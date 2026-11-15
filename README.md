@@ -32,9 +32,11 @@ Twitter, Telegram и другие сервисы показывают в пре�
 
 ```sh
 C="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-"$C" --headless=new --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=3000 --screenshot=og.png "file://$PWD/tools/og-card.html"
-"$C" --headless=new --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=3000 --screenshot=og-en.png "file://$PWD/tools/og-card.html#en"
+"$C" --headless=new --hide-scrollbars --allow-file-access-from-files --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=3000 --screenshot=og.png "file://$PWD/tools/og-card.html"
+"$C" --headless=new --hide-scrollbars --allow-file-access-from-files --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=3000 --screenshot=og-en.png "file://$PWD/tools/og-card.html#en"
 ```
+
+Фото на обложке берётся из `images/tatiana.jpg`; без флага `--allow-file-access-from-files` Chrome его не подгрузит.
 
 ## Как посмотреть локально
 

@@ -9,42 +9,48 @@
   html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
   body {
     background: #0D1118; color: #E5E9F1; font-family: "Golos Text", sans-serif;
-    box-sizing: border-box; padding: 64px 80px; display: flex; flex-direction: column; justify-content: space-between;
+    box-sizing: border-box; padding: 56px 72px 56px 72px;
+    display: grid; grid-template-columns: minmax(0, 1fr) 376px; gap: 56px;
     background-image:
       linear-gradient(90deg, #182033 1px, transparent 1px),
       linear-gradient(0deg, #182033 1px, transparent 1px);
     background-size: 40px 40px;
   }
-  .top { font-family: "JetBrains Mono", monospace; font-size: 26px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #F0A54C; }
-  h1 { font-family: "Unbounded", sans-serif; font-weight: 700; font-size: 104px; line-height: 1.0; letter-spacing: -0.02em; margin: 0; }
+  .text { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+  .top { font-family: "JetBrains Mono", monospace; font-size: 24px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #F0A54C; }
+  h1 { font-family: "Unbounded", sans-serif; font-weight: 700; font-size: 84px; line-height: 1.02; letter-spacing: -0.02em; margin: 0; }
   h1 span { display: block; color: #8DA7FF; }
-  .tag { font-size: 34px; color: #C9D0DD; margin-top: 26px; max-width: 980px; line-height: 1.3; }
-  .bottom { display: flex; align-items: center; justify-content: space-between; }
-  .nodes { display: flex; align-items: center; font-family: "JetBrains Mono", monospace; font-size: 24px; }
+  .tag { font-size: 30px; color: #C9D0DD; margin-top: 24px; line-height: 1.3; }
+  .nodes { display: flex; align-items: center; font-family: "JetBrains Mono", monospace; font-size: 22px; }
   .node { display: inline-flex; border: 2px solid #E5E9F1; border-radius: 10px; overflow: hidden; background: #141A25; }
-  .node b { font-weight: 400; padding: 10px 18px; }
-  .node i { border-left: 2px solid #E5E9F1; width: 44px; display: grid; place-items: center; }
+  .node b { font-weight: 400; padding: 9px 16px; }
+  .node i { border-left: 2px solid #E5E9F1; width: 40px; display: grid; place-items: center; }
   .node i::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #F0A54C; }
   .node.last i::before { content: "∅"; width: auto; height: auto; background: none; color: #9AA3B6; font-style: normal; }
-  .arrow { width: 44px; height: 3px; background: #F0A54C; position: relative; margin: 0 6px 0 4px; }
+  .arrow { width: 38px; height: 3px; background: #F0A54C; position: relative; margin: 0 6px 0 4px; }
   .arrow::after { content: ""; position: absolute; right: -2px; top: 50%; transform: translateY(-50%); border-left: 11px solid #F0A54C; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
-  .domain { font-family: "JetBrains Mono", monospace; font-size: 28px; color: #9AA3B6; }
+  .side { display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; }
+  .photo { position: relative; isolation: isolate; width: 360px; height: 450px; }
+  .photo img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 22px; border: 2px solid #E5E9F1; box-sizing: border-box; }
+  .photo::after { content: ""; position: absolute; inset: 16px -16px -16px 16px; border: 3px solid #F0A54C; border-radius: 22px; z-index: -1; }
+  .domain { font-family: "JetBrains Mono", monospace; font-size: 24px; color: #9AA3B6; text-align: right; }
 </style>
 </head>
 <body>
-  <div>
+  <div class="text">
     <div class="top" id="top">Алгоритмы · собеседования</div>
-  </div>
-  <div>
-    <h1 id="name">Татьяна <span>Коровкина</span></h1>
-    <div class="tag" id="tag">Курс по алгоритмам, разборы задач с собеседований, эфиры и статьи</div>
-  </div>
-  <div class="bottom">
+    <div>
+      <h1 id="name">Татьяна <span>Коровкина</span></h1>
+      <div class="tag" id="tag">Курс по алгоритмам, разборы задач с собеседований, эфиры и статьи</div>
+    </div>
     <div class="nodes" id="nodes">
       <span class="node"><b>задача</b><i></i></span><span class="arrow"></span>
       <span class="node"><b>паттерн</b><i></i></span><span class="arrow"></span>
       <span class="node last"><b>решение</b><i></i></span>
     </div>
+  </div>
+  <div class="side">
+    <div class="photo"><img src="../images/tatiana.jpg" alt=""></div>
     <div class="domain">korovkina.uk</div>
   </div>
   <script>
