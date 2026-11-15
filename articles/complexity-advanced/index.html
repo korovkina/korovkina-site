@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Продвинутая сложность и оптимизация — Татьяна Коровкина</title>
+  <meta name="description" content="Составные сложности вроде O(n·k), выбор между временем и памятью и разборы оптимизаций на реальных задачах.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Продвинутая сложность и оптимизация — Татьяна Коровкина">
+  <meta property="og:description" content="Составные сложности вроде O(n·k), выбор между временем и памятью и разборы оптимизаций на реальных задачах.">
+  <meta property="og:url" content="https://korovkina.uk/articles/complexity-advanced/">
+  <link rel="canonical" href="https://korovkina.uk/articles/complexity-advanced/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css">
+  <script src="../../site.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="../../">head</a></li>
+          <li><a href="../../#about">Обо мне</a></li>
+          <li><a href="../../#course">Курс</a></li>
+          <li><a href="../../talks/">Выступления</a></li>
+          <li><a href="../../articles/" aria-current="page">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <nav class="lang-switch" aria-label="Язык сайта">
+        <span aria-current="true">RU</span>
+        <a href="../../en/" hreflang="en" lang="en">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="article-page">
+    <div class="wrap article-layout">
+      <header class="article-head">
+        <p class="eyebrow"><a href="../">Статьи</a> · 9 мин чтения</p>
+        <h1 class="article-title">Продвинутая сложность и оптимизация</h1>
+        <p class="lead">Составные сложности вроде O(n·k), выбор между временем и памятью и разборы оптимизаций на реальных задачах.</p>
+      </header>
+      <aside class="article-toc" aria-label="Содержание">
+        <p class="toc-title">Содержание</p>
+        <ol><li><a href="#введение">Введение</a></li><li><a href="#составные-виды-сложности">Составные виды сложности</a></li><li><a href="#трейд-офф-компромисс-между-временем-и-памятью">Трейд-офф (компромисс) между временем и памятью</a></li><li><a href="#пример-поиск-дубликатов-с-разными-сложностями">Пример: Поиск дубликатов с разными сложностями</a></li><li><a href="#амортизированная-сложность">Амортизированная сложность</a></li><li><a href="#заключение">Заключение</a></li></ol>
+      </aside>
+      <article class="article-body">
+<h2 id="введение">Введение</h2>
+<p>Это продолжение темы про сложность алгоритмов. Здесь мы углубим знания: рассмотрим составные виды сложности, научимся выбирать между временем и памятью, а также разберём реальные примеры оптимизации алгоритмов.</p>
+<p>Статья опирается на основы — виды сложности от O(1) до O(n²), нотацию Big-O и способ оценивать алгоритмы. Если вы с ними ещё не знакомы или хотите освежить, начните с <a href="../complexity/">базовой статьи «Сложность алгоритмов»</a>. Как и там, будем опираться на пример с библиотекой, но посмотрим на более сложные сценарии поиска и оптимизации.</p>
+<h2 id="составные-виды-сложности">Составные виды сложности</h2>
+<p>Иногда сложность алгоритма зависит не от одного параметра n, а от нескольких независимых параметров. Рассмотрим такие случаи.</p>
+<h3 id="onk-сложность-произведения-двух-параметров">O(n·k) — Сложность произведения двух параметров</h3>
+<p><strong>Определение</strong>: Время выполнения зависит от произведения двух независимых параметров.</p>
+<p><strong>Пример из библиотеки</strong>: Поиск книг по содержимому. В библиотеке n книг, в каждой книге в среднем k глав. Нужно найти все книги, в которых встречаются определённые ключевые слова.</p>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Время: O(n × k × keywords), где keywords — количество ключевых слов (обычно небольшая константа)</li>
+<li>Память: O(n) для хранения результата (в худшем случае все книги)</li>
+</ul>
+<pre><code class="language-python">def find_books_by_keywords(books, keywords):
+    result = []
+    for book in books:                    # O(n) - проход по книгам
+        for chapter in book.chapters:       # O(k) - проход по главам книги
+            for keyword in keywords:       # проверка по ключевым словам
+                if keyword in chapter.text:
+                    result.append(book)
+                    break
+    return result
+</code></pre>
+<pre><code class="language-java">import java.util.*;
+
+public List&lt;Book&gt; findBooksByKeywords(List&lt;Book&gt; books, Set&lt;String&gt; keywords) {
+    List&lt;Book&gt; result = new ArrayList&lt;&gt;();
+    for (Book book : books) {                      // O(n) - проход по книгам
+        for (Chapter chapter : book.getChapters()) {  // O(k) - проход по главам книги
+            for (String keyword : keywords) {        // проверка по ключевым словам
+                if (chapter.contains(keyword)) {
+                    result.add(book);
+                    break;
+                }
+            }
+        }
+    }
+    return result;
+}
+</code></pre>
+<pre><code class="language-go">func FindBooksByKeywords(books []Book, keywords []string) []Book {
+    var result []Book
+    for _, book := range books {                      // O(n) - проход по книгам
+        for _, chapter := range book.Chapters {        // O(k) - проход по главам книги
+            for _, keyword := range keywords {         // проверка по ключевым словам
+                if strings.Contains(chapter.Text, keyword) {
+                    result = append(result, book)
+                    break
+                }
+            }
+        }
+    }
+    return result
+}
+</code></pre>
+<p><strong>Когда встречается</strong>: Когда есть вложенные циклы, где внутренний цикл зависит от параметра, который отличается от внешнего (пользователи и их действия, комментарии и слова, документы и элементы в них).</p>
+<p><strong>Примеры задач на LeetCode:</strong></p>
+<ul>
+<li><strong><a href="https://leetcode.com/problems/group-anagrams/">Group Anagrams</a></strong> (LeetCode 49) — группировка слов по анаграммам</li>
+<li><strong><a href="https://leetcode.com/problems/top-k-frequent-elements/">Top K Frequent Elements</a></strong> (LeetCode 347) — поиск k самых частых элементов</li>
+<li><strong><a href="https://leetcode.com/problems/k-closest-points-to-origin/">K Closest Points to Origin</a></strong> (LeetCode 973) — поиск k ближайших точек</li>
+</ul>
+<h3 id="on-m-сложность-суммы-двух-параметров">O(n + m) — Сложность суммы двух параметров</h3>
+<p><strong>Определение</strong>: Время выполнения зависит от суммы размеров двух структур данных.</p>
+<p><strong>Пример из библиотеки</strong>: Объединение двух отсортированных каталогов книг в один.</p>
+<p><strong>Визуализация:</strong></p>
+<pre><code>catalog1 = [A, C, E, G]      (n = 4 элемента)
+catalog2 = [B, D, F, H, J]   (m = 5 элементов)
+
+Шаг 1: сравниваем A и B → A меньше
+merged = [A]         i=1, j=0
+
+Шаг 2: сравниваем C и B → B меньше
+merged = [A, B]      i=1, j=1
+
+Шаг 3: сравниваем C и D → C меньше
+merged = [A, B, C]   i=2, j=1
+
+... продолжаем пока оба массива не закончатся ...
+
+Итого: проходим по каждому элементу ровно один раз
+</code></pre>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Время: O(n + m)</li>
+<li>Память: O(m + n) для хранения объединенного массива</li>
+</ul>
+<pre><code class="language-python">def merge_catalogs(catalog1, catalog2):
+    i = j = 0
+    merged = []
+
+    while i &lt; len(catalog1) and j &lt; len(catalog2):  # O(n + m)
+        if catalog1[i] &lt; catalog2[j]:
+            merged.append(catalog1[i])
+            i += 1
+        else:
+            merged.append(catalog2[j])
+            j += 1
+
+    # Добавляем оставшиеся элементы
+    while i &lt; len(catalog1):  # O(оставшиеся из n)
+        merged.append(catalog1[i])
+        i += 1
+
+    while j &lt; len(catalog2):  # O(оставшиеся из m)
+        merged.append(catalog2[j])
+        j += 1
+
+    return merged
+</code></pre>
+<pre><code class="language-java">// Java
+import java.util.*;
+
+public static List&lt;String&gt; mergeCatalogs(List&lt;String&gt; catalog1, List&lt;String&gt; catalog2) {
+    List&lt;String&gt; merged = new ArrayList&lt;&gt;();
+    int i = 0, j = 0;
+
+    while (i &lt; catalog1.size() &amp;&amp; j &lt; catalog2.size()) {  // O(n + m)
+        if (catalog1.get(i).compareTo(catalog2.get(j)) &lt; 0) {
+            merged.add(catalog1.get(i));
+            i++;
+        } else {
+            merged.add(catalog2.get(j));
+            j++;
+        }
+    }
+
+    // Добавляем оставшиеся элементы из catalog1
+    while (i &lt; catalog1.size()) {  // O(оставшиеся из n)
+        merged.add(catalog1.get(i));
+        i++;
+    }
+
+    // Добавляем оставшиеся элементы из catalog2
+    while (j &lt; catalog2.size()) {  // O(оставшиеся из m)
+        merged.add(catalog2.get(j));
+        j++;
+    }
+
+    return merged;
+}
+</code></pre>
+<pre><code class="language-go">// Go
+func MergeCatalogs(catalog1, catalog2 []string) []string {
+    merged := make([]string, 0, len(catalog1)+len(catalog2))
+    i, j := 0, 0
+
+    for i &lt; len(catalog1) &amp;&amp; j &lt; len(catalog2) {  // O(n + m)
+        if catalog1[i] &lt; catalog2[j] {
+            merged = append(merged, catalog1[i])
+            i++
+        } else {
+            merged = append(merged, catalog2[j])
+            j++
+        }
+    }
+
+    // Добавляем оставшиеся элементы из catalog1
+    for i &lt; len(catalog1) {  // O(оставшиеся из n)
+        merged = append(merged, catalog1[i])
+        i++
+    }
+
+    // Добавляем оставшиеся элементы из catalog2
+    for j &lt; len(catalog2) {  // O(оставшиеся из m)
+        merged = append(merged, catalog2[j])
+        j++
+    }
+
+    return merged
+}
+</code></pre>
+<p><strong>Когда встречается</strong>: При обработке нескольких структур данных последовательно (слияние, объединение, поиск в нескольких структурах).</p>
+<p><strong>Ключевая идея:</strong></p>
+<ul>
+<li>O(n·m) — вложенные циклы, каждый с каждым</li>
+<li>O(n+m) — последовательная обработка, один за другим</li>
+</ul>
+<p><strong>Примеры задач на LeetCode:</strong></p>
+<ul>
+<li><strong><a href="https://leetcode.com/problems/intersection-of-two-arrays/">Intersection of Two Arrays</a></strong> (LeetCode 349) — пересечение двух массивов</li>
+<li><strong><a href="https://leetcode.com/problems/merge-sorted-array/">Merge Sorted Array</a></strong> (LeetCode 88) — слияние двух отсортированных массивов</li>
+<li><strong><a href="https://leetcode.com/problems/intersection-of-two-linked-lists/">Intersection of Two Linked Lists</a></strong> (LeetCode 160) — поиск точки пересечения двух списков</li>
+</ul>
+<h3 id="o2ⁿ-экспоненциальная-сложность">O(2ⁿ) — Экспоненциальная сложность</h3>
+<p><strong>Определение</strong>: Время выполнения удваивается с каждым добавленным элементом. Возведение в степень — одна из самых быстро растущих функций, поэтому такой сложности стоит избегать.</p>
+<p><strong>Пример</strong>: Генерация всех возможных подмножеств множества из n элементов. Для каждого элемента есть два выбора: либо включить его в подмножество, либо нет. Количество подмножеств удваивается на каждом шаге.</p>
+<p><strong>Сложность</strong>:
+Время: O(n × 2ⁿ) — для каждого из n элементов удваиваем количество подмножеств
+Память: O(2ⁿ) — храним все подмножества</p>
+<pre><code class="language-python">def generate_all_subsets(elements):
+    result = [[]]
+    for elem in elements:           # для каждого элемента
+        new_subsets = []
+        for subset in result:       # количество подмножеств удваивается
+            new_subsets.append(subset + [elem])
+            new_subsets.append(subset)
+        result = new_subsets
+    return result
+</code></pre>
+<pre><code class="language-java">import java.util.*;
+
+public List&lt;List&lt;Integer&gt;&gt; generateAllSubsets(int[] elements) {
+    List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+    result.add(new ArrayList&lt;&gt;());  // добавляем пустое подмножество
+
+    for (int elem : elements) {           // для каждого элемента
+        List&lt;List&lt;Integer&gt;&gt; newSubsets = new ArrayList&lt;&gt;();
+        for (List&lt;Integer&gt; subset : result) {       // количество подмножеств удваивается
+            // Создаем копию текущего подмножества и добавляем элемент
+            List&lt;Integer&gt; withElem = new ArrayList&lt;&gt;(subset);
+            withElem.add(elem);
+            newSubsets.add(withElem);
+            // Сохраняем также оригинальное подмножество без элемента
+            newSubsets.add(subset);
+        }
+        result = newSubsets;
+    }
+    return result;
+}
+</code></pre>
+<pre><code class="language-go">func GenerateAllSubsets(elements []int) [][]int {
+    result := [][]int{{}}  // начинаем с пустого подмножества
+
+    for _, elem := range elements {           // для каждого элемента
+        newSubsets := [][]int{}
+        for _, subset := range result {       // количество подмножеств удваивается
+            withElem := make([]int, len(subset))
+            copy(withElem, subset)
+            withElem = append(withElem, elem)
+            newSubsets = append(newSubsets, withElem)
+            newSubsets = append(newSubsets, subset)
+        }
+        result = newSubsets
+    }
+    return result
+}
+</code></pre>
+<p><strong>Важно</strong>: Этот пример работает для массива с уникальными элементами. Если в массиве есть дубликаты, то будут сгенерированы повторяющиеся подмножества. Для обработки дубликатов нужна дополнительная логика (сортировка + пропуск повторяющихся элементов).</p>
+<p><strong>Когда встречается:</strong></p>
+<ul>
+<li>Перебор всех подмножеств (subset sum problem)</li>
+<li>Задачи о рюкзаке (brute force)</li>
+<li>Взлом паролей полным перебором</li>
+<li>Комбинаторные задачи без оптимизации</li>
+</ul>
+<p><strong>Почему это плохо</strong>: Для n=20 уже более миллиона операций (2²⁰ = 1,048,576). Для n=30 — более миллиарда.</p>
+<p><strong>Как оптимизировать:</strong></p>
+<ul>
+<li>Динамическое программирование — избегаем повторных вычислений, используя таблицу</li>
+<li>Мемоизация — сохраняем результаты дорогих операций в кэше</li>
+<li><a href="https://en.wikipedia.org/wiki/Greedy_algorithm">Жадные алгоритмы (greedy)</a> — делаем локально оптимальный выбор на каждом шаге</li>
+<li><a href="https://en.wikipedia.org/wiki/Branch_and_bound">Метод ветвей и границ (branch and bound)</a> — отсекаем ветви поиска, которые точно не дадут оптимального решения</li>
+</ul>
+<p><strong>Примеры задач на LeetCode:</strong></p>
+<ul>
+<li><strong><a href="https://leetcode.com/problems/partition-equal-subset-sum/">Partition Equal Subset Sum</a></strong> (LeetCode 416) — можно ли разбить массив на два подмножества с равной суммой</li>
+<li><strong><a href="https://leetcode.com/problems/partition-to-k-equal-sum-subsets/">Partition to K Equal Sum Subsets</a></strong> (LeetCode 698) — разбиение массива на k подмножеств</li>
+<li><strong><a href="https://leetcode.com/problems/word-break/">Word Break</a></strong> (LeetCode 139) — можно ли разбить строку на слова из словаря</li>
+<li><strong><a href="https://leetcode.com/problems/palindrome-partitioning/">Palindrome Partitioning</a></strong> (LeetCode 131) — разбиение строки на палиндромы</li>
+</ul>
+<h3 id="on-факториальная-сложность">O(n!) — Факториальная сложность</h3>
+<p><strong>Определение</strong>: Время выполнения растёт как факториал от n. Это ещё медленнее, чем экспоненциальная сложность.</p>
+<p><strong>Пример</strong>: Задача коммивояжёра — найти кратчайший маршрут, который посещает все города ровно один раз и возвращается в исходный. Для n городов нужно проверить n! вариантов.</p>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Время: O(n! × n) — n! перестановок, каждая вычисляет расстояние за O(n)</li>
+<li>Память: O(n!) — храним все перестановки</li>
+</ul>
+<pre><code class="language-python">def travelling_salesman_bruteforce(cities):
+    from itertools import permutations
+
+    min_distance = float('inf')
+    best_route = None
+
+    for route in permutations(cities):  # O(n!) - все перестановки городов
+        distance = calculate_total_distance(route)  # псевдофункция для вычисления расстояния
+        if distance &lt; min_distance:
+            min_distance = distance
+            best_route = route
+
+    return best_route
+</code></pre>
+<pre><code class="language-java">import java.util.*;
+
+public List&lt;String&gt; travellingSalesmanBruteforce(List&lt;String&gt; cities) {
+    List&lt;String&gt; bestRoute = null;
+    int minDistance = Integer.MAX_VALUE;
+
+    // Генерируем все перестановки городов
+    List&lt;List&lt;String&gt;&gt; permutations = generatePermutations(new ArrayList&lt;&gt;(cities));
+
+    for (List&lt;String&gt; route : permutations) {  // O(n!) - все перестановки городов
+        int distance = calculateTotalDistance(route); // псевдофункция для вычисления расстояния
+        if (distance &lt; minDistance) {
+            minDistance = distance;
+            bestRoute = route;
+        }
+    }
+
+    return bestRoute;
+}
+
+private List&lt;List&lt;String&gt;&gt; generatePermutations(List&lt;String&gt; cities) {
+    List&lt;List&lt;String&gt;&gt; result = new ArrayList&lt;&gt;();
+    if (cities.isEmpty()) {
+        result.add(new ArrayList&lt;&gt;());
+        return result;
+    }
+
+    for (int i = 0; i &lt; cities.size(); i++) {
+        String current = cities.get(i);
+        List&lt;String&gt; remaining = new ArrayList&lt;&gt;(cities);
+        remaining.remove(i);
+
+        for (List&lt;String&gt; perm : generatePermutations(remaining)) {
+            perm.add(0, current);
+            result.add(perm);
+        }
+    }
+    return result;
+}
+</code></pre>
+<pre><code class="language-go">func TravellingSalesmanBruteforce(cities []string) []string {
+    permutations := generatePermutations(cities)
+    bestRoute := []string{}
+    minDistance := math.MaxInt32
+
+    for _, route := range permutations {  // O(n!) - все перестановки городов
+        distance := calculateTotalDistance(route) // псевдофункция для вычисления расстояния
+        if distance &lt; minDistance {
+            minDistance = distance
+            bestRoute = route
+        }
+    }
+
+    return bestRoute
+}
+
+func generatePermutations(cities []string) [][]string {
+    if len(cities) == 0 {
+        return [][]string{{}}
+    }
+
+    result := [][]string{}
+    for i, city := range cities {
+        remaining := make([]string, 0, len(cities)-1)
+        remaining = append(remaining, cities[:i]...)
+        remaining = append(remaining, cities[i+1:]...)
+
+        for _, perm := range generatePermutations(remaining) {
+            route := append([]string{city}, perm...)
+            result = append(result, route)
+        }
+    }
+    return result
+}
+</code></pre>
+<p><strong>Когда встречается:</strong></p>
+<ul>
+<li>Задачи коммивояжёра</li>
+<li>Расписания (генерация всех возможных вариантов)</li>
+<li>Перестановки элементов</li>
+<li>N-queens problem (расстановка ферзей без взаимных атак)</li>
+</ul>
+<p><strong>Почему это плохо</strong>: Для n=10 уже 3,628,800 операций. Для n=15 — более 1 триллиона.</p>
+<p><strong>Как оптимизировать:</strong></p>
+<ul>
+<li>Динамическое программирование с состояниями</li>
+<li>Приближённые алгоритмы (approximation algorithms)</li>
+<li>Эвристики</li>
+<li>Local search (поиск локальных оптимумов)</li>
+</ul>
+<p><strong>Сравнение O(2ⁿ) vs O(n!):</strong></p>
+<ul>
+<li>O(2ⁿ) — для каждого элемента 2 выбора (да/нет)</li>
+<li>O(n!) — для каждого шага n вариантов, затем (n-1), затем (n-2), и т.д.</li>
+<li>O(n!) растёт быстрее, чем O(2ⁿ), при больших n</li>
+</ul>
+<p><strong>Примеры задач на LeetCode:</strong></p>
+<ul>
+<li><strong><a href="https://leetcode.com/problems/permutations/">Permutations</a></strong> (LeetCode 46) — генерация всех перестановок массива</li>
+<li><strong><a href="https://leetcode.com/problems/permutations-ii/">Permutations II</a></strong> (LeetCode 47) — перестановки с дубликатами</li>
+<li><strong><a href="https://leetcode.com/problems/n-queens/">N-Queens</a></strong> (LeetCode 51) — расстановка n ферзей на доске n×n</li>
+<li><strong><a href="https://leetcode.com/problems/sudoku-solver/">Sudoku Solver</a></strong> (LeetCode 37) — решение судоку перебором</li>
+</ul>
+<h2 id="трейд-офф-компромисс-между-временем-и-памятью">Трейд-офф (компромисс) между временем и памятью</h2>
+<p>Часто можно обменять использование дополнительной памяти на ускорение алгоритма или наоборот. Такие обмены называются трейд-оффами.</p>
+<h3 id="основные-принципы-трейд-оффов">Основные принципы трейд-оффов</h3>
+<p><strong>Когда оптимизируем по времени в ущерб памяти</strong>:</p>
+<ul>
+<li>Доступно много памяти</li>
+<li>Нужна максимальная скорость</li>
+<li>Алгоритм будет вызываться часто</li>
+</ul>
+<p><strong>Когда оптимизируем по памяти в ущерб времени</strong>:</p>
+<ul>
+<li>Память ограничена</li>
+<li>Данные очень большие</li>
+<li>Скорость не критична</li>
+</ul>
+<h3 id="примеры-трейд-оффов">Примеры трейд-оффов</h3>
+<p><strong>1. Хэш-таблица</strong>: использует O(n) дополнительной памяти, но обеспечивает O(1) поиск вместо O(n).</p>
+<p><strong>2. Кэширование</strong>: хранит результаты вычислений для повторного использования — тратим память, но экономим время на повторные вычисления.</p>
+<p><strong>3. Динамическое программирование</strong>: тратим O(n²) или O(n·m) память на таблицу, чтобы избежать экспоненциальной сложности O(2ⁿ) или O(n!) и получить полиномиальное решение O(n·m) или O(n²). </p>
+<h2 id="пример-поиск-дубликатов-с-разными-сложностями">Пример: Поиск дубликатов с разными сложностями</h2>
+<p>Разберём классическую задачу поиска дубликатов и посмотрим, как разные подходы влияют на сложность.</p>
+<h3 id="метод-1-в-лоб-on²-время-o1-память">Метод 1: В лоб — O(n²) время, O(1) память</h3>
+<p>Сравниваем каждый элемент с каждым.</p>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Время: O(n²)</li>
+<li>Память: O(n) для хранения дубликатов</li>
+</ul>
+<pre><code class="language-python">def find_duplicates_slow(books):
+    duplicates = []
+    for i in range(len(books)):
+        for j in range(i + 1, len(books)):
+            if books[i] == books[j]:
+                duplicates.append(books[i])
+    return list(set(duplicates))
+</code></pre>
+<pre><code class="language-java">import java.util.*;
+
+public class DuplicateFinder {
+    public static Set&lt;String&gt; findDuplicatesSlow(List&lt;String&gt; books) {
+        Set&lt;String&gt; duplicates = new HashSet&lt;&gt;();
+        for (int i = 0; i &lt; books.size(); i++) {
+            for (int j = i + 1; j &lt; books.size(); j++) {
+                if (books.get(i).equals(books.get(j))) {
+                    duplicates.add(books.get(i));
+                }
+            }
+        }
+        return duplicates;
+    }
+}
+</code></pre>
+<pre><code class="language-go">func FindDuplicatesSlow(books []string) []string {
+    seen := make(map[string]bool)
+    for i := 0; i &lt; len(books); i++ {
+        for j := i + 1; j &lt; len(books); j++ {
+            if books[i] == books[j] {
+                seen[books[i]] = true
+                break // Нашли дубликат, переходим к следующей книге
+            }
+        }
+    }
+
+    var result []string
+    for book := range seen {
+        result = append(result, book)
+    }
+    return result
+}
+</code></pre>
+<h3 id="метод-2-с-сортировкой-on-log-n-время-o1-память">Метод 2: С сортировкой — O(n log n) время, O(1) память</h3>
+<p>Сначала сортируем, затем идём по массиву и сравниваем соседние элементы.</p>
+<pre><code class="language-python">def find_duplicates_medium(books):
+    books.sort()  # O(n log n)
+    duplicates = []
+    for i in range(1, len(books)):
+        if books[i] == books[i-1]:
+            duplicates.append(books[i])
+    return list(set(duplicates))
+</code></pre>
+<pre><code class="language-java">import java.util.*;
+
+public class DuplicateFinder {
+    public static Set&lt;String&gt; findDuplicatesMedium(List&lt;String&gt; books) {
+        Collections.sort(books); // O(n log n)
+        Set&lt;String&gt; duplicates = new HashSet&lt;&gt;();
+        for (int i = 1; i &lt; books.size(); i++) {
+            if (books.get(i).equals(books.get(i-1))) {
+                duplicates.add(books.get(i));
+            }
+        }
+        return duplicates;
+    }
+}
+</code></pre>
+<pre><code class="language-go">import &quot;sort&quot;
+
+func FindDuplicatesMedium(books []string) []string {
+    sort.Strings(books) // O(n log n)
+    seen := make(map[string]bool)
+
+    for i := 1; i &lt; len(books); i++ {
+        if books[i] == books[i-1] {
+            seen[books[i]] = true
+        }
+    }
+
+    var result []string
+    for book := range seen {
+        result = append(result, book)
+    }
+    return result
+}
+</code></pre>
+<h3 id="метод-3-с-хэш-таблицей-on-время-on-память">Метод 3: С хэш-таблицей — O(n) время, O(n) память</h3>
+<p>Проходим по массиву один раз, запоминая увиденные элементы в HashSet.</p>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Время: O(n)</li>
+<li>Память: O(n) для двух HashSet</li>
+</ul>
+<pre><code class="language-python">def find_duplicates_fast(books):
+    seen = set()
+    duplicates = set()
+    for book in books:  # O(n)
+        if book in seen:
+            duplicates.add(book)
+        else:
+            seen.add(book)
+    return list(duplicates)
+</code></pre>
+<pre><code class="language-java">import java.util.*;
+
+public class DuplicateFinder {
+    public static Set&lt;String&gt; findDuplicatesFast(List&lt;String&gt; books) {
+        Set&lt;String&gt; seen = new HashSet&lt;&gt;();
+        Set&lt;String&gt; duplicates = new HashSet&lt;&gt;();
+        for (String book : books) { // O(n)
+            if (seen.contains(book)) {
+                duplicates.add(book);
+            } else {
+                seen.add(book);
+            }
+        }
+        return duplicates;
+    }
+}
+</code></pre>
+<pre><code class="language-go">func FindDuplicatesFast(books []string) []string {
+    seen := make(map[string]bool)
+    duplicates := make(map[string]bool)
+
+    for _, book := range books { // O(n)
+        if seen[book] {
+            duplicates[book] = true
+        } else {
+            seen[book] = true
+        }
+    }
+
+    var result []string
+    for book := range duplicates {
+        result = append(result, book)
+    }
+    return result
+}
+</code></pre>
+<h3 id="анализ-трейд-оффов">Анализ трейд-оффов</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Метод</th>
+<th>Время</th>
+<th>Память</th>
+<th>Когда применять</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>В лоб</td>
+<td>O(n²)</td>
+<td>O(1) доп., O(n) для результата</td>
+<td>Мало данных, мало памяти</td>
+</tr>
+<tr>
+<td>С сортировкой</td>
+<td>O(n log n)</td>
+<td>O(1) доп., O(n) для результата</td>
+<td>Можно изменять массив*</td>
+</tr>
+<tr>
+<td>С хэш-таблицей</td>
+<td>O(n)</td>
+<td>O(n) доп. для HashSet</td>
+<td>Много памяти, нужна скорость</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>* сортировка меняет порядок элементов в исходном массиве</em></p>
+<p><strong>Почему последняя версия O(n)</strong>: мы проходим по массиву один раз, все операции с HashSet (add, contains) в среднем занимают O(1). Поэтому общая сложность O(n) × O(1) = O(n).</p>
+<h2 id="амортизированная-сложность">Амортизированная сложность</h2>
+<p>Возможно, вы уже встречали термин <strong>«амортизированная сложность»</strong> при работе с массивами и хеш-таблицами. Теперь разберём это понятие подробно.</p>
+<p><strong>Определение</strong>: Амортизированная сложность — это средняя сложность операции, если она выполняется многократно. Некоторые операции могут быть дорогими, но происходят редко, а большинство — быстрыми.</p>
+<p><strong>Пример из библиотеки</strong>: Представьте, что вы добавляете книги на полку. Обычно это занимает O(1) времени (просто поставить книгу). Но когда полка заполняется, вам нужно достать все книги и перенести их на новую, большую полку — это дорогая операция O(n). Однако такая реорганизация происходит редко (каждые 100 книг), поэтому в среднем каждая операция добавления книги занимает примерно O(1) времени.</p>
+<p><strong>Когда встречается</strong>: При работе с динамическими массивами, хэш-таблицами, очередями.</p>
+<p><strong>Визуализация амортизированной сложности</strong>:</p>
+<pre><code>Операции добавления в динамический массив (capacity = 4):
+
+Шаг 1: [A]           capacity = 4,  добавили A     → O(1)  (быстрая)
+Шаг 2: [A, B]        capacity = 4,  добавили B     → O(1)  (быстрая)
+Шаг 3: [A, B, C]     capacity = 4,  добавили C     → O(1)  (быстрая)
+Шаг 4: [A,B,C,D]     capacity = 4,  добавили D     → O(1)  (быстрая)
+
+Шаг 5: [A,B,C,D,E]   capacity = 8,  добавили E     → O(5)  (медленная: расширяем массив и копируем все 5 элементов)
+
+Шаг 6: [A,B,C,D,E,F] capacity = 8, добавили F      → O(1)  (быстрая)
+Шаг 7: [A,B,C,D,E,F,G] capacity = 8, добавили G    → O(1)  (быстрая)
+Шаг 8: [A,B,C,D,E,F,G,H] capacity = 8, добавили H  → O(1)  (быстрая)
+Шаг 9: [...]         capacity = 16,                → O(9)  (медленная: расширяем массив и копируем все 9 элементов)
+
+Анализ:
+- 4 быстрые операции (O(1))
+- 1 медленная операция (O(n))
+- 7 быстрых операций (O(1))
+- 1 медленная операция (O(n))
+- ...
+
+Средняя стоимость: (1+1+1+1+5+1+1+1+1+1+9+...) / n ≈ O(1) амортизированная
+</code></pre>
+<p><strong>Классические примеры:</strong></p>
+<ul>
+<li><strong>Динамический массив (ArrayList)</strong>: добавление элемента в среднем O(1), но O(n) при необходимости расширения массива</li>
+<li><strong>Хэш-таблица</strong>: вставка в среднем O(1), но O(n) при перехэшировании когда много коллизий</li>
+</ul>
+<p><strong>Почему это важно</strong>: Амортизированный анализ помогает понять реальную производительность структур данных, где отдельные операции могут быть медленными, но в среднем алгоритм работает эффективно.</p>
+<p><strong>Примеры задач на LeetCode:</strong></p>
+<ul>
+<li><strong><a href="https://leetcode.com/problems/design-hashmap/">Design HashMap</a></strong> (LeetCode 706) — реализация хэш-таблицы с перехэшированием</li>
+<li><strong><a href="https://leetcode.com/problems/design-twitter/">Design Twitter</a></strong> (LeetCode 355) — дизайн системы с эффективными операциями</li>
+<li><strong><a href="https://leetcode.com/problems/implement-stack-using-queues/">Implement Stack using Queues</a></strong> (LeetCode 225) — реализация стека на очередях</li>
+</ul>
+<h3 id="почему-это-важно-на-интервью">Почему это важно на интервью</h3>
+<p>На интервью вас могут спросить: "Какая сложность вставки в ArrayList?"
+Правильный ответ: "O(1) амортизированная", а не просто "O(1)". Это показывает, что вы понимаете, как работают структуры данных "под капотом".</p>
+<hr />
+<h2 id="заключение">Заключение</h2>
+<p>В этой статье мы разобрали составные виды сложности, научились выбирать между временем и памятью и увидели, как разные подходы к одной и той же задаче приводят к разным сложностям.</p>
+<p><strong>Что важно запомнить:</strong></p>
+<ol>
+<li>
+<p><strong>Составные виды сложности:</strong></p>
+<ul>
+<li>O(n·k) — произведение параметров (вложенные циклы с разными размерами)</li>
+<li>O(n + m) — сумма параметров (последовательная обработка структур)</li>
+<li>O(2ⁿ) и O(n!) — избегать, использовать оптимизации (DP, greedy, эвристики)</li>
+</ul>
+</li>
+<li>
+<p><strong>Трейд-офф время/память:</strong></p>
+<ul>
+<li>Хэш-таблица: O(n) память → O(1) поиск</li>
+<li>Сортировка + бинарный поиск: O(n log n) подготовка → O(log n) поиск</li>
+<li>Кэширование: тратим память → экономим время вычислений</li>
+</ul>
+</li>
+<li>
+<p><strong>Выбор алгоритма зависит от ограничений:</strong></p>
+<ul>
+<li>Много данных? → O(n) или O(n log n) алгоритмы</li>
+<li>Мало памяти? → O(1) или O(log n) дополнительной памяти</li>
+<li>Частые вызовы? → оптимизируем по времени</li>
+<li>Ограниченное время? → используем больше памяти</li>
+</ul>
+</li>
+<li>
+<p><strong>Амортизированная сложность:</strong></p>
+<ul>
+<li>Отдельные операции могут быть O(n), но в среднем O(1)</li>
+<li>Важно для динамических массивов и хэш-таблиц</li>
+<li>На интервью говорите "амортизированная O(1)", а не просто "O(1)"</li>
+</ul>
+</li>
+</ol>
+        <nav class="pager" aria-label="Другие статьи"><a href="../complexity/"><span>← предыдущая</span>Сложность алгоритмов</a><a class="next" href="../sorting/"><span>следующая →</span>Сортировки</a></nav>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>

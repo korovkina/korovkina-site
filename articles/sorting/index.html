@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Сортировки — Татьяна Коровкина</title>
+  <meta name="description" content="Встроенные сортировки в Python, Java и Go, задачи, которые упрощаются после сортировки, и как устроены Merge Sort и Quick Sort.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Сортировки — Татьяна Коровкина">
+  <meta property="og:description" content="Встроенные сортировки в Python, Java и Go, задачи, которые упрощаются после сортировки, и как устроены Merge Sort и Quick Sort.">
+  <meta property="og:url" content="https://korovkina.uk/articles/sorting/">
+  <link rel="canonical" href="https://korovkina.uk/articles/sorting/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css">
+  <script src="../../site.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="../../">head</a></li>
+          <li><a href="../../#about">Обо мне</a></li>
+          <li><a href="../../#course">Курс</a></li>
+          <li><a href="../../talks/">Выступления</a></li>
+          <li><a href="../../articles/" aria-current="page">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <nav class="lang-switch" aria-label="Язык сайта">
+        <span aria-current="true">RU</span>
+        <a href="../../en/" hreflang="en" lang="en">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="article-page">
+    <div class="wrap article-layout">
+      <header class="article-head">
+        <p class="eyebrow"><a href="../">Статьи</a> · 13 мин чтения</p>
+        <h1 class="article-title">Сортировки</h1>
+        <p class="lead">Встроенные сортировки в Python, Java и Go, задачи, которые упрощаются после сортировки, и как устроены Merge Sort и Quick Sort.</p>
+      </header>
+      <aside class="article-toc" aria-label="Содержание">
+        <p class="toc-title">Содержание</p>
+        <ol><li><a href="#введение">Введение</a></li><li><a href="#сортировка-на-практике">Сортировка на практике</a></li><li><a href="#основные-алгоритмы-сортировки">Основные алгоритмы сортировки</a></li><li><a href="#стабильная-vs-нестабильная-сортировка">Стабильная vs нестабильная сортировка</a></li><li><a href="#сравнение-алгоритмов-сортировки">Сравнение алгоритмов сортировки</a></li><li><a href="#частые-задачи-на-сортировку">Частые задачи на сортировку</a></li><li><a href="#заключение">Заключение</a></li></ol>
+      </aside>
+      <article class="article-body">
+<h2 id="введение">Введение</h2>
+<p>Сортировка — это фундаментальная операция, которая встречается во многих алгоритмических задачах на собеседованиях. В этой статье мы сосредоточимся на практических навыках: как правильно использовать встроенные функции сортировки, когда применять сортировку для решения задач и как понимать алгоритмы сортировки.</p>
+<p><strong>Почему это важно для интервью:</strong></p>
+<ul>
+<li>Многие задачи становятся проще после сортировки массива</li>
+<li>Задачи на два указателя часто требуют предварительной сортировки</li>
+<li>Задачи на интервалы почти всегда начинаются с сортировки</li>
+<li>Бинарный поиск требует отсортированный массив</li>
+<li>Понимание алгоритмов сортировки помогает оценивать сложность решений</li>
+</ul>
+<p><strong>Что вы узнаете:</strong></p>
+<ol>
+<li>Как использовать встроенные функции сортировки (sorted, sort, Arrays.sort, Collections.sort)</li>
+<li>Как распознавать задачи, где нужна предварительная сортировка</li>
+<li>Как работают основные алгоритмы сортировки:<ul>
+<li>Квадратичные сортировки: Bubble Sort, Selection Sort, Insertion Sort</li>
+<li>Эффективные сортировки: Merge Sort, Quick Sort</li>
+<li>Оптимизированные и специализированные сортировки: Counting Sort, Timsort, Dual-Pivot Quicksort</li>
+</ul>
+</li>
+<li>Когда использовать сортировку, а когда нет</li>
+</ol>
+<h2 id="сортировка-на-практике">Сортировка на практике</h2>
+<h3 id="зачем-нужна-сортировка-на-интервью">Зачем нужна сортировка на интервью</h3>
+<p>На собеседованиях вас <strong>практически никогда не попросят реализовать алгоритм сортировки</strong> (Bubble Sort, Merge Sort, Quick Sort). Но вам наверняка придется использовать встроенные функции сортировки для решения задач.</p>
+<p><strong>Что важно знать:</strong></p>
+<ul>
+<li>Эффективная сортировка работает за <code>O(n log n)</code> времени</li>
+<li>Сортировка требует <code>O(1)</code> или <code>O(n)</code> дополнительной памяти (зависит от реализации)</li>
+<li>После сортировки многие задачи становятся проще</li>
+</ul>
+<h3 id="встроенные-функции-сортировки">Встроенные функции сортировки</h3>
+<div class="tabs"><div class="tab-list" role="tablist" hidden><button type="button" role="tab" data-lang="Python">Python</button><button type="button" role="tab" data-lang="Java">Java</button><button type="button" role="tab" data-lang="Go">Go</button></div><div class="tab-panel" role="tabpanel" data-lang="Python"><p class="tab-label">Python</p><p><strong>Базовая сортировка:</strong></p>
+<pre><code class="language-python"># sorted() - возвращает новый отсортированный список
+arr = [3, 1, 4, 1, 5]
+sorted_arr = sorted(arr)  # [1, 1, 3, 4, 5]
+# arr остаётся [3, 1, 4, 1, 5]
+
+# list.sort() - сортирует список на месте (in-place)
+arr = [3, 1, 4, 1, 5]
+arr.sort()  # arr теперь [1, 1, 3, 4, 5]
+</code></pre>
+<p><strong>Сортировка с ключом (key):</strong></p>
+<p>Параметр <code>key</code> принимает функцию, которая применяется к каждому элементу перед сравнением. Сортировка сравнивает результаты вызова этой функции, а не сами элементы напрямую.</p>
+<pre><code class="language-python"># По длине строки
+words = [&quot;banana&quot;, &quot;pie&quot;, &quot;Washington&quot;, &quot;book&quot;]
+sorted_words = sorted(words, key=len)  # [&quot;pie&quot;, &quot;book&quot;, &quot;banana&quot;, &quot;Washington&quot;]
+
+# По второму элементу кортежа
+pairs = [(1, 5), (3, 2), (2, 8)]
+sorted_pairs = sorted(pairs, key=lambda x: x[1])  # [(3, 2), (1, 5), (2, 8)]
+
+# По модулю числа
+nums = [-4, -2, 1, 3, -5]
+sorted_nums = sorted(nums, key=abs)  # [1, -2, 3, -4, -5]
+
+# По нескольким критериям (сначала по длине, потом лексикографически)
+words = [&quot;apple&quot;, &quot;pie&quot;, &quot;banana&quot;, &quot;pear&quot;]
+sorted_words = sorted(words, key=lambda x: (len(x), x))
+# [&quot;pie&quot;, &quot;pear&quot;, &quot;apple&quot;, &quot;banana&quot;]
+</code></pre>
+<p><strong>Обратная сортировка:</strong></p>
+<pre><code class="language-python">arr = [3, 1, 4, 1, 5]
+sorted_arr = sorted(arr, reverse=True)  # [5, 4, 3, 1, 1]
+</code></pre>
+<p><strong>Сортировка символов в строке:</strong></p>
+<pre><code class="language-python">s = &quot;algorithm&quot;
+sorted_s = ''.join(sorted(s))  # &quot;aghilmort&quot;
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Java"><p class="tab-label">Java</p><p><strong>Массивы:</strong></p>
+<pre><code class="language-java">// Сортировка массива примитивов
+int[] arr = {3, 1, 4, 1, 5};
+Arrays.sort(arr);  // [1, 1, 3, 4, 5]
+
+// Сортировка части массива (от индекса 1 до 4, не включая 4)
+Arrays.sort(arr, 1, 4);
+
+// Сортировка массива объектов (String)
+String[] words = {&quot;banana&quot;, &quot;pie&quot;, &quot;Washington&quot;, &quot;book&quot;};
+Arrays.sort(words);  // [&quot;Washington&quot;, &quot;banana&quot;, &quot;book&quot;, &quot;pie&quot;]
+</code></pre>
+<p><strong>Коллекции:</strong></p>
+<pre><code class="language-java">// Сортировка списка
+List&lt;Integer&gt; list = new ArrayList&lt;&gt;(Arrays.asList(3, 1, 4, 1, 5));
+Collections.sort(list);  // [1, 1, 3, 4, 5]
+
+// Обратная сортировка
+Collections.sort(list, Collections.reverseOrder());  // [5, 4, 3, 1, 1]
+</code></pre>
+<p><strong>Сортировка с компаратором (Comparator):</strong></p>
+<pre><code class="language-java">// По длине строки
+List&lt;String&gt; words = Arrays.asList(&quot;banana&quot;, &quot;pie&quot;, &quot;Washington&quot;, &quot;book&quot;);
+words.sort(Comparator.comparingInt(String::length));
+// [&quot;pie&quot;, &quot;book&quot;, &quot;banana&quot;, &quot;Washington&quot;]
+
+// По второму элементу массива
+List&lt;int[]&gt; pairs = Arrays.asList(new int[]{1, 5}, new int[]{3, 2}, new int[]{2, 8});
+pairs.sort(Comparator.comparingInt(a -&gt; a[1]));
+// [[3, 2], [1, 5], [2, 8]]
+
+// По нескольким критериям
+words.sort(Comparator.comparingInt(String::length)
+                     .thenComparing(String::compareTo));
+// Сначала по длине, потом лексикографически
+
+// Пользовательский компаратор (сортировка строк по длине)
+List&lt;String&gt; words = Arrays.asList(&quot;banana&quot;, &quot;pie&quot;, &quot;Washington&quot;, &quot;book&quot;);
+words.sort((a, b) -&gt; {
+    // Возвращает отрицательное, если a короче b
+    // Возвращает 0, если a и b одинаковой длины
+    // Возвращает положительное, если a длиннее b
+    return a.length() - b.length();
+});
+// Результат: [&quot;pie&quot;, &quot;book&quot;, &quot;banana&quot;, &quot;Washington&quot;]
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Go"><p class="tab-label">Go</p><p><strong>Базовая сортировка:</strong></p>
+<pre><code class="language-go">// Сортировка слайса целых чисел
+arr := []int{3, 1, 4, 1, 5}
+sort.Ints(arr)  // [1, 1, 3, 4, 5]
+
+// Сортировка строк
+words := []string{&quot;banana&quot;, &quot;pie&quot;, &quot;Washington&quot;, &quot;book&quot;}
+sort.Strings(words)  // [&quot;Washington&quot;, &quot;banana&quot;, &quot;book&quot;, &quot;pie&quot;]
+
+// Сортировка float64
+nums := []float64{3.14, 1.41, 2.71}
+sort.Float64s(nums)  // [1.41, 2.71, 3.14]
+</code></pre>
+<p><strong>Проверка, отсортирован ли слайс:</strong></p>
+<pre><code class="language-go">arr := []int{1, 2, 3, 4, 5}
+isSorted := sort.IntsAreSorted(arr)  // true
+</code></pre>
+<p><strong>Сортировка с пользовательской функцией:</strong></p>
+<pre><code class="language-go">// По длине строки
+words := []string{&quot;banana&quot;, &quot;pie&quot;, &quot;Washington&quot;, &quot;book&quot;}
+sort.Slice(words, func(i, j int) bool {
+    return len(words[i]) &lt; len(words[j])
+})
+// [&quot;pie&quot;, &quot;book&quot;, &quot;banana&quot;, &quot;Washington&quot;]
+
+// По второму элементу структуры
+type Pair struct {
+    first, second int
+}
+pairs := []Pair{{1, 5}, {3, 2}, {2, 8}}
+sort.Slice(pairs, func(i, j int) bool {
+    return pairs[i].second &lt; pairs[j].second
+})
+// [{{3 2} {1 5} {2 8}}]
+
+// Обратная сортировка
+sort.Slice(arr, func(i, j int) bool {
+    return arr[i] &gt; arr[j]
+})
+</code></pre></div></div>
+<h2 id="основные-алгоритмы-сортировки">Основные алгоритмы сортировки</h2>
+<p>Хотя на собеседованиях вы почти всегда будете использовать встроенные функции сортировки, понимание того, как работают различные алгоритмы сортировки, демонстрирует глубокое знание Computer Science и помогает лучше оценивать сложность решений.</p>
+<h3 id="квадратичные-сортировки-on²">Квадратичные сортировки (<code>O(n²)</code>)</h3>
+<p>Эти алгоритмы просты для понимания, но неэффективны для больших массивов. Их полезно знать для общего развития, но на практике используются редко.</p>
+<h4 id="bubble-sort-пузырьковая-сортировка">Bubble Sort (Пузырьковая сортировка)</h4>
+<p><strong>Идея:</strong> многократно проходим по массиву, сравнивая соседние элементы и меняя их местами, если они стоят в неправильном порядке. Большие элементы «всплывают» в конец массива, как пузырьки.</p>
+<p><strong>Как работает:</strong></p>
+<pre><code class="language-text">Шаг 1: [5, 2, 8, 1, 9]
+       [2, 5, 8, 1, 9]  # сравнили 5 и 2, поменяли
+       [2, 5, 8, 1, 9]  # 5 и 8 в порядке
+       [2, 5, 1, 8, 9]  # сравнили 8 и 1, поменяли
+       [2, 5, 1, 8, 9]  # 8 и 9 в порядке
+
+Шаг 2: [2, 5, 1, 8, 9]
+       [2, 5, 1, 8, 9]  # 2 и 5 в порядке
+       [2, 1, 5, 8, 9]  # сравнили 5 и 1, поменяли
+       [2, 1, 5, 8, 9]  # 5 и 8 в порядке
+
+Шаг 3: [2, 1, 5, 8, 9]
+       [1, 2, 5, 8, 9]  # сравнили 2 и 1, поменяли
+       [1, 2, 5, 8, 9]  # остальные уже в порядке
+
+Шаг 4: [1, 2, 5, 8, 9]  # готово, массив отсортирован
+</code></pre>
+<p><strong>Алгоритм:</strong></p>
+<ol>
+<li>Проходим по массиву n раз (внешний цикл)</li>
+<li>На каждой итерации внешнего цикла:<ul>
+<li>Проходим по неотсортированной части массива (внутренний цикл)</li>
+<li>Сравниваем каждую пару соседних элементов</li>
+<li>Если элементы стоят в неправильном порядке — меняем их местами</li>
+<li>Используем флаг <code>swapped</code>: если за проход не было обменов — массив отсортирован, выходим досрочно (это опциональная оптимизация)</li>
+</ul>
+</li>
+<li>После каждой итерации внешнего цикла самый большой элемент «всплывает» в конец</li>
+<li>Последние i элементов уже отсортированы, поэтому внутренний цикл сокращается</li>
+</ol>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Временная: <code>O(n²)</code> в худшем и среднем случае, <code>O(n)</code> в лучшем (когда массив уже отсортирован)</li>
+<li>Пространственная: <code>O(1)</code> — сортировка in-place</li>
+</ul>
+<p><strong>Когда использовать:</strong> практически никогда на интервью. Знать для общего понимания алгоритмов сортировки.</p>
+<h4 id="selection-sort-сортировка-выбором">Selection Sort (Сортировка выбором)</h4>
+<p><strong>Идея:</strong> на каждой итерации находим минимальный элемент в неотсортированной части массива и ставим его в конец отсортированной части.</p>
+<p><strong>Как работает:</strong></p>
+<pre><code class="language-text">[5, 2, 8, 1, 9]
+ ^  ^  ^  ^  ^  ищем минимум (1), меняем с первым
+[1, 2, 8, 5, 9]
+    ^  ^  ^  ^  ищем минимум (2), уже на месте
+[1, 2, 8, 5, 9]
+       ^  ^  ^  ищем минимум (5), меняем с третьим
+[1, 2, 5, 8, 9]
+          ^  ^  ищем минимум (8), уже на месте
+[1, 2, 5, 8, 9]  готово
+</code></pre>
+<p><strong>Алгоритм:</strong></p>
+<ol>
+<li>Массив условно делится на две части: отсортированную (слева) и неотсортированную (справа)</li>
+<li>Проходим по массиву n-1 раз (внешний цикл):<ul>
+<li>Изначально отсортированная часть пуста, неотсортированная — весь массив</li>
+</ul>
+</li>
+<li>На каждой итерации внешнего цикла:<ul>
+<li>Находим минимальный элемент в неотсортированной части (внутренний цикл)</li>
+<li>Меняем его местами с первым элементом неотсортированной части</li>
+<li>Граница между отсортированной и неотсортированной частью сдвигается вправо</li>
+</ul>
+</li>
+<li>После n-1 итераций весь массив отсортирован</li>
+</ol>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Временная: <code>O(n²)</code> во всех случаях (всегда проходим по всему массиву)</li>
+<li>Пространственная: <code>O(1)</code> — сортировка in-place</li>
+</ul>
+<p><strong>Отличие от bubble sort:</strong> Selection sort делает меньше обменов (максимум n-1), но всегда проходит весь массив. Bubble sort может остановиться раньше, если массив уже отсортирован.</p>
+<p><strong>Когда использовать:</strong> редко. Может быть полезна, если операция обмена очень дорогая.</p>
+<h4 id="insertion-sort-сортировка-вставками">Insertion Sort (Сортировка вставками)</h4>
+<p><strong>Идея:</strong> строим отсортированную часть массива постепенно, вставляя каждый следующий элемент на правильное место. Похоже на то, как вы сортируете карты в руке.</p>
+<p><strong>Как работает:</strong></p>
+<pre><code class="language-text">[5, 2, 8, 1, 9]
+[5] [2, 8, 1, 9]  # 5 уже «отсортирована»
+    ^
+[2, 5] [8, 1, 9]  # вставили 2 перед 5
+       ^
+[2, 5, 8] [1, 9]  # вставили 8 после 5
+          ^
+[1, 2, 5, 8] [9]  # вставили 1 в начало
+             ^
+[1, 2, 5, 8, 9]   # вставили 9 в конец
+</code></pre>
+<p><strong>Алгоритм:</strong></p>
+<ol>
+<li>Массив условно делится на две части: отсортированную (слева) и неотсортированную (справа)</li>
+<li>Изначально первый элемент считается отсортированным, остальные — неотсортированными</li>
+<li>Проходим по неотсортированной части (начиная со второго элемента):<ul>
+<li>Берем текущий элемент (ключ) из неотсортированной части</li>
+<li>Сравниваем его с элементами отсортированной части справа налево</li>
+<li>Сдвигаем элементы отсортированной части вправо, пока не найдем правильное место для ключа</li>
+<li>Вставляем ключ на найденное место</li>
+</ul>
+</li>
+<li>После обработки всех элементов массив полностью отсортирован</li>
+</ol>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Временная: <code>O(n²)</code> в худшем случае, <code>O(n)</code> в лучшем (почти отсортированный массив)</li>
+<li>Пространственная: <code>O(1)</code> — сортировка in-place</li>
+</ul>
+<p><strong>Когда эффективна:</strong></p>
+<ul>
+<li>Массив почти отсортирован</li>
+<li>Массив маленький (до 10-20 элементов)</li>
+<li>Добавление новых элементов в уже отсортированный массив</li>
+</ul>
+<p><strong>Применение:</strong> Insertion sort используется в Timsort (гибридный алгоритм в Python) для маленьких подмассивов.</p>
+<h3 id="эффективные-сортировки-on-log-n-и-лучше">Эффективные сортировки (<code>O(n log n)</code> и лучше)</h3>
+<p>Эти алгоритмы используются на практике и лежат в основе встроенных функций сортировки в большинстве языков программирования.</p>
+<h4 id="merge-sort-сортировка-слиянием">Merge Sort (Сортировка слиянием)</h4>
+<p><strong>Идея:</strong> разделяем массив на две половины, рекурсивно сортируем каждую половину, затем сливаем два отсортированных массива в один.</p>
+<p><strong>Примечание:</strong> Merge Sort — это классический пример подхода Divide and Conquer («Разделяй и властвуй»): задача делится на подзадачи, каждая решается рекурсивно, а результаты объединяются на шаге слияния.</p>
+<p><strong>Как работает:</strong></p>
+<pre><code class="language-text">[5, 2, 8, 1, 9]
+       |
+   [5, 2]  [8, 1, 9]      # делим пополам
+    |         |
+ [5] [2]   [8] [1, 9]     # продолжаем делить
+              |
+           [8] [1] [9]    # дошли до одного элемента
+              |
+           [8] [1, 9]     # сливаем [1] и [9]
+    |         |
+ [2, 5]   [1, 8, 9]       # сливаем половины
+       |
+[1, 2, 5, 8, 9]           # финальное слияние
+</code></pre>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Временная: <code>O(n log n)</code> во всех случаях</li>
+<li>Пространственная: <code>O(n)</code> — требуется дополнительная память для временных массивов</li>
+</ul>
+<p><strong>Преимущества:</strong></p>
+<ul>
+<li>Стабильная сортировка (сохраняет порядок равных элементов — подробнее ниже)</li>
+<li>Гарантированная <code>O(n log n)</code> сложность</li>
+<li>Подходит для внешней сортировки (когда данные не помещаются в памяти)</li>
+</ul>
+<p><strong>Применение:</strong> сортировка связных списков (не требует произвольного доступа), внешняя сортировка файлов.</p>
+<h4 id="quick-sort-быстрая-сортировка">Quick Sort (Быстрая сортировка)</h4>
+<p><strong>Идея:</strong> выбираем опорный элемент (pivot), переставляем массив так, чтобы все элементы меньше pivot были слева, а все больше — справа. Затем рекурсивно сортируем левую и правую части.</p>
+<p><strong>Примечание:</strong> Quick Sort также использует подход Divide and Conquer («Разделяй и властвуй»), но с несколько изменённым подходом. В отличие от Merge Sort, где вся работа происходит на этапе слияния (combine), в Quick Sort основная работа выполняется на этапе разделения (divide) через операцию partition, а этап combine фактически отсутствует — элементы уже на своих местах.</p>
+<p><strong>Как работает:</strong></p>
+<pre><code class="language-text">[5, 2, 8, 1, 9]  выбираем pivot = 5
+ ^
+[2, 1, 5, 8, 9]  элементы &lt; 5 слева, &gt;= 5 справа
+       ^
+[1, 2] 5 [8, 9]  рекурсивно сортируем части
+   ^       ^
+[1, 2, 5, 8, 9]  готово
+</code></pre>
+<p><strong>Реализация:</strong></p>
+<div class="tabs"><div class="tab-list" role="tablist" hidden><button type="button" role="tab" data-lang="Python">Python</button><button type="button" role="tab" data-lang="Java">Java</button><button type="button" role="tab" data-lang="Go">Go</button></div><div class="tab-panel" role="tabpanel" data-lang="Python"><p class="tab-label">Python</p><pre><code class="language-python">def quick_sort(arr):
+    # Базовый случай
+    if len(arr) &lt;= 1:
+        return arr
+
+    # Выбираем pivot (обычно средний элемент)
+    pivot = arr[len(arr) // 2]
+
+    # Разделяем на три части: меньше, равно, больше pivot
+    left = [x for x in arr if x &lt; pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x &gt; pivot]
+
+    # Рекурсивно сортируем и объединяем
+    return quick_sort(left) + middle + quick_sort(right)
+
+# Версия in-place (более эффективная по памяти)
+def quick_sort_inplace(arr, low, high):
+    if low &lt; high:
+        # Находим позицию pivot после разделения
+        pi = partition(arr, low, high)
+
+        # Рекурсивно сортируем части
+        quick_sort_inplace(arr, low, pi - 1)
+        quick_sort_inplace(arr, pi + 1, high)
+
+def partition(arr, low, high):
+    pivot = arr[high]  # Берём последний элемент как pivot
+    i = low - 1
+
+    for j in range(low, high):
+        if arr[j] &lt; pivot:
+            i += 1
+            arr[i], arr[j] = arr[j], arr[i]
+
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Java"><p class="tab-label">Java</p><pre><code class="language-java">public static void quickSort(int[] arr, int low, int high) {
+    if (low &lt; high) {
+        int pi = partition(arr, low, high);
+
+        // Рекурсивно сортируем части
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+private static int partition(int[] arr, int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+
+    for (int j = low; j &lt; high; j++) {
+        if (arr[j] &lt; pivot) {
+            i++;
+            // Меняем местами
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+
+    // Ставим pivot на правильное место
+    int temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+
+    return i + 1;
+}
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Go"><p class="tab-label">Go</p><pre><code class="language-go">func quickSort(arr []int, low, high int) {
+    if low &lt; high {
+        pi := partition(arr, low, high)
+
+        // Рекурсивно сортируем части
+        quickSort(arr, low, pi-1)
+        quickSort(arr, pi+1, high)
+    }
+}
+
+func partition(arr []int, low, high int) int {
+    pivot := arr[high]
+    i := low - 1
+
+    for j := low; j &lt; high; j++ {
+        if arr[j] &lt; pivot {
+            i++
+            arr[i], arr[j] = arr[j], arr[i]
+        }
+    }
+
+    arr[i+1], arr[high] = arr[high], arr[i+1]
+    return i + 1
+}
+</code></pre></div></div>
+<p><strong>Выбор pivot элемента:</strong></p>
+<ul>
+<li>Первый/последний элемент — простой, но плох для почти отсортированных массивов (<code>O(n²)</code>)</li>
+<li>Средний элемент — хороший баланс</li>
+<li>Случайный элемент — защита от худшего случая</li>
+<li>Медиана из трёх — выбираем медиану из первого, среднего и последнего элемента</li>
+</ul>
+<p><strong>Сложность:</strong></p>
+<ul>
+<li>Временная: <code>O(n log n)</code> в среднем случае, <code>O(n²)</code> в худшем (когда pivot всегда минимум/максимум)</li>
+<li>Пространственная: <code>O(log n)</code> для стека рекурсии</li>
+</ul>
+<p><strong>Почему называется «быстрой»:</strong></p>
+<ul>
+<li>На практике работает быстрее merge sort из-за меньшего количества операций</li>
+<li>Хорошая кэш-локальность (работает с соседними элементами)</li>
+<li>Сортировка in-place (не требует дополнительной памяти для данных)</li>
+</ul>
+<p><strong>Применение:</strong> стандартная сортировка в большинстве библиотек (с оптимизациями для предотвращения худшего случая).</p>
+<h3 id="оптимизированные-и-специализированные-сортировки">Оптимизированные и специализированные сортировки</h3>
+<h4 id="counting-sort-сортировка-подсчётом">Counting Sort (Сортировка подсчётом)</h4>
+<p><strong>Ключевая идея:</strong> подсчитываем частоту каждого значения, затем восстанавливаем отсортированный массив.</p>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-text">Массив: [4, 2, 2, 8, 3, 3, 1]
+
+Подсчитываем частоты:
+count[1]=1, count[2]=2, count[3]=2, count[4]=1, count[8]=1
+
+Восстанавливаем: [1, 2, 2, 3, 3, 4, 8]
+</code></pre>
+<p><strong>Сложность:</strong> <code>O(n + k)</code>, где k — диапазон значений</p>
+<p><strong>Когда применима:</strong></p>
+<ul>
+<li>Ограниченный диапазон значений (например, 0-100, возраст 0-120)</li>
+<li>Целые числа</li>
+<li>Пример: Sort Colors (LeetCode 75) — сортировка массива из 0, 1, 2</li>
+</ul>
+<p><strong>Когда НЕ использовать:</strong></p>
+<ul>
+<li>Большой диапазон значений при малом количестве элементов</li>
+<li>Нецелые числа</li>
+</ul>
+<p>На собеседованиях эта сортировка встречается редко, обычно в специфических задачах с ограниченным набором значений.</p>
+<h4 id="timsort">Timsort</h4>
+<p><strong>Ключевая идея:</strong> гибридный алгоритм, который комбинирует Merge Sort и Insertion Sort, используя преимущества обоих.</p>
+<p><strong>Как работает:</strong></p>
+<ul>
+<li>Делит массив на небольшие блоки (runs)</li>
+<li>Сортирует маленькие блоки через Insertion Sort (быстро для малых данных)</li>
+<li>Объединяет блоки через Merge Sort</li>
+</ul>
+<p><strong>Сложность:</strong> <code>O(n log n)</code> в среднем и худшем случае, <code>O(n)</code> в лучшем (почти отсортированные данные)</p>
+<p><strong>Применение:</strong></p>
+<ul>
+<li>Стандартная сортировка в Python (<code>sorted()</code>, <code>.sort()</code>)</li>
+<li>Стандартная сортировка объектов в Java (<code>Arrays.sort()</code> для объектов)</li>
+</ul>
+<p><strong>Почему эффективен:</strong> оптимизирован для реальных данных, которые часто частично отсортированы.</p>
+<p>На собеседованиях <strong>не нужно</strong> знать детали реализации Timsort — достаточно понимать, что это гибридный алгоритм с <code>O(n log n)</code> и что он используется в Python/Java.</p>
+<h4 id="dual-pivot-quicksort">Dual-Pivot Quicksort</h4>
+<p><strong>Ключевая идея:</strong> модификация Quick Sort, которая использует два опорных элемента (pivot) вместо одного.</p>
+<p><strong>Как работает:</strong></p>
+<ul>
+<li>Выбирает два опорных элемента: меньший и больший</li>
+<li>Делит массив на три части: элементы &lt; меньшего pivot, элементы между pivots, элементы &gt; большего pivot</li>
+<li>Рекурсивно сортирует каждую часть</li>
+</ul>
+<p><strong>Сложность:</strong> <code>O(n log n)</code> в среднем случае, <code>O(n²)</code> в худшем (как обычный Quick Sort)</p>
+<p><strong>Применение:</strong> cтандартная сортировка примитивов в Java (<code>Arrays.sort()</code> для int, double, и т.д.)</p>
+<p><strong>Почему эффективен:</strong> на практике работает быстрее классического Quick Sort благодаря меньшему количеству сравнений и лучшей кэш-локальности.</p>
+<p>На собеседованиях <strong>не нужно</strong> знать детали реализации Dual-Pivot Quicksort — достаточно понимать, что это оптимизированная версия Quick Sort, используемая в Java для примитивов.</p>
+<h2 id="стабильная-vs-нестабильная-сортировка">Стабильная vs нестабильная сортировка</h2>
+<p><strong>Стабильная сортировка</strong> сохраняет относительный порядок равных элементов.</p>
+<p><strong>Пример:</strong></p>
+<pre><code class="language-text">Исходный массив: [(3, &quot;a&quot;), (1, &quot;b&quot;), (3, &quot;c&quot;), (2, &quot;d&quot;)]
+Сортируем по первому элементу:
+
+Стабильная:   [(1, &quot;b&quot;), (2, &quot;d&quot;), (3, &quot;a&quot;), (3, &quot;c&quot;)]  # (3,&quot;a&quot;) перед (3,&quot;c&quot;)
+Нестабильная: [(1, &quot;b&quot;), (2, &quot;d&quot;), (3, &quot;c&quot;), (3, &quot;a&quot;)]  # порядок может измениться
+</code></pre>
+<p><strong>Когда важна стабильность:</strong></p>
+<ul>
+<li>Сортировка по нескольким критериям последовательно</li>
+<li>Сохранение порядка при равных значениях важно для логики</li>
+</ul>
+<p><strong>Пример использования стабильности:</strong></p>
+<pre><code class="language-python"># Сортируем людей сначала по возрасту, потом по имени
+people = [(&quot;Alice&quot;, 30), (&quot;Bob&quot;, 25), (&quot;Charlie&quot;, 30), (&quot;David&quot;, 25)]
+
+# Сначала сортируем по имени
+people.sort(key=lambda x: x[0])
+# [(&quot;Alice&quot;, 30), (&quot;Bob&quot;, 25), (&quot;Charlie&quot;, 30), (&quot;David&quot;, 25)]
+
+# Потом сортируем по возрасту (стабильная сортировка сохранит порядок имен!)
+people.sort(key=lambda x: x[1])
+# [(&quot;Bob&quot;, 25), (&quot;David&quot;, 25), (&quot;Alice&quot;, 30), (&quot;Charlie&quot;, 30)]
+# Bob перед David, Alice перед Charlie - порядок имен сохранился
+</code></pre>
+<p><strong>Встроенные сортировки:</strong></p>
+<ul>
+<li>Python: стабильная (Timsort)</li>
+<li>Java: стабильная для объектов (Timsort), нестабильная для примитивов (Dual-Pivot Quicksort)</li>
+<li>Go: нестабильная (quicksort с оптимизациями) — используйте <code>sort.SliceStable()</code> для стабильной сортировки</li>
+</ul>
+<h2 id="сравнение-алгоритмов-сортировки">Сравнение алгоритмов сортировки</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Алгоритм</th>
+<th>Лучший случай</th>
+<th>Средний случай</th>
+<th>Худший случай</th>
+<th>Память</th>
+<th>Стабильная</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bubble Sort</td>
+<td><code>O(n)</code></td>
+<td><code>O(n²)</code></td>
+<td><code>O(n²)</code></td>
+<td><code>O(1)</code></td>
+<td>Да</td>
+</tr>
+<tr>
+<td>Selection Sort</td>
+<td><code>O(n²)</code></td>
+<td><code>O(n²)</code></td>
+<td><code>O(n²)</code></td>
+<td><code>O(1)</code></td>
+<td>Нет</td>
+</tr>
+<tr>
+<td>Insertion Sort</td>
+<td><code>O(n)</code></td>
+<td><code>O(n²)</code></td>
+<td><code>O(n²)</code></td>
+<td><code>O(1)</code></td>
+<td>Да</td>
+</tr>
+<tr>
+<td>Merge Sort</td>
+<td><code>O(n log n)</code></td>
+<td><code>O(n log n)</code></td>
+<td><code>O(n log n)</code></td>
+<td><code>O(n)</code></td>
+<td>Да</td>
+</tr>
+<tr>
+<td>Quick Sort</td>
+<td><code>O(n log n)</code></td>
+<td><code>O(n log n)</code></td>
+<td><code>O(n²)</code></td>
+<td><code>O(log n)</code></td>
+<td>Нет</td>
+</tr>
+<tr>
+<td>Counting Sort</td>
+<td><code>O(n + k)</code></td>
+<td><code>O(n + k)</code></td>
+<td><code>O(n + k)</code></td>
+<td><code>O(k)</code></td>
+<td>Да</td>
+</tr>
+<tr>
+<td>Timsort</td>
+<td><code>O(n)</code></td>
+<td><code>O(n log n)</code></td>
+<td><code>O(n log n)</code></td>
+<td><code>O(n)</code></td>
+<td>Да</td>
+</tr>
+<tr>
+<td>Dual-Pivot Quicksort</td>
+<td><code>O(n log n)</code></td>
+<td><code>O(n log n)</code></td>
+<td><code>O(n²)</code></td>
+<td><code>O(log n)</code></td>
+<td>Нет</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="частые-задачи-на-сортировку">Частые задачи на сортировку</h2>
+<p><strong>Классические задачи, где сортировка необходима или является одним из стандартных решений:</strong></p>
+<h3 id="1-поиск-нескольких-чисел-с-заданной-суммой-3sum-4sum">1. Поиск нескольких чисел с заданной суммой (3Sum, 4Sum)</h3>
+<p><strong>Ключевая идея:</strong> сортировка + two pointers (два указателя)</p>
+<p><strong>Задача:</strong> дан массив целых чисел. Найти все уникальные тройки чисел, которые в сумме дают 0.</p>
+<p><strong>Пример:</strong></p>
+<ul>
+<li>Вход: <code>[-1, 0, 1, 2, -1, -4]</code></li>
+<li>Выход: <code>[[-1, -1, 2], [-1, 0, 1]]</code></li>
+</ul>
+<p><strong>Алгоритм:</strong></p>
+<ol>
+<li>Сортируем массив по возрастанию</li>
+<li>Перебираем массив, фиксируя первый элемент тройки (индекс <code>i</code>)</li>
+<li>Для каждого фиксированного элемента:<ul>
+<li>Ставим два указателя: <code>left</code> на элемент после <code>i</code>, <code>right</code> на конец массива</li>
+<li>Вычисляем сумму трёх элементов: <code>nums[i] + nums[left] + nums[right]</code></li>
+<li>Если сумма равна 0: добавляем тройку в результат, сдвигаем оба указателя</li>
+<li>Если сумма меньше 0: сдвигаем <code>left</code> вправо (увеличиваем сумму)</li>
+<li>Если сумма больше 0: сдвигаем <code>right</code> влево (уменьшаем сумму)</li>
+</ul>
+</li>
+<li>Важно: пропускаем дубликаты на всех уровнях (для <code>i</code>, <code>left</code> и <code>right</code>)</li>
+</ol>
+<p><strong>Сложность:</strong> <code>O(n²)</code> времени, <code>O(1)</code> памяти (не считая результата)</p>
+<p><strong>Примечание:</strong> все задачи типа nSum (3Sum, 4Sum, и т.д.) решаются через сортировку + two pointers. Однако для задачи 2Sum рекомендуется использовать HashMap.</p>
+<h3 id="2-слияние-перекрывающихся-интервалов-merge-intervals">2. Слияние перекрывающихся интервалов (Merge Intervals)</h3>
+<p><strong>Ключевая идея:</strong> сортировка по началу интервала, затем линейный проход</p>
+<p><strong>Задача:</strong> дан массив интервалов, где каждый интервал представлен как <code>[start, end]</code>. Объединить все перекрывающиеся интервалы и вернуть массив неперекрывающихся интервалов.</p>
+<p><strong>Пример:</strong></p>
+<ul>
+<li>Вход: <code>[[1, 3], [2, 6], [8, 10], [15, 18]]</code></li>
+<li>Выход: <code>[[1, 6], [8, 10], [15, 18]]</code></li>
+</ul>
+<p><strong>Алгоритм:</strong> ключевая идея — сортируем интервалы по началу, затем проходим линейно, объединяя перекрывающиеся интервалы.</p>
+<p><strong>Сложность:</strong> <code>O(n log n)</code> по времени (сортировка), <code>O(n)</code> по памяти</p>
+<h3 id="3-группировка-анаграмм-group-anagrams">3. Группировка анаграмм (Group Anagrams)</h3>
+<p><strong>Ключевая идея:</strong> сортировка символов каждого слова + HashMap для группировки</p>
+<p><strong>Задача:</strong> дан массив строк. Сгруппировать все анаграммы вместе. Анаграммы — это слова, состоящие из одинаковых букв в разном порядке.</p>
+<p><strong>Пример:</strong></p>
+<ul>
+<li>Вход: <code>["eat", "tea", "tan", "ate", "nat", "bat"]</code></li>
+<li>Выход: <code>[["eat", "tea", "ate"], ["tan", "nat"], ["bat"]]</code></li>
+</ul>
+<p><strong>Решение:</strong> ключевая идея — сортируем символы каждого слова и используем отсортированную строку как ключ в HashMap. Все анаграммы после сортировки символов дают одинаковую строку (<code>"eat"</code>, <code>"tea"</code>, <code>"ate"</code> → <code>"aet"</code>), поэтому группируются вместе.</p>
+<p><strong>Сложность:</strong> <code>O(n × k log k)</code>, где n — количество слов, k — средняя длина слова</p>
+<p><strong>Важно для интервью:</strong></p>
+<ul>
+<li><strong>Three Sum</strong> и <strong>Merge Intervals</strong> — сортировка является стандартным и ожидаемым решением</li>
+<li><strong>Group Anagrams</strong> — сортировка это классический подход; если интервьюер спросит про оптимизацию, можно упомянуть альтернативу через подсчет частот символов (<code>O(n × k)</code> вместо <code>O(n × k log k)</code>)</li>
+</ul>
+<p><strong>Когда НЕ нужно сортировать:</strong></p>
+<div class="tabs"><div class="tab-list" role="tablist" hidden><button type="button" role="tab" data-lang="Python">Python</button><button type="button" role="tab" data-lang="Java">Java</button><button type="button" role="tab" data-lang="Go">Go</button></div><div class="tab-panel" role="tabpanel" data-lang="Python"><p class="tab-label">Python</p><pre><code class="language-python"># Two Sum с HashMap: O(n) - лучше, чем сортировка O(n log n)
+def two_sum(nums, target):
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+
+# Проверка на анаграмму с HashMap: O(n) - эффективнее сортировки
+def is_anagram(s, t):
+    if len(s) != len(t):
+        return False
+    count = {}
+    for char in s:
+        count[char] = count.get(char, 0) + 1
+    for char in t:
+        if char not in count or count[char] == 0:
+            return False
+        count[char] -= 1
+    return True
+
+# Можно и через сортировку, но это O(n log n):
+def is_anagram_sorting(s, t):
+    return sorted(s) == sorted(t)  # Проще, но медленнее
+
+# Поиск дубликатов с HashSet: O(n) - эффективнее сортировки
+def find_duplicates(arr):
+    seen = set()
+    duplicates = []
+    for num in arr:
+        if num in seen:
+            duplicates.append(num)
+        else:
+            seen.add(num)
+    return duplicates
+
+# То же самое можно сделать с сортировкой, но это O(n log n):
+def find_duplicates_sorting(arr):
+    arr.sort()  # O(n log n)
+    duplicates = []
+    for i in range(1, len(arr)):
+        if arr[i] == arr[i-1]:
+            duplicates.append(arr[i])
+    return duplicates
+# Вывод: если можно за O(n) с HashMap — не сортируйте!
+
+# Проверка отсортированности массива: O(n)
+def is_sorted(arr):
+    for i in range(1, len(arr)):
+        if arr[i] &lt; arr[i-1]:
+            return False
+    return True
+
+# Можно и через сортировку, но это O(n log n):
+def is_sorted_with_sorting(arr):
+    return sorted(arr) == arr  # Проще, но медленнее
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Java"><p class="tab-label">Java</p><pre><code class="language-java">// Two Sum с HashMap: O(n) - лучше, чем сортировка O(n log n)
+public int[] twoSum(int[] nums, int target) {
+    Map&lt;Integer, Integer&gt; seen = new HashMap&lt;&gt;();
+    for (int i = 0; i &lt; nums.length; i++) {
+        int complement = target - nums[i];
+        if (seen.containsKey(complement)) {
+            return new int[]{seen.get(complement), i};
+        }
+        seen.put(nums[i], i);
+    }
+    return new int[]{};
+}
+
+// Проверка на анаграмму с HashMap: O(n) - эффективнее сортировки
+public boolean isAnagram(String s, String t) {
+    if (s.length() != t.length()) {
+        return false;
+    }
+    Map&lt;Character, Integer&gt; count = new HashMap&lt;&gt;();
+    for (char c : s.toCharArray()) {
+        count.put(c, count.getOrDefault(c, 0) + 1);
+    }
+    for (char c : t.toCharArray()) {
+        if (!count.containsKey(c) || count.get(c) == 0) {
+            return false;
+        }
+        count.put(c, count.get(c) - 1);
+    }
+    return true;
+}
+
+// Можно и через сортировку, но это O(n log n):
+public boolean isAnagramSorting(String s, String t) {
+    char[] sChars = s.toCharArray();
+    char[] tChars = t.toCharArray();
+    Arrays.sort(sChars);
+    Arrays.sort(tChars);
+    return Arrays.equals(sChars, tChars);  // Проще, но медленнее
+}
+
+// Поиск дубликатов с HashSet: O(n) - эффективнее сортировки
+public List&lt;Integer&gt; findDuplicates(int[] arr) {
+    Set&lt;Integer&gt; seen = new HashSet&lt;&gt;();
+    List&lt;Integer&gt; duplicates = new ArrayList&lt;&gt;();
+    for (int num : arr) {
+        if (seen.contains(num)) {
+            duplicates.add(num);
+        } else {
+            seen.add(num);
+        }
+    }
+    return duplicates;
+}
+
+// То же самое можно сделать с сортировкой, но это O(n log n):
+public List&lt;Integer&gt; findDuplicatesSorting(int[] arr) {
+    Arrays.sort(arr);  // O(n log n)
+    List&lt;Integer&gt; duplicates = new ArrayList&lt;&gt;();
+    for (int i = 1; i &lt; arr.length; i++) {
+        if (arr[i] == arr[i-1]) {
+            duplicates.add(arr[i]);
+        }
+    }
+    return duplicates;
+}
+// Вывод: если можно за O(n) с HashMap — не сортируйте!
+
+// Проверка отсортированности массива: O(n)
+public boolean isSorted(int[] arr) {
+    for (int i = 1; i &lt; arr.length; i++) {
+        if (arr[i] &lt; arr[i-1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Можно и через сортировку, но это O(n log n):
+public boolean isSortedWithSorting(int[] arr) {
+    int[] sorted = arr.clone();
+    Arrays.sort(sorted);
+    return Arrays.equals(arr, sorted);  // Проще, но медленнее
+}
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Go"><p class="tab-label">Go</p><pre><code class="language-go">// Two Sum с HashMap: O(n) - лучше, чем сортировка O(n log n)
+func twoSum(nums []int, target int) []int {
+    seen := make(map[int]int)
+    for i, num := range nums {
+        complement := target - num
+        if j, found := seen[complement]; found {
+            return []int{j, i}
+        }
+        seen[num] = i
+    }
+    return []int{}
+}
+
+// Проверка на анаграмму с HashMap: O(n) - эффективнее сортировки
+func isAnagram(s, t string) bool {
+    if len(s) != len(t) {
+        return false
+    }
+    count := make(map[rune]int)
+    for _, char := range s {
+        count[char]++
+    }
+    for _, char := range t {
+        count[char]--
+        if count[char] &lt; 0 {
+            return false
+        }
+    }
+    return true
+}
+
+// Можно и через сортировку, но это O(n log n):
+func isAnagramSorting(s, t string) bool {
+    sRunes := []rune(s)
+    tRunes := []rune(t)
+    sort.Slice(sRunes, func(i, j int) bool { return sRunes[i] &lt; sRunes[j] })
+    sort.Slice(tRunes, func(i, j int) bool { return tRunes[i] &lt; tRunes[j] })
+    return string(sRunes) == string(tRunes)  // Проще, но медленнее
+}
+
+// Поиск дубликатов с HashSet: O(n) - эффективнее сортировки
+func findDuplicates(arr []int) []int {
+    seen := make(map[int]bool)
+    duplicates := []int{}
+    for _, num := range arr {
+        if seen[num] {
+            duplicates = append(duplicates, num)
+        } else {
+            seen[num] = true
+        }
+    }
+    return duplicates
+}
+
+// То же самое можно сделать с сортировкой, но это O(n log n):
+func findDuplicatesSorting(arr []int) []int {
+    arrCopy := make([]int, len(arr))
+    copy(arrCopy, arr)
+    sort.Ints(arrCopy)  // O(n log n)
+    duplicates := []int{}
+    for i := 1; i &lt; len(arrCopy); i++ {
+        if arrCopy[i] == arrCopy[i-1] {
+            duplicates = append(duplicates, arrCopy[i])
+        }
+    }
+    return duplicates
+}
+// Вывод: если можно за O(n) с HashMap — не сортируйте!
+
+// Проверка отсортированности массива: O(n)
+func isSorted(arr []int) bool {
+    for i := 1; i &lt; len(arr); i++ {
+        if arr[i] &lt; arr[i-1] {
+            return false
+        }
+    }
+    return true
+}
+
+// Можно и через сортировку, но это O(n log n):
+func isSortedWithSorting(arr []int) bool {
+    arrCopy := make([]int, len(arr))
+    copy(arrCopy, arr)
+    sort.Ints(arrCopy)
+    for i := range arr {
+        if arr[i] != arrCopy[i] {
+            return false
+        }
+    }
+    return true  // Проще, но медленнее
+}
+</code></pre></div></div>
+<p><strong>Правило:</strong> сортируйте, только если это действительно упрощает задачу или требуется по условию.</p>
+<h2 id="заключение">Заключение</h2>
+<h3 id="что-мы-изучили">Что мы изучили</h3>
+<p>В этой статье мы изучили:</p>
+<ol>
+<li>
+<p><strong>Встроенные функции сортировки:</strong></p>
+<ul>
+<li>Python: <code>sorted()</code>, <code>list.sort()</code> с параметром <code>key</code></li>
+<li>Java: <code>Arrays.sort()</code>, <code>Collections.sort()</code> с <code>Comparator</code></li>
+<li>Go: <code>sort.Slice()</code>, <code>sort.Sort()</code> с пользовательскими функциями</li>
+</ul>
+</li>
+<li>
+<p><strong>Квадратичные сортировки <code>O(n²)</code>:</strong></p>
+<ul>
+<li>Bubble Sort, Selection Sort, Insertion Sort</li>
+<li>Просты в реализации, но медленны для больших данных</li>
+</ul>
+</li>
+<li>
+<p><strong>Эффективные сортировки <code>O(n log n)</code>:</strong></p>
+<ul>
+<li>Merge Sort: стабильная, гарантированная <code>O(n log n)</code>, требует <code>O(n)</code> памяти</li>
+<li>Quick Sort: быстрая на практике, in-place, в среднем <code>O(n log n)</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Оптимизированные сортировки:</strong></p>
+<ul>
+<li>Counting Sort: <code>O(n + k)</code> для ограниченного диапазона</li>
+<li>Timsort и Dual-Pivot Quicksort: гибридные алгоритмы в Python и Java</li>
+</ul>
+</li>
+<li>
+<p><strong>Когда использовать сортировку:</strong></p>
+<ul>
+<li>Задачи на два указателя, интервалы, поиск дубликатов</li>
+<li>Бинарный поиск требует отсортированный массив</li>
+</ul>
+</li>
+</ol>
+<h3 id="что-важно-знать">Что важно знать</h3>
+<p><strong>Обязательно:</strong></p>
+<ul>
+<li>Уметь использовать встроенную сортировку языка</li>
+<li>Знать, как сортировать с кастомным компаратором (по нескольким критериям)</li>
+<li>Понимать, что эффективная сортировка работает за <code>O(n log n)</code></li>
+<li>Знать Merge Sort и Quick Sort как примеры Divide and Conquer</li>
+<li>Распознавать задачи, где сортировка упрощает решение</li>
+</ul>
+<p><strong>Хорошо знать (но не критично):</strong></p>
+<ul>
+<li>Insertion Sort для малых массивов</li>
+<li>Counting Sort для специальных случаев</li>
+<li>Различие между стабильной и нестабильной сортировкой</li>
+<li>Timsort и Dual-Pivot Quicksort (что используется в вашем языке)</li>
+</ul>
+<p><strong>Не обязательно:</strong></p>
+<ul>
+<li>Реализация Bubble Sort и Selection Sort (учебные алгоритмы)</li>
+<li>Математические доказательства корректности</li>
+<li>Все возможные оптимизации Quick Sort</li>
+</ul>
+<h3 id="практические-рекомендации">Практические рекомендации</h3>
+<p><strong>На собеседовании:</strong></p>
+<ul>
+<li><strong>«Отсортируйте массив»</strong> — используйте встроенную функцию</li>
+<li><strong>«Реализуйте сортировку»</strong> — спросите про требования (стабильность, память, размер данных)</li>
+<li><strong>«Как бы вы отсортировали это?»</strong> — обсудите трейд-оффы (компромиссы по времени, памяти и стабильности)</li>
+<li>Умейте объяснить, почему выбрали конкретный алгоритм</li>
+</ul>
+<p><strong>Частые задачи с сортировкой:</strong></p>
+<ul>
+<li>Сортировка с кастомным компаратором (по нескольким критериям)</li>
+<li>Задачи на интервалы (сортировка + жадный алгоритм)</li>
+<li>Поиск k-го элемента</li>
+<li>Группировка и агрегация данных</li>
+</ul>
+<h3 id="что-делать-дальше">Что делать дальше</h3>
+<ul>
+<li>Решите несколько задач на сортировку с кастомным компаратором (по нескольким критериям)</li>
+<li>Реализуйте Merge Sort самостоятельно для полного понимания Divide and Conquer</li>
+<li>Тренируйтесь распознавать задачи, где помогает предварительная сортировка</li>
+</ul>
+        <nav class="pager" aria-label="Другие статьи"><a href="../complexity-advanced/"><span>← предыдущая</span>Продвинутая сложность и оптимизация</a><span></span></nav>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>

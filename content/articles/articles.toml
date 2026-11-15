@@ -1,0 +1,21 @@
+# Список статей. Порядок здесь = порядок на странице «Статьи».
+# Чтобы добавить статью: положите .md в эту папку, допишите блок ниже
+# и запустите `python3 tools/build_articles.py` из корня сайта.
+
+[[articles]]
+slug = "complexity"
+file = "complexity.md"
+title = "Сложность алгоритмов"
+description = "Что такое Big-O, как оценивать время и память и почему считают худший случай. На примере поиска книги в библиотеке."
+
+[[articles]]
+slug = "complexity-advanced"
+file = "complexity-advanced.md"
+title = "Продвинутая сложность и оптимизация"
+description = "Составные сложности вроде O(n·k), выбор между временем и памятью и разборы оптимизаций на реальных задачах."
+
+[[articles]]
+slug = "sorting"
+file = "sorting.md"
+title = "Сортировки"
+description = "Встроенные сортировки в Python, Java и Go, задачи, которые упрощаются после сортировки, и как устроены Merge Sort и Quick Sort."
