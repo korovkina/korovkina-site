@@ -25,6 +25,17 @@ ID видео в `data-yt` (часть ссылки после `watch?v=`), сс
 
 Править HTML в `articles/` вручную не нужно: при следующей сборке он перезапишется.
 
+## Картинка для превью ссылок
+
+Twitter, Telegram и другие сервисы показывают в превью `og.png` (русские страницы) и `og-en.png` (английская), 1200×630.
+Шаблон обложки — `tools/og-card.html`. Чтобы пересобрать картинки после правок, из корня сайта:
+
+```sh
+C="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+"$C" --headless=new --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=3000 --screenshot=og.png "file://$PWD/tools/og-card.html"
+"$C" --headless=new --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=3000 --screenshot=og-en.png "file://$PWD/tools/og-card.html#en"
+```
+
 ## Как посмотреть локально
 
 Откройте `index.html` в браузере двойным щелчком.

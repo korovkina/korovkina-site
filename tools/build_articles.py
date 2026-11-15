@@ -136,6 +136,11 @@ def head(title, description, canonical, depth):
   <meta property="og:title" content="{html.escape(title)}">
   <meta property="og:description" content="{html.escape(description)}">
   <meta property="og:url" content="{canonical}">
+  <meta property="og:image" content="https://korovkina.uk/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Татьяна Коровкина — алгоритмы и собеседования">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="{canonical}">
   <link rel="icon" href="{up}favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{up}styles.css">
