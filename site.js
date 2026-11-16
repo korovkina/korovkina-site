@@ -1,4 +1,4 @@
-// Вкладки с кодом в статьях и запуск видео на странице «Выступления».
+// Вкладки с кодом в статьях, запуск видео на странице «Выступления» и рыбки на главной.
 (function () {
   // ---------- вкладки: выбранный язык одинаковый во всех блоках страницы ----------
   var KEY = "code-lang";
@@ -50,4 +50,55 @@
       btn.replaceWith(frame);
     });
   });
+  // ---------- рыбки на цепочке: медленная (сверху) идёт на 1 ноду, быстрая (снизу) на 2 ----------
+  var chain = document.querySelector(".hero .nodes");
+  if (chain) {
+    var nodes = chain.querySelectorAll(".node");
+    var slow = document.createElement("span"), fast = document.createElement("span");
+    slow.className = "fish fish-slow"; fast.className = "fish fish-fast";
+    slow.setAttribute("aria-hidden", "true"); fast.setAttribute("aria-hidden", "true");
+    chain.appendChild(slow); chain.appendChild(fast);
+    var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // шаги: [нода медленной, нода быстрой (-1 — уплыла за None), видна ли быстрая]
+    var STEPS = [[0, 0, 1], [1, 2, 1], [2, -1, 0]];
+    var cur = calm ? 1 : 0, loops = 0;
+
+    function pos(i, below) {
+      var c = chain.getBoundingClientRect();
+      var r = i < 0 ? nodes[nodes.length - 1].getBoundingClientRect() : nodes[i].getBoundingClientRect();
+      var x = i < 0 ? r.right - c.left + 40 : r.left - c.left + r.width / 2 - 15;
+      var y = below ? r.bottom - c.top + 8 : r.top - c.top - 25;
+      return "translate(" + Math.round(x) + "px," + Math.round(y) + "px)";
+    }
+    function show(k, instant) {
+      var st = STEPS[k];
+      [slow, fast].forEach(function (f) { f.classList.toggle("no-anim", !!instant); });
+      slow.style.transform = pos(st[0], false);
+      fast.style.transform = pos(st[1], true);
+      fast.style.opacity = st[2];
+      slow.style.opacity = 1;
+      if (instant) { void chain.offsetWidth; [slow, fast].forEach(function (f) { f.classList.remove("no-anim"); }); }
+    }
+    function fits() {
+      // если цепочка переносится на две строки (телефон), рыбки не показываем
+      var t = nodes[0].getBoundingClientRect().top;
+      return Array.prototype.every.call(nodes, function (n) { return Math.abs(n.getBoundingClientRect().top - t) < 2; });
+    }
+    function layout() {
+      var ok = fits();
+      slow.hidden = fast.hidden = !ok;
+      if (ok) show(cur, true);
+    }
+    function tick() {
+      if (cur < STEPS.length - 1) { cur++; show(cur); setTimeout(tick, 1700); return; }
+      loops++;
+      if (loops >= 3) { cur = 1; show(cur); return; }       // три круга и отдыхаем
+      slow.style.opacity = 0;
+      setTimeout(function () { cur = 0; show(cur, true); setTimeout(tick, 1400); }, 900);
+    }
+    layout();
+    window.addEventListener("resize", layout);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+    if (!calm) setTimeout(tick, 1600);
+  }
 })();

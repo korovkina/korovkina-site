@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Рыба уплыла — Татьяна Коровкина</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .lost { min-height: 70vh; display: grid; align-content: center; padding-block: 64px; }
+    .lost-art { width: min(320px, 80%); height: auto; color: var(--brand); margin-bottom: 36px; overflow: visible; }
+    .lost-art .bubble { fill: none; stroke: currentColor; stroke-width: 1.4; }
+    .lost .lead code { font-size: 0.9em; background: var(--soft); padding: 1px 6px; border-radius: 5px; }
+    .lost .en { color: var(--muted); margin: 10px 0 0; }
+    @media (prefers-reduced-motion: no-preference) {
+      .lost-art .swim { animation: swim 6s ease-in-out infinite; }
+      @keyframes swim { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(14px, -5px); } }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="/">head</a></li>
+          <li><a href="/#about">Обо мне</a></li>
+          <li><a href="/#course">Курс</a></li>
+          <li><a href="/talks/">Выступления</a></li>
+          <li><a href="/articles/">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <nav class="lang-switch" aria-label="Язык сайта">
+        <span aria-current="true">RU</span>
+        <a href="/en/" hreflang="en" lang="en">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap lost">
+      <!-- нода, указатель next в пустоту и уплывающая рыба -->
+      <svg class="lost-art" viewBox="0 0 320 120" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+          <rect x="2" y="42" width="96" height="40" rx="8"/>
+          <path d="M64 42V82"/>
+          <circle cx="81" cy="62" r="4" fill="currentColor"/>
+          <path d="M98 62H150" stroke-dasharray="5 6"/>
+        </g>
+        <g class="swim">
+          <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" transform="translate(178 30) scale(4)">
+            <path d="M7 9C10.5 3.5 19 3 26.5 9C19 15 10.5 14.5 7 9ZM7 9L2 4.5V13.5Z" stroke-width="0.6"/>
+            <path d="M14.5 5.8Q13 9 14.5 12.2" stroke-width="0.55"/>
+            <circle cx="21.5" cy="8" r="1.1" fill="currentColor" stroke="none"/>
+          </g>
+          <circle class="bubble" cx="300" cy="30" r="5"/>
+          <circle class="bubble" cx="312" cy="12" r="3"/>
+        </g>
+      </svg>
+      <p class="eyebrow">404</p>
+      <h1 class="page-title">Рыба уплыла</h1>
+      <p class="lead">Такой страницы нет: указатель <code>next</code> ведёт в&nbsp;<code>None</code>.</p>
+      <p class="en" lang="en">Page not found: the fish swam away.</p>
+      <div class="actions">
+        <a class="btn primary" href="/">На главную</a>
+        <a class="btn ghost" href="/articles/">Статьи</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>
