@@ -8,32 +8,32 @@
 <style>
   html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
   body {
-    background: #0D1118; color: #E5E9F1; font-family: "Golos Text", sans-serif;
+    background: #F3F1EC; color: #18262D; font-family: "IBM Plex Sans", sans-serif;
     box-sizing: border-box; padding: 56px 72px 56px 72px;
     display: grid; grid-template-columns: minmax(0, 1fr) 376px; gap: 56px;
     background-image:
-      linear-gradient(90deg, #182033 1px, transparent 1px),
-      linear-gradient(0deg, #182033 1px, transparent 1px);
+      linear-gradient(90deg, #E6E2D9 1px, transparent 1px),
+      linear-gradient(0deg, #E6E2D9 1px, transparent 1px);
     background-size: 40px 40px;
   }
   .text { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
-  .top { font-family: "JetBrains Mono", monospace; font-size: 24px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #F0A54C; }
-  h1 { font-family: "Unbounded", sans-serif; font-weight: 700; font-size: 84px; line-height: 1.02; letter-spacing: -0.02em; margin: 0; }
-  h1 span { display: block; color: #8DA7FF; }
-  .tag { font-size: 30px; color: #C9D0DD; margin-top: 24px; line-height: 1.3; }
-  .nodes { display: flex; align-items: center; font-family: "JetBrains Mono", monospace; font-size: 22px; }
-  .node { display: inline-flex; border: 2px solid #E5E9F1; border-radius: 10px; overflow: hidden; background: #141A25; }
+  .top { font-family: "IBM Plex Mono", monospace; font-size: 24px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #467083; }
+  h1 { font-family: "Source Serif 4", serif; font-weight: 600; font-size: 104px; line-height: 1; letter-spacing: -0.02em; margin: 0; }
+  h1 span { display: block; color: #3B6577; }
+  .tag { font-size: 30px; color: #55646B; margin-top: 24px; line-height: 1.3; }
+  .nodes { display: flex; align-items: center; font-family: "IBM Plex Mono", monospace; font-size: 22px; }
+  .node { display: inline-flex; border: 2px solid #18262D; border-radius: 10px; overflow: hidden; background: #FBFAF7; }
   .node b { font-weight: 400; padding: 9px 16px; }
-  .node i { border-left: 2px solid #E5E9F1; width: 40px; display: grid; place-items: center; }
-  .node i::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #F0A54C; }
-  .node.last i::before { content: "∅"; width: auto; height: auto; background: none; color: #9AA3B6; font-style: normal; }
-  .arrow { width: 38px; height: 3px; background: #F0A54C; position: relative; margin: 0 6px 0 4px; }
-  .arrow::after { content: ""; position: absolute; right: -2px; top: 50%; transform: translateY(-50%); border-left: 11px solid #F0A54C; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+  .node i { border-left: 2px solid #18262D; width: 40px; display: grid; place-items: center; }
+  .node i::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #527E91; }
+  .node.last i::before { content: "∅"; width: auto; height: auto; background: none; color: #55646B; font-style: normal; }
+  .arrow { width: 38px; height: 3px; background: #527E91; position: relative; margin: 0 6px 0 4px; }
+  .arrow::after { content: ""; position: absolute; right: -2px; top: 50%; transform: translateY(-50%); border-left: 11px solid #527E91; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
   .side { display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; }
   .photo { position: relative; isolation: isolate; width: 360px; height: 450px; }
-  .photo img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 22px; border: 2px solid #E5E9F1; box-sizing: border-box; }
-  .photo::after { content: ""; position: absolute; inset: 16px -16px -16px 16px; border: 3px solid #F0A54C; border-radius: 22px; z-index: -1; }
-  .domain { font-family: "JetBrains Mono", monospace; font-size: 24px; color: #9AA3B6; text-align: right; }
+  .photo img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 22px; border: 2px solid #18262D; box-sizing: border-box; }
+  .photo::after { content: ""; position: absolute; inset: 16px -16px -16px 16px; border: 3px solid #527E91; border-radius: 22px; z-index: -1; }
+  .domain { font-family: "IBM Plex Mono", monospace; font-size: 24px; color: #55646B; text-align: right; }
 </style>
 </head>
 <body>
