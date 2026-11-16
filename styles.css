@@ -355,3 +355,6 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
   .hero-photo { order: -1; width: min(240px, 70%); }
 }
 .talk-info .talk-date { font-family: var(--f-mono, monospace); font-size: 0.8125rem; letter-spacing: 0.04em; color: var(--muted); order: -1; }
+
+/* фраза под блоком «Обо мне» */
+.motto { margin: clamp(32px, 5vw, 56px) 0 0; padding-left: 18px; border-left: 4px solid var(--ptr); font-weight: 700; font-size: clamp(1.2rem, 2.2vw, 1.5rem); line-height: 1.35; text-wrap: balance; max-width: 40ch; }
