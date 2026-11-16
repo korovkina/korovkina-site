@@ -191,8 +191,7 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 .course-format p + p { margin-top: 10px; color: var(--muted); font-size: 0.975rem; }
 
 /* channel */
-.rubrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
-@media (max-width: 560px) { .rubrics { grid-template-columns: minmax(0, 1fr); } }
+.rubrics { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin: 0; padding: 0; list-style: none; }
 .rubrics li { border-left: 3px solid var(--ptr); padding: 4px 0 4px 14px; }
 .rubrics strong { display: block; font-weight: 600; }
 .rubrics span { color: var(--muted); font-size: 0.9375rem; }
@@ -355,3 +354,4 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
   .hero-grid { grid-template-columns: minmax(0, 1fr); }
   .hero-photo { order: -1; width: min(240px, 70%); }
 }
+.talk-info .talk-date { font-family: var(--f-mono, monospace); font-size: 0.8125rem; letter-spacing: 0.04em; color: var(--muted); order: -1; }
