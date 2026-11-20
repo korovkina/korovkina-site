@@ -211,6 +211,122 @@
   refresh();
   window.siteRefresh = refresh;                    // course.js зовёт после расшифровки страницы
 
+  // ---------- 404: ищем запрошенный адрес бинарным поиском по страницам сайта ----------
+  var lostSearch = document.querySelector(".lost-search[data-pages]");
+  if (lostSearch) {
+    var pagesList = JSON.parse(lostSearch.dataset.pages);
+    var target = location.pathname;
+    try { target = decodeURIComponent(target); } catch (e) {}
+    lostSearch.hidden = false;
+    lostSearch.innerHTML = '<p class="ls-title">Ищу <code></code> бинарным поиском по страницам сайта</p>' +
+      '<ol class="ls-list" start="0"></ol><pre class="ls-log" aria-live="polite"></pre>';
+    lostSearch.querySelector("code").textContent = target;
+    var listEl = lostSearch.querySelector(".ls-list"), logEl = lostSearch.querySelector(".ls-log");
+    var rows = pagesList.map(function (path, i) {
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="ls-i">[' + i + ']</span><span class="ls-path"></span><span class="ls-mark"></span>';
+      li.querySelector(".ls-path").textContent = path;
+      listEl.appendChild(li);
+      return li;
+    });
+    var seeker = document.createElement("span");
+    seeker.className = "fish fish-search";
+    seeker.setAttribute("aria-hidden", "true");
+    listEl.appendChild(seeker);
+    paintFish(seeker);
+
+    var lo = 0, hi = pagesList.length - 1, log = [];
+    function q(s) { return "«" + s + "»"; }
+    function mark(mid) {
+      rows.forEach(function (r, i) {
+        r.classList.toggle("out", i < lo || i > hi);
+        r.classList.toggle("mid", i === mid);
+        var m = [];
+        if (i === lo) m.push("lo");
+        if (i === mid) m.push("mid");
+        if (i === hi) m.push("hi");
+        r.querySelector(".ls-mark").textContent = m.join(" ");
+      });
+    }
+    function point(i, instant) {
+      var r = rows[i];
+      moveFish(seeker, 8, r.offsetTop + r.offsetHeight / 2 - 7, instant);
+    }
+    function step() {
+      if (lo > hi) {
+        mark(-1);
+        log.push("lo=" + lo + " > hi=" + hi + " → None. Такой страницы нет.");
+        logEl.textContent = log.join("\n");
+        seeker.classList.add("gone");                // рыба уплывает
+        return false;
+      }
+      var mid = (lo + hi) >> 1, path = pagesList[mid], line = "lo=" + lo + " hi=" + hi + " mid=" + mid + ": " + q(path);
+      mark(mid);
+      point(mid, false);
+      if (path === target) { log.push(line + " = цель"); logEl.textContent = log.join("\n"); return false; }
+      if (path < target) { line += " < " + q(target) + " → lo = " + (mid + 1); lo = mid + 1; }
+      else { line += " > " + q(target) + " → hi = " + (mid - 1); hi = mid - 1; }
+      log.push(line);
+      logEl.textContent = log.join("\n");
+      return true;
+    }
+    point((lo + hi) >> 1, true);
+    mark(-1);
+    if (calmMotion) { while (step()) {} }
+    else setTimeout(function run() { if (step()) setTimeout(run, 1500); }, 900);
+  }
+
+  // ---------- пасхалка: наберите «fish» — стая расходится волной, как обход в ширину (BFS) по сетке ----------
+  function fishSchool(ox, oy) {
+    if (calmMotion || document.querySelector(".school")) return;
+    var cell = 56, cols = Math.ceil(window.innerWidth / cell), rowsN = Math.ceil(window.innerHeight / cell);
+    var sc = Math.min(cols - 1, Math.max(0, Math.floor(ox / cell))), sr = Math.min(rowsN - 1, Math.max(0, Math.floor(oy / cell)));
+    var dist = new Array(cols * rowsN), queue = [sr * cols + sc], head = 0, maxD = 0;
+    dist[sr * cols + sc] = 0;
+    while (head < queue.length) {                   // обычный BFS: соседи сверху, снизу, слева, справа
+      var v = queue[head++], r = Math.floor(v / cols), c = v % cols;
+      [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]].forEach(function (n) {
+        if (n[0] < 0 || n[0] >= rowsN || n[1] < 0 || n[1] >= cols) return;
+        var u = n[0] * cols + n[1];
+        if (dist[u] !== undefined) return;
+        dist[u] = dist[v] + 1;
+        maxD = Math.max(maxD, dist[u]);
+        queue.push(u);
+      });
+    }
+    var layer = document.createElement("div");
+    layer.className = "school";
+    layer.setAttribute("aria-hidden", "true");
+    queue.forEach(function (v) {
+      var r = Math.floor(v / cols), c = v % cols, f = document.createElement("span");
+      f.className = "fish fish-school";
+      f.style.left = (c * cell + cell / 2 - 11) + "px";
+      f.style.top = (r * cell + cell / 2 - 6) + "px";
+      f.style.setProperty("--dir", c < sc ? -1 : 1);
+      f.style.setProperty("--fish-color", "var(--fish-" + (1 + Math.floor(Math.random() * FISH_COLORS)) + ")");
+      f.style.animationDelay = (dist[v] * 55) + "ms";
+      layer.appendChild(f);
+    });
+    document.body.appendChild(layer);
+    setTimeout(function () { layer.remove(); }, maxD * 55 + 1300);
+  }
+  var typed = "", pointer = null;
+  document.addEventListener("pointermove", function (e) { pointer = [e.clientX, e.clientY]; }, { passive: true });
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey || !e.key || e.key.length !== 1) return;
+    if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
+    typed = (typed + e.key.toLowerCase()).slice(-4);
+    if (typed === "fish" || typed === "рыба") {
+      typed = "";
+      fishSchool(pointer ? pointer[0] : window.innerWidth / 2, pointer ? pointer[1] : window.innerHeight / 2);
+    }
+  });
+  // на телефоне клавиатуры нет: стаю можно выпустить нажатием на «next → None» в подвале
+  document.querySelectorAll(".site-foot .mono").forEach(function (el) {
+    el.addEventListener("click", function (e) { fishSchool(e.clientX, e.clientY); });
+  });
+  if (window.console && console.log) console.log("🐟 Наберите на странице «fish».");
+
   // ---------- видео: YouTube грузится только после нажатия ----------
   document.querySelectorAll(".talk-player[data-yt]").forEach(function (btn) {
     btn.addEventListener("click", function () {
