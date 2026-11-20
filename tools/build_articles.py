@@ -152,6 +152,7 @@ def site_header(up, current=""):
           <li><a class="head" href="{up}">head</a></li>
           <li><a href="{up}#about">Обо мне</a></li>
           <li><a href="{up}#course">Курс</a></li>
+          <li><a href="{up}#mentoring">Занятия</a></li>
           <li><a href="{up}talks/">Выступления</a></li>
           <li><a href="{up}articles/"{current}>Статьи</a></li>
           <li><span class="none">None</span></li>

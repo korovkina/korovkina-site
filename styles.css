@@ -248,6 +248,13 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 .eyebrow a:hover { text-decoration: underline; }
 
 /* home: materials teaser */
+/* блок «Занятия»: карточка с приглашением на бесплатную встречу */
+.cta-card { margin-top: 28px; padding: 22px 24px; border: 1px solid var(--line); border-left: 3px solid var(--brand); border-radius: 16px; background: var(--card); }
+.cta-card p { margin: 0; }
+.cta-card .cta-title { font-family: var(--f-display); font-size: 1.35rem; font-weight: 600; line-height: 1.25; }
+.cta-card p + p { margin-top: 8px; }
+.cta-card .btn { margin-top: 18px; }
+.cta-card .cta-note { margin-top: 12px; font-size: 0.875rem; color: var(--muted); }
 .more-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
 @media (max-width: 720px) { .more-grid { grid-template-columns: minmax(0, 1fr); } }
 .more-card {
