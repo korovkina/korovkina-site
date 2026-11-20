@@ -319,6 +319,53 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 .note > :first-child { margin-top: 0; }
 .note-label { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ptr); font-weight: 500; margin: 0 0 6px !important; }
 .note p { margin-top: 6px; }
+/* другие виды врезок: совет, важно, внимание */
+.note-tip { border-left-color: var(--fish-4); }
+.note-tip .note-label { color: var(--fish-4); }
+.note-important { border-left-color: var(--fish-6); }
+.note-important .note-label { color: var(--fish-6); }
+.note-warning { border-left-color: var(--fish-2); }
+.note-warning .note-label { color: var(--fish-2); }
+
+/* спойлеры в материалах курса: подсказки и разборы */
+.spoiler { margin: 20px 0 0; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.spoiler > summary {
+  cursor: pointer; padding: 12px 18px; font-weight: 600; list-style: none;
+  display: flex; align-items: center; gap: 10px;
+}
+.spoiler > summary::-webkit-details-marker { display: none; }
+.spoiler > summary::before { content: "▸"; color: var(--ptr); transition: transform .15s ease; }
+.spoiler[open] > summary::before { transform: rotate(90deg); }
+.spoiler > summary:hover { color: var(--accent); }
+.spoiler > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 12px; }
+.spoiler-body { padding: 0 18px 16px; border-top: 1px solid var(--line); }
+@media (prefers-reduced-motion: reduce) { .spoiler > summary::before { transition: none; } }
+
+/* списки задач в практике: группы в две колонки */
+.bubbles { margin-top: 20px; }
+.bubbles > ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.bubbles > ul > li { margin: 0; padding: 14px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.bubbles > ul > li > ul { padding-left: 1.1em; margin-top: 8px; }
+@media (max-width: 720px) { .bubbles > ul { grid-template-columns: minmax(0, 1fr); } }
+
+/* страница курса: темы и уроки */
+.lesson-meta { margin: 12px 0 0; font-family: var(--f-mono); font-size: 0.8125rem; color: var(--muted); }
+.course-module + .course-module { margin-top: 40px; }
+.course-module h2 { font-size: 1.45rem; line-height: 1.25; }
+.lesson-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+.lesson-row {
+  display: grid; grid-template-columns: 7.5rem minmax(0, 1fr) auto; gap: 4px 16px; align-items: baseline;
+  padding: 12px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--card);
+  color: var(--ink); text-decoration: none;
+}
+.lesson-row:hover { border-color: var(--accent); }
+.lesson-row .k, .lesson-row .m { font-family: var(--f-mono); font-size: 0.8125rem; color: var(--muted); }
+.lesson-row .k { color: var(--ptr); }
+.lesson-row strong { font-weight: 600; }
+@media (max-width: 600px) {
+  .lesson-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .lesson-row .k { grid-column: 1 / -1; }
+}
 
 /* code tabs */
 .tabs { margin-top: 16px; }

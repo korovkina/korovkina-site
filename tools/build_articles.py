@@ -6,7 +6,7 @@
 
 Понимает обычный Markdown (таблицы, блоки кода) и две особые конструкции из курса:
     ::: tabs / === Python / ... / :::   — вкладки с кодом на разных языках
-    > [!NOTE] текст                      — врезка-заметка
+    > [!NOTE] текст                      — врезка-заметка (а также TIP, IMPORTANT, WARNING, CAUTION)
 """
 import html
 import re
@@ -23,9 +23,27 @@ OUT = ROOT / "articles"
 
 MD_EXT = ["extra", "sane_lists"]
 
+# врезки вида > [!NOTE]: подпись и CSS-класс
+NOTE_KINDS = {
+    "NOTE": ("Заметка", "note"),
+    "TIP": ("Совет", "note note-tip"),
+    "IMPORTANT": ("Важно", "note note-important"),
+    "WARNING": ("Внимание", "note note-warning"),
+    "CAUTION": ("Осторожно", "note note-warning"),
+}
+
 
 def md_fragment(text):
     return markdown.markdown(text, extensions=MD_EXT)
+
+
+def fragment_with_blocks(text):
+    """Кусок Markdown внутри вкладки: тоже понимает врезки > [!NOTE]."""
+    body, blocks = extract_blocks(text)
+    out = md_fragment(body)
+    for n, b in enumerate(blocks):
+        out = out.replace(f"<p>BLOCKPLACEHOLDER{n}</p>", b)
+    return out
 
 
 def extract_blocks(text):
@@ -54,21 +72,23 @@ def extract_blocks(text):
             )
             panels = "".join(
                 f'<div class="tab-panel" role="tabpanel" data-lang="{html.escape(name)}">'
-                f'<p class="tab-label">{html.escape(name)}</p>{md_fragment(chr(10).join(body))}</div>'
+                f'<p class="tab-label">{html.escape(name)}</p>{fragment_with_blocks(chr(10).join(body))}</div>'
                 for name, body in tabs
             )
             blocks.append(f'<div class="tabs"><div class="tab-list" role="tablist" hidden>{buttons}</div>{panels}</div>')
             out += ["", f"BLOCKPLACEHOLDER{n}", ""]
             continue
-        m = re.match(r"^> \[!NOTE\]\s*(.*)$", line)
+        m = re.match(r"^> \[!(NOTE|TIP|WARNING|IMPORTANT|CAUTION)\]\s*(.*)$", line)
         if m:
-            body = [m.group(1)]
+            kind = m.group(1)
+            body = [m.group(2)]
             i += 1
             while i < len(lines) and lines[i].startswith(">"):
                 body.append(lines[i][1:].lstrip())
                 i += 1
             n = len(blocks)
-            blocks.append(f'<aside class="note"><p class="note-label">Заметка</p>{md_fragment(chr(10).join(body))}</aside>')
+            label, cls = NOTE_KINDS[kind]
+            blocks.append(f'<aside class="{cls}"><p class="note-label">{label}</p>{md_fragment(chr(10).join(body))}</aside>')
             out += ["", f"BLOCKPLACEHOLDER{n}", ""]
             continue
         out.append(line)
