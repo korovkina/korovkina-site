@@ -343,7 +343,8 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 .privacy-note { margin: 20px 0 0; color: var(--muted); font-size: 0.875rem; }
 
 /* ---------- hero photo ---------- */
-.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 16rem); gap: 40px 56px; align-items: center; }
+/* колонка фото узкая, чтобы текст слева переносился так же, как без фото */
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 13rem); gap: 40px 48px; align-items: center; }
 .hero-text { min-width: 0; }
 .hero-photo { margin: 0; position: relative; isolation: isolate; }
 .hero-photo img {
@@ -357,7 +358,22 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 /* фото сбоку, только пока цепочка «задача → … → собеседование» помещается в одну строку рядом с ним */
 @media (max-width: 1060px) {
   .hero-grid { grid-template-columns: minmax(0, 1fr); }
-  .hero-photo { order: -1; width: min(220px, 60%); }
+  .hero-photo { order: -1; width: min(200px, 55%); margin-top: 8px; }
+}
+
+/* рукописная приписка «это я» со стрелкой */
+.its-me {
+  position: absolute; bottom: calc(100% + 6px); left: -3.2rem;
+  display: flex; flex-direction: column; align-items: flex-start;
+  font-family: "Caveat", "Segoe Print", "Bradley Hand", cursive; font-weight: 500;
+  font-size: 2.1rem; line-height: 1; color: var(--brand); pointer-events: none;
+}
+.its-me-text { transform: rotate(-7deg); white-space: nowrap; }
+.its-me-arrow { width: 52px; height: 42px; margin: 2px 0 0 1.6rem; }
+/* на узком экране фото сверху: приписка справа от него, стрелка смотрит влево */
+@media (max-width: 1060px) {
+  .its-me { bottom: auto; top: 6%; left: calc(100% + 30px); }
+  .its-me-arrow { transform: scaleX(-1); margin: 4px 0 0 -0.6rem; }
 }
 .talk-info .talk-date { font-family: var(--f-mono, monospace); font-size: 0.8125rem; letter-spacing: 0.04em; color: var(--muted); order: -1; }
 
