@@ -122,6 +122,36 @@ def reading_minutes(md_text):
     return max(1, round(len(re.findall(r"\w+", prose)) / 180))
 
 
+def site_header(up, current=""):
+    """Ссылка «перейти к содержанию» и шапка: цепочка разделов, тема, язык. current — атрибуты для ссылки «Статьи»."""
+    return f"""  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="{up}">head</a></li>
+          <li><a href="{up}#about">Обо мне</a></li>
+          <li><a href="{up}#course">Курс</a></li>
+          <li><a href="{up}talks/">Выступления</a></li>
+          <li><a href="{up}articles/"{current}>Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <div class="head-tools">
+        <div class="theme-switch" role="group" aria-label="Тема оформления" hidden>
+          <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Светлая тема" title="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+          <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1Z"/></svg></button>
+        </div>
+        <nav class="lang-switch" aria-label="Язык сайта">
+          <span aria-current="true">RU</span>
+          <a href="{up}en/" hreflang="en" lang="en">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+"""
+
+
 def head(title, description, canonical, depth):
     up = "../" * depth
     return f"""<!doctype html>
@@ -148,32 +178,7 @@ def head(title, description, canonical, depth):
   <script src="{up}site.js" defer></script>
 </head>
 <body>
-  <a class="skip" href="#main">Перейти к содержанию</a>
-  <header class="site-head">
-    <div class="wrap head-row">
-      <nav aria-label="Разделы сайта">
-        <ol class="chain">
-          <li><a class="head" href="{up}">head</a></li>
-          <li><a href="{up}#about">Обо мне</a></li>
-          <li><a href="{up}#course">Курс</a></li>
-          <li><a href="{up}talks/">Выступления</a></li>
-          <li><a href="{up}articles/" aria-current="page">Статьи</a></li>
-          <li><span class="none">None</span></li>
-        </ol>
-      </nav>
-      <div class="head-tools">
-        <div class="theme-switch" role="group" aria-label="Тема оформления" hidden>
-          <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Светлая тема" title="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
-          <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1Z"/></svg></button>
-        </div>
-        <nav class="lang-switch" aria-label="Язык сайта">
-          <span aria-current="true">RU</span>
-          <a href="{up}en/" hreflang="en" lang="en">EN</a>
-        </nav>
-      </div>
-    </div>
-  </header>
-"""
+{site_header(up, ' aria-current="page"')}"""
 
 
 FOOT = """

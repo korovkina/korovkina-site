@@ -1,1 +1,4 @@
 .DS_Store
+# исходники закрытого курса и ключ: на GitHub не попадают (см. tools/build_course.py)
+course-src/
+__pycache__/

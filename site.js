@@ -36,11 +36,11 @@
   document.querySelectorAll(".site-foot .mono, .lost-art .swim").forEach(paintFish);
 
   // ---------- вкладки: выбранный язык одинаковый во всех блоках страницы ----------
+  // window.siteInitTabs() можно вызвать ещё раз, когда вкладки появились позже (расшифрованный курс)
   var KEY = "code-lang";
-  var groups = document.querySelectorAll(".tabs");
 
   function choose(lang, remember) {
-    groups.forEach(function (g) {
+    document.querySelectorAll(".tabs").forEach(function (g) {
       var panels = g.querySelectorAll(".tab-panel");
       var has = Array.prototype.some.call(panels, function (p) { return p.dataset.lang === lang; });
       var pick = has ? lang : panels[0].dataset.lang;
@@ -54,8 +54,10 @@
     if (remember) { try { localStorage.setItem(KEY, lang); } catch (e) {} }
   }
 
-  if (groups.length) {
-    groups.forEach(function (g) {
+  function initTabs() {
+    var fresh = document.querySelectorAll(".tabs:not(.tabs-ready)");
+    if (!fresh.length) return;
+    fresh.forEach(function (g) {
       g.classList.add("tabs-ready");
       g.querySelector(".tab-list").hidden = false;
       g.querySelectorAll('[role="tab"]').forEach(function (b) {
@@ -69,8 +71,10 @@
     });
     var saved = null;
     try { saved = localStorage.getItem(KEY); } catch (e) {}
-    choose(saved || groups[0].querySelector(".tab-panel").dataset.lang, false);
+    choose(saved || document.querySelector(".tabs .tab-panel").dataset.lang, false);
   }
+  initTabs();
+  window.siteInitTabs = initTabs;
 
   // ---------- видео: YouTube грузится только после нажатия ----------
   document.querySelectorAll(".talk-player[data-yt]").forEach(function (btn) {
