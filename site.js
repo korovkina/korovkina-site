@@ -35,6 +35,25 @@
   }
   document.querySelectorAll(".site-foot .mono, .lost-art .swim").forEach(paintFish);
 
+  // рыбка у кнопки «Оставить заявку» — тоже случайного цвета
+  document.querySelectorAll(".btn-fish").forEach(paintFish);
+
+  // спойлер открыли — из заголовка выплывает рыбка
+  var calmMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.addEventListener("toggle", function (e) {
+    var d = e.target;
+    if (calmMotion || !d.classList || !d.classList.contains("spoiler") || !d.open) return;
+    var summary = d.querySelector("summary"), f = summary.querySelector(".fish-spoiler");
+    if (!f) {
+      f = document.createElement("span");
+      f.className = "fish fish-spoiler";
+      f.setAttribute("aria-hidden", "true");
+      summary.appendChild(f);
+      paintFish(f);
+    }
+    f.classList.remove("go"); void f.offsetWidth; f.classList.add("go");
+  }, true);
+
   // переместить рыбку в точку (x, y) внутри её контейнера; рыбка разворачивается мордой туда, куда плывёт
   function moveFish(f, x, y, instant) {
     if (f._x !== undefined && Math.abs(x - f._x) > 1) f._left = x < f._x;
