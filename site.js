@@ -308,7 +308,7 @@
     document.body.appendChild(layer);
     setTimeout(function () { layer.remove(); }, maxD * 55 + 1300);
   }
-  var SCHOOL_WORDS = ["fish", "рыба", "bfs", "secret", "school"];   // любое из этих слов запускает стаю
+  var SCHOOL_WORDS = ["fish", "рыба", "рыбы", "косяк", "bfs", "secret", "school"];   // любое из этих слов запускает стаю
   var typed = "", pointer = null;
   document.addEventListener("pointermove", function (e) { pointer = [e.clientX, e.clientY]; }, { passive: true });
   document.addEventListener("keydown", function (e) {
