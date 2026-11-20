@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="440" viewBox="0 0 1000 440">
+  <defs>
+    <style>
+      text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;fill:#1c2434}
+      .title{font-size:20px;font-weight:700}
+      .h{font-size:18px;font-weight:650}
+      .cell{font-size:14px}
+      .idx{font-size:13px;font-weight:650;fill:#2f78b5}
+      .label{font-size:13px;fill:#5a6478}
+      .arr{fill:#e3f0fb;stroke:#2f78b5;stroke-width:2}
+      .hit{fill:#fdf0d8;stroke:#c08416;stroke-width:2.5}
+      .line{stroke:#6b7687;stroke-width:2.2;fill:none;marker-end:url(#a)}
+      .accent{stroke:#c08416;stroke-width:2.2;fill:none;marker-end:url(#ao)}
+      .sep{stroke:#dde2ea;stroke-width:1.5}
+      .good{fill:#1f7a46;font-size:14px;font-weight:650}
+    </style>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7687"/>
+    </marker>
+    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c08416"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="440" fill="#ffffff"/>
+  <text x="36" y="46" class="title">Массив в памяти: непрерывный блок с индексами</text>
+
+  <!-- ============ ЯЧЕЙКИ ============ -->
+  <text x="36" y="92" class="h">Полка с книгами: место у каждой книги своё, и оно пронумеровано</text>
+
+  <!-- индексы -->
+  <text x="150" y="128" class="idx" text-anchor="middle">[0]</text>
+  <text x="378" y="128" class="idx" text-anchor="middle">[1]</text>
+  <text x="606" y="128" class="idx" text-anchor="middle">[2]</text>
+  <text x="834" y="128" class="idx" text-anchor="middle">[3]</text>
+
+  <!-- ячейки -->
+  <rect x="36"  y="140" width="228" height="64" rx="6" class="arr"/>
+  <rect x="264" y="140" width="228" height="64" rx="6" class="arr"/>
+  <rect x="492" y="140" width="228" height="64" rx="6" class="hit"/>
+  <rect x="720" y="140" width="228" height="64" rx="6" class="arr"/>
+
+  <text x="150" y="167" class="cell" text-anchor="middle">«Война</text>
+  <text x="150" y="187" class="cell" text-anchor="middle">и мир»</text>
+
+  <text x="378" y="167" class="cell" text-anchor="middle">«Преступление</text>
+  <text x="378" y="187" class="cell" text-anchor="middle">и наказание»</text>
+
+  <text x="606" y="167" class="cell" text-anchor="middle">«Анна</text>
+  <text x="606" y="187" class="cell" text-anchor="middle">Каренина»</text>
+
+  <text x="834" y="167" class="cell" text-anchor="middle">«Мастер</text>
+  <text x="834" y="187" class="cell" text-anchor="middle">и Маргарита»</text>
+
+  <!-- скобка непрерывности -->
+  <path d="M36,222 L36,232 L948,232 L948,222" class="sep" fill="none"/>
+  <text x="492" y="252" class="label" text-anchor="middle">элементы лежат подряд, без разрывов — это и есть непрерывная область памяти</text>
+
+  <line x1="36" y1="282" x2="964" y2="282" class="sep"/>
+
+  <!-- ============ ДОСТУП ПО ИНДЕКСУ ============ -->
+  <text x="36" y="318" class="h">Доступ по индексу</text>
+
+  <rect x="36" y="336" width="160" height="42" rx="6" class="hit"/>
+  <text x="116" y="363" class="cell" text-anchor="middle" font-weight="650">books[2]</text>
+
+  <path d="M216,357 L430,357" class="accent"/>
+  <text x="323" y="347" class="label" text-anchor="middle">адрес = начало + 2 × размер</text>
+
+  <rect x="450" y="336" width="200" height="42" rx="6" class="hit"/>
+  <text x="550" y="363" class="cell" text-anchor="middle">«Анна Каренина»</text>
+
+  <text x="664" y="363" class="good">за один шаг — O(1)</text>
+
+  <text x="36" y="410" class="label">Перебирать элементы не нужно: зная номер, интерпретатор вычисляет адрес арифметикой.</text>
+</svg>

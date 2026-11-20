@@ -216,7 +216,7 @@ FOOT = """
 def main():
     meta = tomllib.loads((SRC / "articles.toml").read_text())["articles"]
     (OUT / "images").mkdir(parents=True, exist_ok=True)
-    for img in SRC.glob("*.png"):
+    for img in [*SRC.glob("*.png"), *SRC.glob("*.svg")]:
         shutil.copy2(img, OUT / "images" / img.name)
 
     cards = []
@@ -263,7 +263,7 @@ def main():
         )
 
     index = head("Статьи — Татьяна Коровкина",
-                 "Статьи Татьяны Коровкиной об алгоритмах: сложность, оптимизация, сортировки.",
+                 "Статьи Татьяны Коровкиной об алгоритмах: сложность, оптимизация, массивы, строки, связные списки, сортировки.",
                  "https://korovkina.uk/articles/", 1)
     index += f"""
   <main id="main">
@@ -271,7 +271,7 @@ def main():
       <div class="wrap">
         <p class="eyebrow">Статьи</p>
         <h1 class="page-title">Статьи об алгоритмах</h1>
-        <p class="lead">Подробные материалы, к которым удобно возвращаться при подготовке к собеседованиям. Код в примерах на Python, Java и Go.</p>
+        <p class="lead">Подробные материалы, к которым удобно возвращаться при подготовке к собеседованиям. Код в примерах на Python, Java, Go и других языках.</p>
       </div>
     </section>
     <section class="section">

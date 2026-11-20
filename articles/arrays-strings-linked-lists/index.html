@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Массивы, строки, связные списки — Татьяна Коровкина</title>
+  <meta name="description" content="Как базовые структуры устроены в памяти, сложность их операций, когда выбирать массив, а когда связный список, и ловушки строк в шести языках.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Массивы, строки, связные списки — Татьяна Коровкина">
+  <meta property="og:description" content="Как базовые структуры устроены в памяти, сложность их операций, когда выбирать массив, а когда связный список, и ловушки строк в шести языках.">
+  <meta property="og:url" content="https://korovkina.uk/articles/arrays-strings-linked-lists/">
+  <meta property="og:image" content="https://korovkina.uk/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Татьяна Коровкина — алгоритмы и собеседования">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://korovkina.uk/articles/arrays-strings-linked-lists/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="../../styles.css">
+  <script src="../../site.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="../../">head</a></li>
+          <li><a href="../../#about">Обо мне</a></li>
+          <li><a href="../../#course">Курс</a></li>
+          <li><a href="../../talks/">Выступления</a></li>
+          <li><a href="../../articles/" aria-current="page">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <div class="head-tools">
+        <div class="theme-switch" role="group" aria-label="Тема оформления" hidden>
+          <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Светлая тема" title="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+          <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1Z"/></svg></button>
+        </div>
+        <nav class="lang-switch" aria-label="Язык сайта">
+          <span aria-current="true">RU</span>
+          <a href="../../en/" hreflang="en" lang="en">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="article-page">
+    <div class="wrap article-layout">
+      <header class="article-head">
+        <p class="eyebrow"><a href="../">Статьи</a> · 20 мин чтения</p>
+        <h1 class="article-title">Массивы, строки, связные списки</h1>
+        <p class="lead">Как базовые структуры устроены в памяти, сложность их операций, когда выбирать массив, а когда связный список, и ловушки строк в шести языках.</p>
+      </header>
+      <aside class="article-toc" aria-label="Содержание">
+        <p class="toc-title">Содержание</p>
+        <ol><li><a href="#введение">Введение</a></li><li><a href="#пример-задачи-управление-библиотекой">Пример задачи: управление библиотекой</a></li><li><a href="#массивы">Массивы</a></li><li><a href="#связные-списки">Связные списки</a></li><li><a href="#сравнение-массивов-и-связных-списков">Сравнение массивов и связных списков</a></li><li><a href="#строки">Строки</a></li><li><a href="#специфика-по-языкам">Специфика по языкам</a></li><li><a href="#заключение">Заключение</a></li></ol>
+      </aside>
+      <article class="article-body">
+<h2 id="введение">Введение</h2>
+<p>Вы, скорее всего, уже знакомы с массивами, списками и строками и используете их каждый день. Возможно, это даже не первый материал, где вы встречаете эти структуры данных. Мы это понимаем и не будем учить вас базовому синтаксису.</p>
+<p>Вместо этого мы посмотрим на знакомые структуры <strong>под другим углом</strong> — с точки зрения алгоритмических интервью.</p>
+<h3 id="что-мы-будем-делать">Что мы будем делать</h3>
+<p>На интервью вас часто спрашивают не «как написать код», а:</p>
+<ul>
+<li>«Какая сложность этой операции?»</li>
+<li>«Почему вы выбрали массив, а не хэш-таблицу?»</li>
+<li>«Как это будет работать в памяти?»</li>
+<li>«В чём недостатки вашего подхода?»</li>
+</ul>
+<p>Чтобы отвечать на эти вопросы, нужно понимать:</p>
+<ol>
+<li><strong>Как структуры работают внутри</strong> — устройство памяти, указатели</li>
+<li><strong>Сложность операций</strong> — почему поиск в массиве O(n), а по индексу O(1)</li>
+<li><strong>Практическое применение</strong> — реальные сценарии, когда какую структуру выбрать</li>
+<li><strong>Трейд-офф</strong> (компромисс) — обмен временем на память, когда это оправдано</li>
+</ol>
+<h3 id="почему-это-важно-для-интервью">Почему это важно для интервью</h3>
+<p>На собеседовании от вас ожидают, что вы:</p>
+<ul>
+<li>Понимаете разницу между массивом и связным списком <strong>на уровне памяти</strong></li>
+<li>Знаете сложность операций «из коробки», не задумываясь</li>
+<li>Можете объяснить, почему в одной задаче лучше HashMap, а в другой — массив</li>
+<li>Понимаете последствия своего выбора для производительности</li>
+</ul>
+<h3 id="структуры-которые-мы-рассмотрим">Структуры, которые мы рассмотрим</h3>
+<p>В этом материале мы разберём три базовые структуры, которые вы, скорее всего, уже знаете, и посмотрим на них глубже:</p>
+<ul>
+<li><strong>Массивы</strong> — как устроены в памяти, почему доступ O(1)</li>
+<li><strong>Строки</strong> — Unicode, mutable vs immutable, особенности разных языков</li>
+<li><strong>Связные списки</strong> — устройство, указатели, когда они лучше массивов</li>
+</ul>
+<p>Мы не будем учить вас их использовать. Вы уже это умеете. Мы научим вас <strong>обосновывать свой выбор</strong> и <strong>понимать последствия</strong> — именно это нужно на алгоритмических интервью.</p>
+<h2 id="пример-задачи-управление-библиотекой">Пример задачи: управление библиотекой</h2>
+<p>В качестве примера до конца материала будем рассматривать систему управления библиотекой. Нам нужно хранить информацию о книгах, выполнять поиск, добавление и удаление. Разные структуры данных подойдут для разных задач.</p>
+<h2 id="массивы">Массивы</h2>
+<h3 id="что-такое-массив">Что такое массив</h3>
+<p><strong>Массив</strong> — это непрерывная область памяти, где хранятся элементы одного типа. Каждому элементу присваивается индекс, начиная с 0.</p>
+<p><strong>Пример из библиотеки</strong>: Полка с книгами, где на каждом месте стоит одна книга. Можем сразу обратиться к книге по её номеру на полке.</p>
+<p><img alt="Массив в памяти: непрерывный блок с индексами" src="../images/array-in-memory.svg" /></p>
+<div class="tabs"><div class="tab-list" role="tablist" hidden><button type="button" role="tab" data-lang="Python">Python</button><button type="button" role="tab" data-lang="Java">Java</button><button type="button" role="tab" data-lang="Go">Go</button><button type="button" role="tab" data-lang="JavaScript">JavaScript</button><button type="button" role="tab" data-lang="C#">C#</button><button type="button" role="tab" data-lang="PHP">PHP</button></div><div class="tab-panel" role="tabpanel" data-lang="Python"><p class="tab-label">Python</p><pre><code class="language-python"># Python
+# Создание массива (list)
+books = [&quot;Война и мир&quot;, &quot;Преступление и наказание&quot;, &quot;Анна Каренина&quot;]
+
+# Доступ по индексу
+first_book = books[0]  # O(1)
+
+# Добавление в конец
+books.append(&quot;Мастер и Маргарита&quot;)  # O(1)
+
+# Вывод элемента по индексу
+print(books[2])  # &quot;Анна Каренина&quot;
+</code></pre>
+<p>Роль массива играет <code>list</code> — динамический массив: внутри он хранит непрерывный блок ссылок на элементы (сами объекты лежат отдельно в куче), длину и ёмкость. Это обеспечивает O(1) доступ по индексу и автоматическое расширение. В дальнейшем говорим «массив», подразумевая <code>list</code>.</p></div><div class="tab-panel" role="tabpanel" data-lang="Java"><p class="tab-label">Java</p><pre><code class="language-java">// Java
+import java.util.*;
+
+// Создание массива
+String[] books = new String[3];
+books[0] = &quot;Война и мир&quot;;
+books[1] = &quot;Преступление и наказание&quot;;
+books[2] = &quot;Анна Каренина&quot;;
+
+// Или ArrayList (динамический массив)
+List&lt;String&gt; bookList = new ArrayList&lt;&gt;();
+bookList.add(&quot;Война и мир&quot;);
+bookList.add(&quot;Преступление и наказание&quot;);
+
+// Доступ по индексу
+String firstBook = bookList.get(0);  // O(1)
+</code></pre>
+<p>В Java два типа: <code>T[]</code> — массив фиксированного размера с полем <code>length</code>, и <code>ArrayList&lt;T&gt;</code> — динамический массив-обёртка (внутри хранит массив <code>elementData</code> и поле <code>size</code>). Для алгоритмических задач чаще используйте <code>ArrayList</code>: динамический размер, удобные методы. Обычный массив применяйте, когда размер фиксирован и известен заранее.</p></div><div class="tab-panel" role="tabpanel" data-lang="Go"><p class="tab-label">Go</p><pre><code class="language-go">// Go
+// Создание среза (slice)
+books := []string{&quot;Война и мир&quot;, &quot;Преступление и наказание&quot;, &quot;Анна Каренина&quot;}
+
+// Доступ по индексу
+firstBook := books[0]  // O(1)
+
+// Добавление в конец
+books = append(books, &quot;Мастер и Маргарита&quot;)  // O(1)
+
+// Вывод элемента по индексу
+fmt.Println(books[2])  // &quot;Анна Каренина&quot;
+</code></pre>
+<p>В Go два типа: <code>[N]T</code> — классический массив фиксированного размера (размер является частью типа и известен при компиляции), и <code>[]T</code> (slice) — динамический массив. Slice хранит указатель на первый элемент, длину (<code>len</code>) и ёмкость (<code>cap</code>). В дальнейшем говорим «массив», подразумевая slice.</p></div><div class="tab-panel" role="tabpanel" data-lang="JavaScript"><p class="tab-label">JavaScript</p><pre><code class="language-js">// JavaScript
+// Создание массива
+const books = [&quot;Война и мир&quot;, &quot;Преступление и наказание&quot;, &quot;Анна Каренина&quot;];
+
+// Доступ по индексу
+const firstBook = books[0];  // O(1)
+
+// Добавление в конец
+books.push(&quot;Мастер и Маргарита&quot;);  // O(1)
+
+// Вывод элемента по индексу
+console.log(books[2]);  // &quot;Анна Каренина&quot;
+</code></pre>
+<p>Роль массива играет <code>Array</code> — всегда динамический массив: ни фиксированного размера, ни единого типа элементов у него нет. Добавление и удаление в конце (<code>push</code>/<code>pop</code>) — O(1), вставка и удаление в начале (<code>unshift</code>/<code>shift</code>) — O(n): все остальные элементы сдвигаются.</p></div><div class="tab-panel" role="tabpanel" data-lang="C#"><p class="tab-label">C#</p><pre><code class="language-csharp">// C#
+// Создание массива фиксированного размера
+string[] books = { &quot;Война и мир&quot;, &quot;Преступление и наказание&quot;, &quot;Анна Каренина&quot; };
+
+// Доступ по индексу
+string firstBook = books[0];  // O(1)
+
+// Или List&lt;T&gt; (динамический массив)
+var bookList = new List&lt;string&gt; { &quot;Война и мир&quot;, &quot;Преступление и наказание&quot; };
+bookList.Add(&quot;Мастер и Маргарита&quot;);  // O(1) амортизированно (в среднем по серии вставок)
+
+// Вывод элемента по индексу
+Console.WriteLine(bookList[1]);  // &quot;Преступление и наказание&quot;
+</code></pre>
+<p>В C# два типа: <code>T[]</code> — массив фиксированного размера со свойством <code>Length</code>, и <code>List&lt;T&gt;</code> — динамический массив-обёртка (внутри хранит массив и поле <code>Count</code>). Для алгоритмических задач чаще используйте <code>List&lt;T&gt;</code>: динамический размер, удобные методы. Обычный массив применяйте, когда размер фиксирован и известен заранее.</p></div><div class="tab-panel" role="tabpanel" data-lang="PHP"><p class="tab-label">PHP</p><pre><code class="language-php">// PHP
+// Создание массива
+$books = [&quot;Война и мир&quot;, &quot;Преступление и наказание&quot;, &quot;Анна Каренина&quot;];
+
+// Доступ по индексу
+$firstBook = $books[0];  // O(1)
+
+// Добавление в конец
+$books[] = &quot;Мастер и Маргарита&quot;;  // O(1) амортизированно (в среднем по серии вставок)
+
+// Вывод элемента по индексу
+echo $books[2] . PHP_EOL;  // &quot;Анна Каренина&quot;
+</code></pre>
+<p>В PHP единственный тип массива — <code>array</code>: упорядоченная хеш-таблица, причём для списка с ключами 0, 1, 2, … внутри используется компактное представление «плоским» блоком. Размер динамический, типы элементов могут быть разными. Массив фиксированного размера даёт класс <code>SplFixedArray</code>. Присваивание и передача массива в функцию копируют его (лениво, copy-on-write), поэтому изменение «на месте» внутри функции требует параметра по ссылке: <code>array &amp;$arr</code>.</p></div></div>
+<p>Подробнее об устройстве этих типов, с ссылками на документацию, — в разделе «Специфика по языкам» в конце материала.</p>
+<h3 id="сложность-операций-с-массивом">Сложность операций с массивом</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Операция</th>
+<th>Сложность</th>
+<th>Пояснение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Доступ по индексу</td>
+<td>O(1)</td>
+<td>Прямой доступ к памяти</td>
+</tr>
+<tr>
+<td>Поиск значения</td>
+<td>O(n)</td>
+<td>Нужно перебрать все элементы</td>
+</tr>
+<tr>
+<td>Вставка в конец</td>
+<td>O(1)</td>
+<td>Доступ по индексу и добавление</td>
+</tr>
+<tr>
+<td>Вставка в начало</td>
+<td>O(n)</td>
+<td>Сдвигаем все элементы</td>
+</tr>
+<tr>
+<td>Удаление из конца</td>
+<td>O(1)</td>
+<td>Просто уменьшаем размер</td>
+</tr>
+<tr>
+<td>Удаление из середины</td>
+<td>O(n)</td>
+<td>Сдвигаем элементы</td>
+</tr>
+</tbody>
+</table></div>
+<p>Для массивов фиксированного размера (<code>T[]</code> в Java и C#, <code>[N]T</code> в Go, <code>SplFixedArray</code> в PHP) доступны только операции:</p>
+<ul>
+<li>Доступ по индексу — O(1)</li>
+<li>Замена элемента по индексу — O(1)</li>
+<li>Поиск значения — O(n)</li>
+</ul>
+<p>Вставка, удаление и изменение размера невозможны: размер фиксирован при создании. В Python и JavaScript массивов фиксированного размера нет: <code>list</code> и <code>Array</code> всегда динамические. В PHP так же ведёт себя обычный <code>array</code>; фиксированный размер появляется только у <code>SplFixedArray</code>.</p>
+<h3 id="преимущества-массивов">Преимущества массивов</h3>
+<ol>
+<li><strong>O(1) доступ по индексу</strong> — прямой доступ к любому элементу за константное время</li>
+<li><strong>O(1) вставка в конец</strong> (для динамических массивов) — можно быстро добавлять элементы в конец</li>
+</ol>
+<h3 id="недостатки-массивов">Недостатки массивов</h3>
+<ol>
+<li><strong>O(n) поиск по значению</strong> — нужно перебрать все элементы</li>
+<li><strong>O(n) вставка/удаление</strong> в начале или середине — сдвигаем элементы</li>
+</ol>
+<h2 id="связные-списки">Связные списки</h2>
+<h3 id="что-такое-связный-список">Что такое связный список</h3>
+<p><strong>Связный список</strong> — это структура данных, где элементы хранятся в узлах. Каждый узел содержит:</p>
+<ol>
+<li><strong>Данные</strong> (значение)</li>
+<li><strong>Указатель</strong> (ссылку) на следующий узел</li>
+</ol>
+<p><strong>Пример из библиотеки</strong>: Книги стоят на полке в случайном порядке, но в каждой книге есть закладка с указанием, где лежит следующая книга.</p>
+<p><img alt="Связный список: узлы и ссылки" src="../images/linked-list-structure.svg" /></p>
+<p>В большинстве языков программирования связного списка нет среди встроенных типов, и на собеседовании его пишут руками: узел — это класс или структура с полем данных и ссылкой <code>next</code>. Готовые реализации кое-где есть (например, <code>java.util.LinkedList</code> в Java, <code>LinkedList&lt;T&gt;</code> в C# или <code>SplDoublyLinkedList</code> в PHP), но в алгоритмических задачах ими почти не пользуются: интервьюер ждёт работы с узлами напрямую. Вот как связный список выглядит на шести языках курса:</p>
+<div class="tabs"><div class="tab-list" role="tablist" hidden><button type="button" role="tab" data-lang="Python">Python</button><button type="button" role="tab" data-lang="Java">Java</button><button type="button" role="tab" data-lang="Go">Go</button><button type="button" role="tab" data-lang="JavaScript">JavaScript</button><button type="button" role="tab" data-lang="C#">C#</button><button type="button" role="tab" data-lang="PHP">PHP</button></div><div class="tab-panel" role="tabpanel" data-lang="Python"><p class="tab-label">Python</p><pre><code class="language-python"># Python
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            return
+
+        current = self.head
+        while current.next:
+            current = current.next
+        current.next = new_node
+
+    def print_list(self):
+        current = self.head
+        while current:
+            print(current.data)
+            current = current.next
+
+# Использование
+library = LinkedList()
+library.append(&quot;Война и мир&quot;)
+library.append(&quot;Преступление и наказание&quot;)
+library.print_list()
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Java"><p class="tab-label">Java</p><pre><code class="language-java">// Java
+class Node {
+    String data;
+    Node next;
+
+    Node(String data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    Node head;
+
+    void append(String data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+
+        Node current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+        current.next = newNode;
+    }
+
+    void printList() {
+        Node current = head;
+        while (current != null) {
+            System.out.println(current.data);
+            current = current.next;
+        }
+    }
+}
+
+// Использование
+LinkedList library = new LinkedList();
+library.append(&quot;Война и мир&quot;);
+library.append(&quot;Преступление и наказание&quot;);
+library.printList();
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Go"><p class="tab-label">Go</p><pre><code class="language-go">// Go
+type Node struct {
+    data string
+    next *Node
+}
+
+type LinkedList struct {
+    head *Node
+}
+
+func (ll *LinkedList) Append(data string) {
+    newNode := &amp;Node{data: data, next: nil}
+
+    if ll.head == nil {
+        ll.head = newNode
+        return
+    }
+
+    current := ll.head
+    for current.next != nil {
+        current = current.next
+    }
+    current.next = newNode
+}
+
+func (ll *LinkedList) PrintList() {
+    current := ll.head
+    for current != nil {
+        fmt.Println(current.data)
+        current = current.next
+    }
+}
+
+// Использование
+library := &amp;LinkedList{}
+library.Append(&quot;Война и мир&quot;)
+library.Append(&quot;Преступление и наказание&quot;)
+library.PrintList()
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="JavaScript"><p class="tab-label">JavaScript</p><pre><code class="language-js">// JavaScript
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        this.head = null;
+    }
+
+    append(data) {
+        const newNode = new Node(data);
+        if (!this.head) {
+            this.head = newNode;
+            return;
+        }
+
+        let current = this.head;
+        while (current.next) {
+            current = current.next;
+        }
+        current.next = newNode;
+    }
+
+    printList() {
+        let current = this.head;
+        while (current) {
+            console.log(current.data);
+            current = current.next;
+        }
+    }
+}
+
+// Использование
+const library = new LinkedList();
+library.append(&quot;Война и мир&quot;);
+library.append(&quot;Преступление и наказание&quot;);
+library.printList();
+</code></pre>
+<p>Встроенного связного списка в JavaScript нет: узел пишут классом, как выше, или простым объектом вида <code>{ data, next }</code>.</p></div><div class="tab-panel" role="tabpanel" data-lang="C#"><p class="tab-label">C#</p><pre><code class="language-csharp">// C#
+class Node
+{
+    public string Data;
+    public Node Next;
+
+    public Node(string data)
+    {
+        Data = data;
+        Next = null;
+    }
+}
+
+class LinkedList
+{
+    public Node Head;
+
+    public void Append(string data)
+    {
+        var newNode = new Node(data);
+        if (Head == null)
+        {
+            Head = newNode;
+            return;
+        }
+
+        Node current = Head;
+        while (current.Next != null)
+        {
+            current = current.Next;
+        }
+        current.Next = newNode;
+    }
+
+    public void PrintList()
+    {
+        Node current = Head;
+        while (current != null)
+        {
+            Console.WriteLine(current.Data);
+            current = current.Next;
+        }
+    }
+}
+
+// Использование
+var library = new LinkedList();
+library.Append(&quot;Война и мир&quot;);
+library.Append(&quot;Преступление и наказание&quot;);
+library.PrintList();
+</code></pre>
+<p>В стандартной библиотеке C# есть <code>LinkedList&lt;T&gt;</code> (двусвязный), но на собеседовании узлы пишут руками, как выше.</p></div><div class="tab-panel" role="tabpanel" data-lang="PHP"><p class="tab-label">PHP</p><pre><code class="language-php">// PHP
+class Node
+{
+    public ?Node $next = null;
+
+    public function __construct(public string $data)
+    {
+    }
+}
+
+class LinkedList
+{
+    public ?Node $head = null;
+
+    public function append(string $data): void
+    {
+        $newNode = new Node($data);
+        if ($this-&gt;head === null) {
+            $this-&gt;head = $newNode;
+            return;
+        }
+
+        $current = $this-&gt;head;
+        while ($current-&gt;next !== null) {
+            $current = $current-&gt;next;
+        }
+        $current-&gt;next = $newNode;
+    }
+
+    public function printList(): void
+    {
+        $current = $this-&gt;head;
+        while ($current !== null) {
+            echo $current-&gt;data . PHP_EOL;
+            $current = $current-&gt;next;
+        }
+    }
+}
+
+// Использование
+$library = new LinkedList();
+$library-&gt;append(&quot;Война и мир&quot;);
+$library-&gt;append(&quot;Преступление и наказание&quot;);
+$library-&gt;printList();
+</code></pre>
+<p>В стандартной библиотеке PHP (SPL) есть <code>SplDoublyLinkedList</code> (двусвязный), но на собеседовании узлы пишут руками, как выше. Объекты в PHP передаются по handle (как ссылки), поэтому присваивание <code>$current = $current-&gt;next</code> перемещает указатель, а не копирует узел.</p></div></div>
+<h3 id="сложность-операций-в-связном-списке">Сложность операций в связном списке</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Операция</th>
+<th>Сложность</th>
+<th>Пояснение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Доступ по индексу</td>
+<td>O(n)</td>
+<td>Нужно пройти от начала</td>
+</tr>
+<tr>
+<td>Доступ к голове</td>
+<td>O(1)</td>
+<td>Если есть указатель на голову</td>
+</tr>
+<tr>
+<td>Вставка в голову</td>
+<td>O(1)</td>
+<td>Создаём узел и обновляем указатель на голову</td>
+</tr>
+<tr>
+<td>Вставка в конец</td>
+<td>O(n)</td>
+<td>Проходим до конца</td>
+</tr>
+<tr>
+<td>Удаление из головы</td>
+<td>O(1)</td>
+<td>Перемещаем head на следующий узел</td>
+</tr>
+<tr>
+<td>Поиск значения</td>
+<td>O(n)</td>
+<td>Проходим все элементы</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="преимущества-связного-списка-перед-массивом">Преимущества связного списка перед массивом</h3>
+<ol>
+<li><strong>O(1) вставка и удаление в начале</strong> — если есть указатель на голову, можно быстро добавлять/удалять элементы</li>
+</ol>
+<h3 id="недостатки-связного-списка-перед-массивом">Недостатки связного списка перед массивом</h3>
+<ol>
+<li><strong>O(n) доступ</strong> по индексу.</li>
+<li><strong>O(n) вставка</strong> в конец (если нет ссылки на последний узел).</li>
+<li><strong>Дополнительная память</strong> на указатели <code>next</code> в каждом узле.</li>
+<li><strong>Однонаправленность</strong>: в односвязных списках невозможен обход в обратном направлении, что ограничивает использование в некоторых алгоритмах.</li>
+</ol>
+<h2 id="сравнение-массивов-и-связных-списков">Сравнение массивов и связных списков</h2>
+<h3 id="таблица-сложностей">Таблица сложностей</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Операция</th>
+<th>Массив</th>
+<th>Связный список</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Доступ по индексу</td>
+<td>O(1)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>Вставка в начало</td>
+<td>O(n)</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td>Вставка в конец</td>
+<td>O(1)*</td>
+<td>O(n)**</td>
+</tr>
+<tr>
+<td>Удаление из начала</td>
+<td>O(n)</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td>Поиск элемента</td>
+<td>O(n)</td>
+<td>O(n)</td>
+</tr>
+</tbody>
+</table></div>
+<p>* Для динамического массива, O(1) амортизированно: отдельная вставка иногда дорогая (место кончилось, массив увеличивается и копирует элементы), но такое случается редко, и в среднем по серии вставок цена одной остаётся константной.</p>
+<p>** O(1), если дополнительно хранить указатель на хвост (tail).</p>
+<p><img alt="Вставка в начало: массив и связный список" src="../images/array-vs-linked-list.svg" /></p>
+<h3 id="когда-что-использовать">Когда что использовать</h3>
+<p><strong>Массив:</strong></p>
+<ul>
+<li>Частый доступ по индексу</li>
+<li>Не нужен поиск по значению</li>
+<li>Размер известен заранее (для фиксированных массивов)</li>
+</ul>
+<p><strong>Связный список:</strong></p>
+<ul>
+<li>Частые вставки/удаления в начале</li>
+<li>Не нужен доступ по индексу</li>
+<li>Размер неизвестен заранее (также подойдет динамический массив)</li>
+</ul>
+<h3 id="практические-примеры">Практические примеры</h3>
+<p><strong>Пример 1: Выбор структуры для каталога библиотеки</strong></p>
+<p>Если нам нужно:</p>
+<ul>
+<li>Быстро находить книгу по номеру → <strong>Массив</strong></li>
+<li>Часто добавлять книги в начало → <strong>Связный список</strong></li>
+<li>И то, и другое → <strong>Комбинированная структура</strong> (например, хэш-таблица + связный список)</li>
+</ul>
+<p><strong>Пример 2: Выбор структуры для истории изменений</strong></p>
+<p>Если нам нужно:</p>
+<ul>
+<li>Хранить историю операций в хронологическом порядке</li>
+<li>Добавлять новые записи в конец</li>
+<li>Редко удалять из середины</li>
+</ul>
+<p>→ <strong>Массив (динамический)</strong> — идеально подходит, так как добавления в конец O(1) и есть доступ по индексу для навигации по истории</p>
+<h2 id="строки">Строки</h2>
+<h3 id="что-такое-строка">Что такое строка</h3>
+<p><strong>Строка</strong> — это последовательность символов.</p>
+<p><strong>Важное различие:</strong></p>
+<ul>
+<li><strong>Mutable</strong> (изменяемый тип данных): можно изменить отдельные символы</li>
+<li><strong>Immutable</strong> (неизменяемый тип данных): при любой операции создаётся новая строка</li>
+</ul>
+<p>В Python, Java, Go, JavaScript и C# строки <strong>неизменяемые</strong>: изменить символ внутри существующей строки нельзя. PHP — исключение: его строка представляет собой изменяемую последовательность байт, но для Unicode-текста это не помогает (разбор — во вкладке PHP ниже).</p>
+<div class="tabs"><div class="tab-list" role="tablist" hidden><button type="button" role="tab" data-lang="Python">Python</button><button type="button" role="tab" data-lang="Java">Java</button><button type="button" role="tab" data-lang="Go">Go</button><button type="button" role="tab" data-lang="JavaScript">JavaScript</button><button type="button" role="tab" data-lang="C#">C#</button><button type="button" role="tab" data-lang="PHP">PHP</button></div><div class="tab-panel" role="tabpanel" data-lang="Python"><p class="tab-label">Python</p><pre><code class="language-python"># Python
+# Строки неизменяемые (immutable)
+title = &quot;Мойна и мир&quot;
+# title[0] = &quot;В&quot;  # Такая операция невозможна: строки нельзя изменять
+
+# Для изменения создаём новую строку
+new_title = &quot;В&quot; + title[1:]  # &quot;Война и мир&quot;
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Java"><p class="tab-label">Java</p><pre><code class="language-java">// Java
+// Строки неизменяемые (immutable)
+String title = &quot;Мойна и мир&quot;;
+// title.charAt(0) = 'М';  // Такая операция невозможна: строки нельзя изменять
+
+// Для изменения используем StringBuilder
+StringBuilder sb = new StringBuilder(title);
+sb.setCharAt(0, 'В');
+String newTitle = sb.toString();  // &quot;Война и мир&quot;
+
+// Или создаём новую строку
+String another = &quot;В&quot; + title.substring(1);  // &quot;Война и мир&quot;
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="Go"><p class="tab-label">Go</p><pre><code class="language-go">// Go
+// Строки неизменяемые (immutable)
+title := &quot;Мойна и мир&quot;
+// title[0] = 'В'  // Такая операция невозможна: строки нельзя изменять
+
+// Для изменения используем []rune (руны для Unicode)
+runes := []rune(title)
+runes[0] = 'В'
+newTitle := string(runes)  // &quot;Война и мир&quot;
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="JavaScript"><p class="tab-label">JavaScript</p><pre><code class="language-js">// JavaScript
+// Строки неизменяемые (immutable)
+const title = &quot;Мойна и мир&quot;;
+// title[0] = &quot;В&quot;;  // Строка не изменится: присваивание молча игнорируется
+//                  // (а в strict mode будет ошибка TypeError)
+
+// Для изменения создаём новую строку
+const newTitle = &quot;В&quot; + title.slice(1);  // &quot;Война и мир&quot;
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="C#"><p class="tab-label">C#</p><pre><code class="language-csharp">// C#
+// Строки неизменяемые (immutable)
+string title = &quot;Мойна и мир&quot;;
+// title[0] = 'В';  // Такая операция невозможна: строки нельзя изменять
+
+// Для изменения используем StringBuilder
+var sb = new StringBuilder(title);
+sb[0] = 'В';
+string newTitle = sb.ToString();  // &quot;Война и мир&quot;
+
+// Или создаём новую строку
+string another = &quot;В&quot; + title.Substring(1);  // &quot;Война и мир&quot;
+</code></pre></div><div class="tab-panel" role="tabpanel" data-lang="PHP"><p class="tab-label">PHP</p><pre><code class="language-php">// PHP
+// Строки в PHP — последовательности байт (UTF-8 для кириллицы)
+$title = &quot;Мойна и мир&quot;;
+// $title[0] = &quot;В&quot;;  // Не сработает как нужно: [0] — это один байт, а «М» занимает два
+
+// Для изменения создаём новую строку
+$newTitle = &quot;В&quot; . mb_substr($title, 1);  // &quot;Война и мир&quot;
+</code></pre>
+<p>Формально строки PHP изменяемы по байтам (<code>$s[0] = "x"</code> допустимо), но это работает только для однобайтовых символов (ASCII). Кириллица занимает в UTF-8 по два байта: присваивание <code>$title[0] = "В"</code> запишет только первый байт и выдаст предупреждение (Warning), поэтому для текста с Unicode новую строку собирают из частей, а символы режут функциями <code>mb_*</code>.</p></div></div>
+<h3 id="особенности-работы-со-строками">Особенности работы со строками</h3>
+<p><strong>1. Операции со строками</strong></p>
+<div class="tabs"><div class="tab-list" role="tablist" hidden><button type="button" role="tab" data-lang="Python">Python</button><button type="button" role="tab" data-lang="Java">Java</button><button type="button" role="tab" data-lang="Go">Go</button><button type="button" role="tab" data-lang="JavaScript">JavaScript</button><button type="button" role="tab" data-lang="C#">C#</button><button type="button" role="tab" data-lang="PHP">PHP</button></div><div class="tab-panel" role="tabpanel" data-lang="Python"><p class="tab-label">Python</p><pre><code class="language-python"># Python
+title = &quot;Война и мир&quot;
+
+# Длина строки
+length = len(title)  # 11 (длина в символах)
+
+# Поиск подстроки
+search = &quot;мир&quot; in title  # True
+
+# Конкатенация (создает новую строку)
+full = title + &quot; - Л.Н. Толстой&quot;
+
+# Повторение
+dashed = &quot;-&quot; * 20  # &quot;--------------------&quot;
+
+# Разбиение
+words = title.split(&quot; &quot;)  # [&quot;Война&quot;, &quot;и&quot;, &quot;мир&quot;]
+
+# Объединение
+result = &quot; &quot;.join(words)  # &quot;Война и мир&quot;
+</code></pre>
+<p>Python 3 использует Unicode по умолчанию: <code>len</code>, индексация и поиск корректно работают с любыми символами, включая кириллицу. При сборке строки в цикле используйте <code>join()</code> вместо <code>+</code>: O(n) вместо O(n²).</p></div><div class="tab-panel" role="tabpanel" data-lang="Java"><p class="tab-label">Java</p><pre><code class="language-java">// Java
+String title = &quot;Война и мир&quot;;
+
+// Длина строки
+int length = title.length();  // 11 (длина в кодовых единицах UTF-16)
+
+// Поиск подстроки
+boolean search = title.contains(&quot;мир&quot;);  // true
+
+// Конкатенация (создает новую строку)
+String full = title + &quot; - Л.Н. Толстой&quot;;
+
+// Или StringBuilder для множественных операций
+StringBuilder sb = new StringBuilder();
+sb.append(title);
+sb.append(&quot; - Л.Н. Толстой&quot;);
+String fullBuilder = sb.toString();
+
+// Разбиение
+String[] words = title.split(&quot; &quot;);  // [&quot;Война&quot;, &quot;и&quot;, &quot;мир&quot;]
+
+// Объединение
+String result = String.join(&quot; &quot;, words);
+</code></pre>
+<p>Java хранит строки в UTF-16: <code>length()</code> и <code>charAt()</code> работают с кодовыми единицами, для символов вне BMP (например, части эмодзи) один символ занимает две единицы. При сборке строки в цикле используйте <code>StringBuilder</code> вместо <code>+</code>: O(n) вместо O(n²).</p></div><div class="tab-panel" role="tabpanel" data-lang="Go"><p class="tab-label">Go</p><pre><code class="language-go">// Go
+title := &quot;Война и мир&quot;
+
+// Длина строки
+length := len(title)  // 20 (количество байт, не символов!)
+
+// Поиск подстроки
+contains := strings.Contains(title, &quot;мир&quot;)  // true
+
+// Конкатенация
+full := title + &quot; - Л.Н. Толстой&quot;
+
+// Для множественных операций эффективнее strings.Builder
+var sb strings.Builder
+sb.WriteString(title)
+sb.WriteString(&quot; - Л.Н. Толстой&quot;)
+fullBuilder := sb.String()
+
+// Разбиение
+words := strings.Split(title, &quot; &quot;)  // [&quot;Война&quot;, &quot;и&quot;, &quot;мир&quot;]
+
+// Объединение
+result := strings.Join(words, &quot; &quot;)
+</code></pre>
+<p>Go хранит строки как байты UTF-8: <code>len(s)</code> возвращает количество <strong>байт</strong> (для «Война и мир» это 20, а не 11), а <code>s[i]</code> даёт i-й байт — можно получить «половинку буквы». Количество символов даёт <code>len([]rune(s))</code>. При сборке строки в цикле используйте <code>strings.Builder</code>: O(n) вместо O(n²).</p></div><div class="tab-panel" role="tabpanel" data-lang="JavaScript"><p class="tab-label">JavaScript</p><pre><code class="language-js">// JavaScript
+const title = &quot;Война и мир&quot;;
+
+// Длина строки
+const length = title.length;  // 11 (длина в кодовых единицах UTF-16)
+
+// Поиск подстроки
+const search = title.includes(&quot;мир&quot;);  // true
+
+// Конкатенация (создаёт новую строку)
+const full = title + &quot; - Л.Н. Толстой&quot;;
+
+// Повторение
+const dashed = &quot;-&quot;.repeat(20);  // &quot;--------------------&quot;
+
+// Разбиение
+const words = title.split(&quot; &quot;);  // [&quot;Война&quot;, &quot;и&quot;, &quot;мир&quot;]
+
+// Объединение
+const result = words.join(&quot; &quot;);  // &quot;Война и мир&quot;
+</code></pre>
+<p>JavaScript, как и Java, хранит строки в UTF-16: <code>length</code> считает кодовые единицы, и символ вне BMP (например, часть эмодзи) занимает две. При сборке строки в цикле собирайте фрагменты в массив и объединяйте <code>join()</code>: O(n) вместо O(n²).</p></div><div class="tab-panel" role="tabpanel" data-lang="C#"><p class="tab-label">C#</p><pre><code class="language-csharp">// C#
+string title = &quot;Война и мир&quot;;
+
+// Длина строки
+int length = title.Length;  // 11 (длина в кодовых единицах UTF-16)
+
+// Поиск подстроки
+bool search = title.Contains(&quot;мир&quot;);  // true
+
+// Конкатенация (создаёт новую строку)
+string full = title + &quot; - Л.Н. Толстой&quot;;
+
+// Или StringBuilder для множественных операций
+var sb = new StringBuilder();
+sb.Append(title);
+sb.Append(&quot; - Л.Н. Толстой&quot;);
+string fullBuilder = sb.ToString();
+
+// Разбиение
+string[] words = title.Split(' ');  // [&quot;Война&quot;, &quot;и&quot;, &quot;мир&quot;]
+
+// Объединение
+string result = string.Join(&quot; &quot;, words);
+</code></pre>
+<p>C#, как и Java, хранит строки в UTF-16: <code>Length</code> и индексация <code>title[i]</code> работают с кодовыми единицами <code>char</code>, символы вне BMP (например, части эмодзи) занимают две. При сборке строки в цикле используйте <code>StringBuilder</code> вместо <code>+</code>: O(n) вместо O(n²).</p></div><div class="tab-panel" role="tabpanel" data-lang="PHP"><p class="tab-label">PHP</p><pre><code class="language-php">// PHP
+$title = &quot;Война и мир&quot;;
+
+// Длина строки
+$length = mb_strlen($title);  // 11 (длина в символах); strlen($title) даст 20 — это байты
+
+// Поиск подстроки
+$search = str_contains($title, &quot;мир&quot;);  // true
+
+// Конкатенация (создаёт новую строку)
+$full = $title . &quot; - Л.Н. Толстой&quot;;
+
+// Повторение
+$dashed = str_repeat(&quot;-&quot;, 20);  // &quot;--------------------&quot;
+
+// Разбиение
+$words = explode(&quot; &quot;, $title);  // [&quot;Война&quot;, &quot;и&quot;, &quot;мир&quot;]
+
+// Объединение
+$result = implode(&quot; &quot;, $words);  // &quot;Война и мир&quot;
+</code></pre>
+<p>PHP хранит строки как байты UTF-8, как и Go: <code>strlen()</code> и <code>$s[$i]</code> работают с байтами, а для подсчёта символов и срезов по символам нужны функции <code>mb_*</code> (<code>mb_strlen</code>, <code>mb_substr</code>) из расширения mbstring. При сборке строки в цикле дописывайте оператором <code>.=</code> (амортизированно O(1) на добавление) или собирайте фрагменты в массив и объединяйте <code>implode()</code>. Запись <code>$s = $s . $x</code> в цикле, напротив, копирует накопленную строку каждый раз: O(n²).</p></div></div>
+<p>В алгоритмических задачах всегда уточняйте, работаете ли вы с ASCII или Unicode: от этого зависит правильность решения. Как длина строки и доступ к символам ведут себя в каждом из шести языков, разобрано в разделе «Специфика по языкам» в конце материала.</p>
+<p><img alt="Сборка строки: по фрагменту против одной операции" src="../images/string-building.svg" /></p>
+<h3 id="сложность-операций-со-строками">Сложность операций со строками</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Операция</th>
+<th>Сложность</th>
+<th>Пояснение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Доступ по индексу</td>
+<td>O(1)</td>
+<td>Прямой доступ</td>
+</tr>
+<tr>
+<td>Поиск подстроки</td>
+<td>O(n*m)</td>
+<td>n — длина строки, m — длина подстроки</td>
+</tr>
+<tr>
+<td>Конкатенация</td>
+<td>O(n+m)</td>
+<td>n и m — длины двух склеиваемых строк; создаём новую строку из всех их символов</td>
+</tr>
+<tr>
+<td>Разбиение</td>
+<td>O(n)</td>
+<td>Проходим по всей строке</td>
+</tr>
+<tr>
+<td>Объединение</td>
+<td>O(n)</td>
+<td>Проходим по всем элементам</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="специфика-по-языкам">Специфика по языкам</h2>
+<div class="tabs"><div class="tab-list" role="tablist" hidden><button type="button" role="tab" data-lang="Python">Python</button><button type="button" role="tab" data-lang="Java">Java</button><button type="button" role="tab" data-lang="Go">Go</button><button type="button" role="tab" data-lang="JavaScript">JavaScript</button><button type="button" role="tab" data-lang="C#">C#</button><button type="button" role="tab" data-lang="PHP">PHP</button></div><div class="tab-panel" role="tabpanel" data-lang="Python"><p class="tab-label">Python</p><h2>Python: list и str</h2>
+<p><strong>Массив:</strong> роль массива играет <code>list</code> — динамический массив (указатель на блок памяти, длина, ёмкость). Добавление в конец <code>append()</code> — O(1) амортизированно, вставка в начало <code>insert(0, x)</code> — O(n). Элементы могут быть разных типов, фиксированного размера нет.</p>
+<p><strong>Кортеж:</strong> <code>tuple</code> — неизменяемая последовательность, например <code>(1, "два", 3.0)</code>. Это не массив фиксированной длины в смысле других языков: элементы могут быть разных типов, а неизменяемым делается не размер, а сам набор элементов (нельзя присвоить <code>t[0] = 5</code> или добавить элемент). Индексация и срезы работают как у <code>list</code>, доступ по индексу — O(1). Кортеж из неизменяемых элементов можно использовать как ключ словаря, список — нельзя.</p>
+<p><strong>Строки:</strong> <code>str</code> хранит символы Unicode, <code>len()</code> считает именно символы. Индексация и срезы работают корректно с любыми алфавитами.</p>
+<p><strong>Сборка строки:</strong> <code>"".join(fragments)</code>; конкатенация <code>+=</code> в цикле даёт O(n²).</p>
+<p><strong>Связный список:</strong> встроенного нет, узел пишут классом с полями <code>data</code> и <code>next</code> (как в примере выше).</p>
+<p><strong>Числа:</strong> <code>int</code> имеет произвольную точность, переполнения не бывает. В задачах, где по условию нужен 32-битный int (например, парсинг числа из строки), границы проверяют вручную.</p>
+<p><strong>Документация:</strong> https://docs.python.org/3/library/stdtypes.html#typesseq-list, https://docs.python.org/3/library/string.html</p></div><div class="tab-panel" role="tabpanel" data-lang="Java"><p class="tab-label">Java</p><h2>Java: массивы, ArrayList и String</h2>
+<p><strong>Массив:</strong> два типа — <code>T[]</code> фиксированного размера (поле <code>length</code>) и динамический <code>ArrayList&lt;T&gt;</code> (метод <code>size()</code>). <code>add()</code> в конец — O(1) амортизированно, <code>add(0, x)</code> в начало — O(n). Для алгоритмических задач чаще берут <code>ArrayList</code>.</p>
+<p><strong>Кортежи:</strong> встроенного типа нет. Фиксированный набор значений разных типов обычно оформляют классом или <code>record</code> (Java 16+).</p>
+<p><strong>Строки:</strong> <code>String</code> хранится в UTF-16; <code>length()</code> и <code>charAt()</code> работают с кодовыми единицами. Для большинства символов это совпадает с количеством символов, но символы вне BMP занимают две единицы.</p>
+<p><strong>Сборка строки:</strong> <code>StringBuilder</code> с <code>append()</code>; конкатенация <code>+</code> в цикле даёт O(n²).</p>
+<p><strong>Связный список:</strong> в стандартной библиотеке есть <code>java.util.LinkedList</code> (двусвязный), но на собеседовании узлы пишут руками: <code>class Node { int val; Node next; }</code>.</p>
+<p><strong>Числа:</strong> <code>int</code> — 32 бита, <code>long</code> — 64; переполнение происходит молча, без ошибок. В задачах на границы диапазона это проверяется явно.</p>
+<p><strong>Документация:</strong> https://dev.java/learn/language-basics/arrays/, https://dev.java/learn/numbers-strings/strings/</p></div><div class="tab-panel" role="tabpanel" data-lang="Go"><p class="tab-label">Go</p><h2>Go: slice и string</h2>
+<p><strong>Массив:</strong> два типа — <code>[N]T</code> фиксированного размера (размер — часть типа) и динамический <code>[]T</code> (slice: указатель, <code>len</code>, <code>cap</code>). <code>append()</code> — O(1) амортизированно и возвращает новый slice, поэтому результат нужно присваивать: <code>s = append(s, x)</code>.</p>
+<p><strong>Кортежи:</strong> отдельного типа нет. Несколько значений из функции возвращают через множественный возврат <code>return a, b</code>, а набор полей объявляют структурой <code>struct</code>.</p>
+<p><strong>Строки:</strong> <code>string</code> — это байты UTF-8. <code>len(s)</code> возвращает количество байт, <code>s[i]</code> даёт i-й байт. Количество символов: <code>len([]rune(s))</code>; для посимвольной работы строку конвертируют в <code>[]rune</code>.</p>
+<p><strong>Сборка строки:</strong> <code>strings.Builder</code> с <code>WriteString()</code>; конкатенация <code>+</code> в цикле даёт O(n²).</p>
+<p><strong>Связный список:</strong> в стандартной библиотеке есть <code>container/list</code> (двусвязный), но на собеседовании узлы пишут руками через struct с указателем <code>next *Node</code>.</p>
+<p><strong>Числа:</strong> размер <code>int</code> зависит от платформы — 32 бита на 32-битных системах и 64 на 64-битных (на большинстве современных машин — 64); есть и фиксированные <code>int32</code>/<code>int64</code>. Переполнение происходит молча.</p>
+<p><strong>Документация:</strong> https://go.dev/blog/slices-intro, https://pkg.go.dev/strings</p></div><div class="tab-panel" role="tabpanel" data-lang="JavaScript"><p class="tab-label">JavaScript</p><h2>JavaScript: Array и строки</h2>
+<p><strong>Массив:</strong> <code>Array</code> — всегда динамический массив: ни фиксированного размера, ни единого типа элементов (<code>[1, "два", null]</code> — валидный массив, и даже <code>new Array(5)</code> остаётся динамическим). <code>push</code>/<code>pop</code> — O(1) амортизированно, <code>shift</code>/<code>unshift</code> — O(n): очередь через <code>shift()</code> в цикле даёт O(n²).</p>
+<p><strong>Кортежи:</strong> отдельного типа нет, на практике используют массив фиксированной длины, например <code>[x, y]</code>. В TypeScript такому массиву можно задать тип-кортеж <code>[number, number]</code>, но во время выполнения это обычный <code>Array</code>.</p>
+<p><strong>Сортировка:</strong> <code>sort()</code> без аргументов сравнивает элементы <strong>как строки</strong>: <code>[10, 9, 1].sort()</code> вернёт <code>[1, 10, 9]</code>. Для чисел компаратор обязателен: <code>arr.sort((a, b) =&gt; a - b)</code>. Это классическая ловушка на собеседованиях.</p>
+<p><strong>Строки:</strong> хранятся в UTF-16, как в Java: <code>length</code> считает кодовые единицы, символы вне BMP занимают две.</p>
+<p><strong>Сборка строки:</strong> собрать фрагменты в массив и объединить <code>join("")</code>; конкатенация <code>+=</code> в цикле по модели неизменяемых строк даёт O(n²).</p>
+<p><strong>Связный список:</strong> встроенного нет; узел — класс (как в примере выше) или объект <code>{ value, next }</code>. На собеседовании это пишется руками.</p>
+<p><strong>Числа:</strong> единственный числовой тип <code>number</code> — это 64-битный double. Целые значения точны до <code>Number.MAX_SAFE_INTEGER</code> (2^53 − 1 = 9007199254740991), дальше нужен <code>BigInt</code>. Отдельного 32-битного int нет: в задачах, где по условию нужны его границы, их проверяют вручную.</p>
+<p><strong>Сравнение по ссылке:</strong> массивы и объекты сравниваются по ссылке, а не по содержимому: <code>[1, 2] === [1, 2]</code> даёт <code>false</code>. Сравнить содержимое можно только поэлементно.</p>
+<p><strong>TypeScript:</strong> массив типизируется как <code>number[]</code> или <code>Array&lt;number&gt;</code>, но проверка происходит только на этапе компиляции: во время выполнения это обычный <code>Array</code> со всеми описанными свойствами.</p>
+<p><strong>Документация:</strong> https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array, https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String</p></div><div class="tab-panel" role="tabpanel" data-lang="C#"><p class="tab-label">C#</p><h2>C#: массивы, List и string</h2>
+<p><strong>Массив:</strong> два типа — <code>T[]</code> фиксированного размера (свойство <code>Length</code>) и динамический <code>List&lt;T&gt;</code> (свойство <code>Count</code>). <code>Add()</code> в конец — O(1) амортизированно, <code>Insert(0, x)</code> в начало — O(n). Для алгоритмических задач чаще берут <code>List&lt;T&gt;</code>.</p>
+<p><strong>Кортежи:</strong> есть тип <code>(int, string)</code>, он же <code>ValueTuple</code>: <code>var t = (1, "два");</code>, к элементам обращаются по <code>t.Item1</code> или по именам <code>(int Id, string Name)</code>. Это структура, поля у неё изменяемые, в отличие от Python-кортежа.</p>
+<p><strong>Строки:</strong> <code>string</code> хранится в UTF-16, как в Java; <code>Length</code> и индексация <code>s[i]</code> работают с кодовыми единицами <code>char</code>. Для большинства символов это совпадает с количеством символов, но символы вне BMP занимают две единицы.</p>
+<p><strong>Сборка строки:</strong> <code>StringBuilder</code> с <code>Append()</code>; конкатенация <code>+</code> в цикле даёт O(n²).</p>
+<p><strong>Связный список:</strong> в стандартной библиотеке есть <code>LinkedList&lt;T&gt;</code> (двусвязный), но на собеседовании узлы пишут руками: <code>class Node { public int Val; public Node Next; }</code>.</p>
+<p><strong>Числа:</strong> <code>int</code> — 32 бита, <code>long</code> — 64. По умолчанию арифметика не бросает исключение при переполнении, а молча заворачивается (поведение как в Java); проверить можно в блоке <code>checked</code>. В задачах на границы диапазона это учитывают явно.</p>
+<p><strong>Документация:</strong> https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1, https://learn.microsoft.com/dotnet/api/system.string</p></div><div class="tab-panel" role="tabpanel" data-lang="PHP"><p class="tab-label">PHP</p><h2>PHP: array и строки</h2>
+<p><strong>Массив:</strong> <code>array</code> — упорядоченная хеш-таблица, одновременно и список, и словарь. Для ключей 0, 1, 2, … внутри используется компактное представление, <code>$a[] = $x</code> в конец — O(1) амортизированно, вставка в начало <code>array_unshift($a, $x)</code> и удаление из начала <code>array_shift($a)</code> — O(n), потому что переиндексируют элементы. Удаление из середины <code>array_splice($a, $i, 1)</code> тоже O(n). <code>unset($a[$i])</code> работает за O(1), но переиндексации не делает: в ключах остаётся дырка, и массив перестаёт быть списком. Элементы могут быть разных типов, фиксированного размера нет (его даёт <code>SplFixedArray</code>).</p>
+<p><strong>Поиск и индексы:</strong> <code>in_array($x, $a)</code> и <code>array_search()</code> — O(n); без третьего аргумента <code>true</code> они сравнивают нестрого (<code>==</code>), и, например, <code>"1e1"</code> найдётся среди <code>["10"]</code>. Отрицательного индекса, как в Python, нет: <code>$a[-1]</code> обращается к ключу <code>-1</code>, а не к последнему элементу; берите <code>$a[count($a) - 1]</code> или <code>array_key_last($a)</code>. Строковые ключи вида <code>"42"</code> превращаются в целые.</p>
+<p><strong>Копирование:</strong> массив передаётся в функцию по значению (copy-on-write). Чтобы изменить его на месте, объявляйте параметр по ссылке: <code>function f(array &amp;$arr)</code>. Объекты, наоборот, передаются по handle.</p>
+<p><strong>Кортежи:</strong> отдельного типа нет, используют массив <code>[$x, $y]</code> и разложение <code>[$x, $y] = $pair;</code>. Несколько значений из функции возвращают массивом.</p>
+<p><strong>Строки:</strong> <code>string</code> — это байты, обычно UTF-8. <code>strlen()</code> и <code>$s[$i]</code> работают с байтами; количество символов и срезы по символам дают <code>mb_strlen()</code> и <code>mb_substr()</code>. По байтам строки формально изменяемы, но для Unicode это бесполезно.</p>
+<p><strong>Сборка строки:</strong> оператор <code>.=</code> или <code>implode()</code> для массива фрагментов. Конкатенация <code>$s = $s . $x</code> в цикле даёт O(n²), а <code>.=</code> — нет.</p>
+<p><strong>Связный список:</strong> в SPL есть <code>SplDoublyLinkedList</code> (двусвязный), стек <code>SplStack</code> и очередь <code>SplQueue</code> построены на нём, но на собеседовании узлы пишут руками через класс с полем <code>?Node $next</code>.</p>
+<p><strong>Числа:</strong> <code>int</code> — 64 бита на 64-битных платформах (<code>PHP_INT_MAX</code>); при переполнении результат молча превращается в <code>float</code>, а не заворачивается. В задачах на границы диапазона это проверяют явно.</p>
+<p><strong>Документация:</strong> https://www.php.net/manual/ru/language.types.array.php, https://www.php.net/manual/ru/book.mbstring.php</p></div></div>
+<h2 id="заключение">Заключение</h2>
+<h3 id="что-мы-изучили">Что мы изучили</h3>
+<ol>
+<li><strong>Массивы</strong> — непрерывная область памяти с доступом по индексу:<ul>
+<li>доступ по индексу O(1), поиск по значению O(n);</li>
+<li>вставка в конец O(1) амортизированно (для динамических массивов), вставка и удаление в начале или середине O(n);</li>
+<li>роль массива в каждом языке играет свой тип: <code>list</code>, <code>ArrayList</code>, slice, <code>Array</code>, <code>List&lt;T&gt;</code>, <code>array</code>.</li>
+</ul>
+</li>
+<li><strong>Связные списки</strong> — узлы с данными и указателем <code>next</code>:<ul>
+<li>вставка и удаление в голове O(1), доступ по индексу O(n);</li>
+<li>дополнительная память на указатели; встроенного типа обычно нет, узел пишется руками.</li>
+</ul>
+</li>
+<li><strong>Строки</strong> — последовательность символов, неизменяемая в Python, Java, Go, JavaScript и C# (в PHP это изменяемые по байтам данные, но для Unicode это бесполезно):<ul>
+<li>любая модификация создаёт новую строку, конкатенация в цикле даёт O(n²) (в PHP квадратичной будет запись <code>$s = $s . $x</code>, а <code>.=</code> дописывает амортизированно за O(1));</li>
+<li>«длина строки» зависит от языка: символы в Python, кодовые единицы UTF-16 в Java, JavaScript и C#, байты в Go и PHP.</li>
+</ul>
+</li>
+</ol>
+<h3 id="что-важно-знать">Что важно знать</h3>
+<p><strong>Обязательно:</strong></p>
+<ul>
+<li>Сложности базовых операций из таблиц этого материала — отвечать не задумываясь.</li>
+<li>Разница между массивом и связным списком на уровне памяти и когда что выбирать.</li>
+<li>Почему конкатенация строк в цикле даёт O(n²) и чем её заменить в вашем языке.</li>
+</ul>
+<p><strong>Хорошо знать (но не критично):</strong></p>
+<ul>
+<li>Амортизированная сложность и механика расширения динамического массива.</li>
+<li>Поведение длины строки и доступа к символам в вашем языке (раздел «Специфика по языкам» в конце этого материала, перед заключением: выберите вкладку со своим языком).</li>
+<li>Ловушки конкретных языков: <code>len</code> в байтах в Go, <code>strlen</code> в байтах и нестрогое сравнение в <code>in_array</code> в PHP, строковый <code>sort()</code> и сравнение массивов по ссылке в JavaScript.</li>
+</ul>
+<p><strong>Не обязательно:</strong></p>
+<ul>
+<li>Точные коэффициенты расширения динамических массивов в конкретных реализациях.</li>
+<li>Внутреннее представление строк в интерпретаторах и виртуальных машинах.</li>
+</ul>
+<h3 id="как-тренировать">Как тренировать</h3>
+<ol>
+<li>Решите задачи на массивы, строки и связные списки: начните с базовых задач на строки, затем переходите к связным спискам.</li>
+<li>Реализуйте связный список на своём языке наизусть: узел, вставка в голову, вставка в конец, поиск, разворот.</li>
+<li>Проговорите вслух сложность каждой операции из трёх таблиц материала, не подглядывая, и сверьтесь с таблицами.</li>
+<li>Выпишите по своему языку из раздела «Специфика по языкам» три вещи: чем собирать длинную строку, как называются операции с началом и концом массива, какие у языка ловушки — и повторите этот список перед собеседованием.</li>
+</ol>
+<h3 id="на-собеседовании">На собеседовании</h3>
+<ul>
+<li>На вопрос «какая сложность этой операции?» отвечайте сразу: это проверка базы, а не повод для размышлений.</li>
+<li>Выбирая структуру, проговаривайте трейд-офф вслух: «частые вставки в начало — беру связный список, частый доступ по индексу — массив».</li>
+<li>В строковых задачах уточняйте, ASCII там или Unicode, и помните, как ваш язык считает длину строки.</li>
+<li>Собирая строку в цикле, сразу используйте правильный инструмент своего языка: интервьюеры замечают конкатенацию за O(n²).</li>
+</ul>
+        <nav class="pager" aria-label="Другие статьи"><a href="../complexity-advanced/"><span>← предыдущая</span>Продвинутая сложность и оптимизация</a><a class="next" href="../sorting/"><span>следующая →</span>Сортировки</a></nav>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>

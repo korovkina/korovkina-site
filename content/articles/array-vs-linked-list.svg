@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700" viewBox="0 0 1000 700">
+  <defs>
+    <style>
+      text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;fill:#1c2434}
+      .title{font-size:20px;font-weight:700}
+      .h{font-size:18px;font-weight:650}
+      .cell{font-size:14px}
+    .book{font-size:13px}
+      .label{font-size:13px;fill:#5a6478}
+      .arr{fill:#e3f0fb;stroke:#2f78b5;stroke-width:2}
+      .node{fill:#e6f6ec;stroke:#2a8050;stroke-width:2}
+      .ptr{fill:#f6f7f9;stroke:#9aa4b5;stroke-width:1.5}
+      .newnode{fill:#fdf0d8;stroke:#c08416;stroke-width:2;stroke-dasharray:6 4}
+      .line{stroke:#6b7687;stroke-width:2.2;fill:none;marker-end:url(#a)}
+      .shift{stroke:#c0561a;stroke-width:2;fill:none;marker-end:url(#ao)}
+      .sep{stroke:#dde2ea;stroke-width:1.5}
+      .good{fill:#1f7a46;font-size:14px;font-weight:650}
+      .bad{fill:#b4531a;font-size:14px;font-weight:650}
+    </style>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7687"/>
+    </marker>
+    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c0561a"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="700" fill="#ffffff"/>
+  <text x="36" y="46" class="title">Вставка в начало: массив и связный список</text>
+
+  <!-- ============ МАССИВ ============ -->
+  <text x="36" y="92" class="h">Массив — элементы лежат в памяти подряд</text>
+
+  <!-- было -->
+  <text x="36" y="122" class="label">было:</text>
+  <rect x="100" y="104" width="160" height="46" class="arr"/>
+  <rect x="260" y="104" width="160" height="46" class="arr"/>
+  <rect x="420" y="104" width="160" height="46" class="arr"/>
+  <rect x="580" y="104" width="160" height="46" class="arr"/>
+  <text x="180" y="133" class="book" text-anchor="middle">«Война и мир»</text>
+  <text x="340" y="133" class="book" text-anchor="middle">«Анна Каренина»</text>
+  <text x="500" y="133" class="book" text-anchor="middle">«Мастер и Маргарита»</text>
+  <text x="660" y="133" class="book" text-anchor="middle">«Идиот»</text>
+  <text x="180" y="167" class="label" text-anchor="middle">[0]</text>
+  <text x="340" y="167" class="label" text-anchor="middle">[1]</text>
+  <text x="500" y="167" class="label" text-anchor="middle">[2]</text>
+  <text x="660" y="167" class="label" text-anchor="middle">[3]</text>
+  <text x="100" y="190" class="label">Адрес: начало + i × шаг</text>
+  <text x="940" y="190" class="good" text-anchor="end">доступ [i] — O(1)</text>
+
+  <!-- стрелки сдвига -->
+  <path d="M245,200 C285,182 305,182 345,200" class="shift"/>
+  <path d="M405,200 C445,182 465,182 505,200" class="shift"/>
+  <path d="M565,200 C605,182 625,182 665,200" class="shift"/>
+  <path d="M725,200 C765,182 785,182 825,200" class="shift"/>
+
+  <!-- стало -->
+  <text x="36" y="232" class="label">стало:</text>
+  <rect x="100" y="206" width="160" height="46" class="newnode"/>
+  <rect x="260" y="206" width="160" height="46" class="arr"/>
+  <rect x="420" y="206" width="160" height="46" class="arr"/>
+  <rect x="580" y="206" width="160" height="46" class="arr"/>
+  <rect x="740" y="206" width="160" height="46" class="arr"/>
+  <text x="180" y="235" class="book" text-anchor="middle">«Отцы и дети»</text>
+  <text x="340" y="235" class="book" text-anchor="middle">«Война и мир»</text>
+  <text x="500" y="235" class="book" text-anchor="middle">«Анна Каренина»</text>
+  <text x="660" y="235" class="book" text-anchor="middle">«Мастер и Маргарита»</text>
+  <text x="820" y="235" class="book" text-anchor="middle">«Идиот»</text>
+
+  <text x="100" y="290" class="label">Чтобы освободить нулевую ячейку, каждый элемент переезжает вправо</text>
+  <text x="940" y="290" class="bad" text-anchor="end">вставка в начало — O(n)</text>
+
+  <line x1="36" y1="340" x2="964" y2="340" class="sep"/>
+
+  <!-- ============ СВЯЗНЫЙ СПИСОК ============ -->
+  <text x="36" y="384" class="h">Связный список — узлы разбросаны, каждый знает следующий</text>
+
+  <text x="118" y="412" class="label">head</text>
+  <g>
+    <rect x="100" y="420" width="105" height="56" class="node"/>
+    <rect x="205" y="420" width="62"  height="56" class="ptr"/>
+    <text x="152" y="442" class="book" text-anchor="middle">«Война</text>
+    <text x="152" y="460" class="book" text-anchor="middle">и мир»</text>
+    <text x="236" y="454" class="label" text-anchor="middle">next</text>
+  </g>
+  <g>
+    <rect x="345" y="420" width="105" height="56" class="node"/>
+    <rect x="450" y="420" width="62"  height="56" class="ptr"/>
+    <text x="397" y="442" class="book" text-anchor="middle">«Анна</text>
+    <text x="397" y="460" class="book" text-anchor="middle">Каренина»</text>
+    <text x="481" y="454" class="label" text-anchor="middle">next</text>
+  </g>
+  <g>
+    <rect x="590" y="420" width="105" height="56" class="node"/>
+    <rect x="695" y="420" width="62"  height="56" class="ptr"/>
+    <text x="642" y="442" class="book" text-anchor="middle">«Мастер</text>
+    <text x="642" y="460" class="book" text-anchor="middle">и Маргарита»</text>
+    <text x="726" y="454" class="label" text-anchor="middle">next</text>
+  </g>
+
+  <path d="M267,448 L340,448" class="line"/>
+  <path d="M512,448 L585,448" class="line"/>
+  <path d="M757,448 L820,448" class="line"/>
+  <text x="832" y="453" class="label">null</text>
+
+  <!-- новый узел -->
+  <text x="118" y="546" class="label">новый head</text>
+  <g>
+    <rect x="100" y="554" width="105" height="56" class="newnode"/>
+    <rect x="205" y="554" width="62"  height="56" class="ptr"/>
+    <text x="152" y="588" class="book" text-anchor="middle">«Отцы и дети»</text>
+    <text x="236" y="588" class="label" text-anchor="middle">next</text>
+  </g>
+
+  <path d="M267,582 C310,582 310,500 240,484" class="line"/>
+
+  <text x="345" y="585" class="label">Соседние узлы не двигаются: создаём узел и переставляем head</text>
+  <text x="940" y="585" class="good" text-anchor="end">вставка в начало — O(1)</text>
+
+  <text x="345" y="640" class="label">Доступ по индексу: проход по цепочке от головы</text>
+  <text x="940" y="640" class="bad" text-anchor="end">доступ по индексу — O(n)</text>
+</svg>

@@ -16,7 +16,7 @@ ID видео в `data-yt` (часть ссылки после `watch?v=`), да
 
 Статьи лежат в `content/articles/` в формате Markdown, а страницы в `articles/` собираются из них:
 
-1. Положите `.md` в `content/articles/` (картинки `.png` туда же, в тексте ссылайтесь на них как `../images/имя.png`).
+1. Положите `.md` в `content/articles/` (картинки `.png` или `.svg` туда же, в тексте ссылайтесь на них как `../images/имя.png`).
 2. Допишите статью в `content/articles/articles.toml`: slug (адрес), файл, заголовок, описание.
 3. Из корня сайта: `python3 -m pip install markdown` (один раз), затем `python3 tools/build_articles.py`.
 4. Загрузите изменения на GitHub.
