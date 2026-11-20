@@ -274,7 +274,7 @@
     else setTimeout(function run() { if (step()) setTimeout(run, 1500); }, 900);
   }
 
-  // ---------- пасхалка: наберите «fish» — стая расходится волной, как обход в ширину (BFS) по сетке ----------
+  // ---------- пасхалка: наберите «fish» (или bfs, secret, school, рыба) — стая расходится волной, как обход в ширину (BFS) по сетке ----------
   function fishSchool(ox, oy) {
     if (calmMotion || document.querySelector(".school")) return;
     var cell = 56, cols = Math.ceil(window.innerWidth / cell), rowsN = Math.ceil(window.innerHeight / cell);
@@ -308,13 +308,15 @@
     document.body.appendChild(layer);
     setTimeout(function () { layer.remove(); }, maxD * 55 + 1300);
   }
+  var SCHOOL_WORDS = ["fish", "рыба", "bfs", "secret", "school"];   // любое из этих слов запускает стаю
   var typed = "", pointer = null;
   document.addEventListener("pointermove", function (e) { pointer = [e.clientX, e.clientY]; }, { passive: true });
   document.addEventListener("keydown", function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey || !e.key || e.key.length !== 1) return;
     if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
-    typed = (typed + e.key.toLowerCase()).slice(-4);
-    if (typed === "fish" || typed === "рыба") {
+    typed = (typed + e.key.toLowerCase()).slice(-12);
+    var word = SCHOOL_WORDS.filter(function (w) { return typed.slice(-w.length) === w; })[0];
+    if (word) {
       typed = "";
       fishSchool(pointer ? pointer[0] : window.innerWidth / 2, pointer ? pointer[1] : window.innerHeight / 2);
     }
