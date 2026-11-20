@@ -107,6 +107,7 @@ h1 {
   line-height: 1.02;
   letter-spacing: -0.02em;
 }
+h1 .intro { display: block; font-size: 0.42em; font-weight: 400; letter-spacing: 0; color: var(--muted); margin-bottom: 0.25em; }
 h1 .line2 { display: block; color: var(--accent); }
 .lead { font-size: clamp(1.125rem, 2.1vw, 1.375rem); max-width: 38em; margin: 26px 0 0; color: var(--ink); }
 .lead .muted { color: var(--muted); }
