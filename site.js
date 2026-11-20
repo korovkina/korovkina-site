@@ -1,5 +1,17 @@
-// Вкладки с кодом в статьях, запуск видео на странице «Выступления» и рыбки на главной.
+// Вкладки с кодом в статьях, запуск видео на странице «Выступления», рыбки на главной и их цвета.
 (function () {
+  // ---------- цвет рыбок: случайный из палитры --fish-1…--fish-6 (styles.css), без повторов на странице ----------
+  var FISH_COLORS = 6, usedColors = [];
+  function paintFish(el) {
+    var free = [];
+    for (var i = 1; i <= FISH_COLORS; i++) if (usedColors.indexOf(i) < 0) free.push(i);
+    if (!free.length) { usedColors = []; return paintFish(el); }
+    var k = free[Math.floor(Math.random() * free.length)];
+    usedColors.push(k);
+    el.style.setProperty("--fish-color", "var(--fish-" + k + ")");
+  }
+  document.querySelectorAll(".site-foot .mono, .lost-art .swim").forEach(paintFish);
+
   // ---------- вкладки: выбранный язык одинаковый во всех блоках страницы ----------
   var KEY = "code-lang";
   var groups = document.querySelectorAll(".tabs");
@@ -58,6 +70,7 @@
     slow.className = "fish fish-slow"; fast.className = "fish fish-fast";
     slow.setAttribute("aria-hidden", "true"); fast.setAttribute("aria-hidden", "true");
     chain.appendChild(slow); chain.appendChild(fast);
+    paintFish(slow); paintFish(fast);
     var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     // шаги: [нода медленной, нода быстрой (-1 — уплыла за None), видна ли быстрая]
     var STEPS = [[0, 0, 1], [1, 2, 1], [2, -1, 0]];
