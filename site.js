@@ -1,5 +1,28 @@
-// Вкладки с кодом в статьях, запуск видео на странице «Выступления», рыбки на главной и их цвета.
+// Вкладки с кодом в статьях, запуск видео на странице «Выступления», рыбки на главной и их цвета, переключатель темы.
 (function () {
+  // ---------- тема: светлая или тёмная; выбор хранится в localStorage («theme»), без выбора — как в системе ----------
+  var root = document.documentElement;
+  var systemDark = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  var themeButtons = document.querySelectorAll("[data-theme-set]");
+  function currentTheme() { return root.dataset.theme || (systemDark && systemDark.matches ? "dark" : "light"); }
+  function syncTheme() {
+    var t = currentTheme();
+    themeButtons.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.themeSet === t ? "true" : "false"); });
+  }
+  themeButtons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      root.dataset.theme = b.dataset.themeSet;
+      try { localStorage.setItem("theme", b.dataset.themeSet); } catch (e) {}
+      syncTheme();
+    });
+  });
+  document.querySelectorAll(".theme-switch").forEach(function (g) { g.hidden = false; });
+  if (systemDark) {
+    if (systemDark.addEventListener) systemDark.addEventListener("change", syncTheme);
+    else if (systemDark.addListener) systemDark.addListener(syncTheme);
+  }
+  syncTheme();
+
   // ---------- цвет рыбок: случайный из палитры --fish-1…--fish-6 (styles.css), без повторов на странице ----------
   var FISH_COLORS = 6, usedColors = [];
   function paintFish(el) {
