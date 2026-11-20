@@ -1,4 +1,4 @@
-// Вкладки с кодом в статьях, запуск видео на странице «Выступления», рыбки на главной и их цвета, переключатель темы.
+// Вкладки с кодом в статьях, запуск видео на странице «Выступления», рыбки (на главной, в меню, над вкладками, прогресс чтения) и их цвета, переключатель темы.
 (function () {
   // ---------- тема: светлая или тёмная; выбор хранится в localStorage («theme»), без выбора — как в системе ----------
   var root = document.documentElement;
@@ -35,6 +35,15 @@
   }
   document.querySelectorAll(".site-foot .mono, .lost-art .swim").forEach(paintFish);
 
+  // переместить рыбку в точку (x, y) внутри её контейнера; рыбка разворачивается мордой туда, куда плывёт
+  function moveFish(f, x, y, instant) {
+    if (f._x !== undefined && Math.abs(x - f._x) > 1) f._left = x < f._x;
+    f._x = x;
+    f.classList.toggle("no-anim", !!instant);
+    f.style.transform = "translate(" + Math.round(x) + "px," + Math.round(y) + "px)" + (f._left ? " scaleX(-1)" : "");
+    if (instant) { void f.offsetWidth; f.classList.remove("no-anim"); }
+  }
+
   // ---------- вкладки: выбранный язык одинаковый во всех блоках страницы ----------
   // window.siteInitTabs() можно вызвать ещё раз, когда вкладки появились позже (расшифрованный курс)
   var KEY = "code-lang";
@@ -50,8 +59,18 @@
         b.setAttribute("aria-selected", on ? "true" : "false");
         b.tabIndex = on ? 0 : -1;
       });
+      placeTabFish(g, false);
     });
     if (remember) { try { localStorage.setItem(KEY, lang); } catch (e) {} }
+  }
+
+  // рыбка-указатель над выбранной вкладкой
+  function placeTabFish(g, instant) {
+    var f = g.querySelector(".fish-tab"), b = g.querySelector('[aria-selected="true"]');
+    if (!f || !b) return;
+    var list = f.parentNode.getBoundingClientRect(), r = b.getBoundingClientRect();
+    if (!list.width) return;                       // вкладки скрыты (например, в закрытом спойлере)
+    moveFish(f, r.left - list.left + r.width / 2 - 8, r.top - list.top - 12, instant || f._x === undefined);
   }
 
   function initTabs() {
@@ -59,7 +78,13 @@
     if (!fresh.length) return;
     fresh.forEach(function (g) {
       g.classList.add("tabs-ready");
-      g.querySelector(".tab-list").hidden = false;
+      var list = g.querySelector(".tab-list");
+      list.hidden = false;
+      var f = document.createElement("span");
+      f.className = "fish fish-tab";
+      f.setAttribute("aria-hidden", "true");
+      list.appendChild(f);
+      paintFish(f);
       g.querySelectorAll('[role="tab"]').forEach(function (b) {
         b.addEventListener("click", function () {
           var top = b.getBoundingClientRect().top;
@@ -75,6 +100,97 @@
   }
   initTabs();
   window.siteInitTabs = initTabs;
+  // вкладки внутри спойлера получают размеры, только когда спойлер открыт
+  document.addEventListener("toggle", function (e) {
+    if (e.target.querySelectorAll) e.target.querySelectorAll(".tabs-ready").forEach(function (g) { placeTabFish(g, true); });
+  }, true);
+
+  // ---------- рыбка-указатель в меню-цепочке и рыбка — прогресс чтения ----------
+  var chainEl = document.querySelector(".site-head .chain");
+  var navFish = null;
+  if (chainEl) {
+    navFish = document.createElement("span");
+    navFish.className = "fish fish-nav";
+    navFish.setAttribute("aria-hidden", "true");
+    chainEl.appendChild(navFish);
+    paintFish(navFish);
+  }
+  function chainItem(selector) {
+    var el = chainEl.querySelector(selector);
+    return el ? el.closest("li") : null;
+  }
+  function navTarget() {
+    var noneItem = chainItem(".none");
+    if (chainEl.querySelector('a[href="#about"]')) {
+      // главная: раздел, до которого дочитали; в самом низу — None
+      var doc = document.documentElement;
+      if (window.scrollY > 0 && window.innerHeight + window.scrollY >= doc.scrollHeight - 4) return noneItem;
+      var line = window.innerHeight * 0.35, id = "top";
+      document.querySelectorAll("main > section[id]").forEach(function (sec) {
+        if (sec.getBoundingClientRect().top <= line) id = sec.id;
+      });
+      return chainItem('a[href="#' + id + '"]') || chainItem('a[href="talks/"]');
+    }
+    if (document.querySelector(".lost")) return noneItem;             // 404: рыба уплыла за None
+    var cur = chainItem('[aria-current="page"]');
+    if (cur) return cur;
+    if (location.pathname.indexOf("/course/") >= 0) return chainItem('a[href$="#course"]');
+    return null;
+  }
+  function placeNavFish(instant) {
+    var li = navTarget();
+    navFish.hidden = !li;
+    if (!li) return;
+    var c = chainEl.getBoundingClientRect(), r = li.querySelector("a, span").getBoundingClientRect();
+    moveFish(navFish, r.left - c.left + r.width / 2 - 9, r.top - c.top - 11, instant);
+  }
+
+  // прогресс чтения: линия по нижнему краю шапки, рыбка плывёт по ней от начала статьи к концу
+  var siteHead = document.querySelector(".site-head"), progress = null, progressFish = null, progressLine = null;
+  function placeProgress() {
+    var body = document.querySelector(".article-body");
+    if (!body || !siteHead) { if (progress) progress.hidden = true; return; }
+    if (!progress) {
+      progress = document.createElement("div");
+      progress.className = "read-progress";
+      progress.setAttribute("aria-hidden", "true");
+      progressLine = document.createElement("span");
+      progressLine.className = "read-progress-line";
+      progressFish = document.createElement("span");
+      progressFish.className = "fish fish-read";
+      progress.appendChild(progressLine);
+      progress.appendChild(progressFish);
+      siteHead.appendChild(progress);
+      paintFish(progress);                         // линия и рыбка одного цвета
+    }
+    progress.hidden = false;
+    var r = body.getBoundingClientRect(), vh = window.innerHeight;
+    var p = r.height > vh ? -r.top / (r.height - vh) : (r.top < vh ? 1 : 0);
+    p = Math.max(0, Math.min(1, p));
+    progressLine.style.width = (p * 100) + "%";
+    progressFish.style.transform = "translateX(" + Math.round(p * (progress.clientWidth - 20)) + "px)";
+  }
+
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      ticking = false;
+      if (navFish) placeNavFish(false);
+      placeProgress();
+    });
+  }
+  function refresh() {
+    if (navFish) placeNavFish(true);
+    placeProgress();
+    document.querySelectorAll(".tabs-ready").forEach(function (g) { placeTabFish(g, true); });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", refresh);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+  refresh();
+  window.siteRefresh = refresh;                    // course.js зовёт после расшифровки страницы
 
   // ---------- видео: YouTube грузится только после нажатия ----------
   document.querySelectorAll(".talk-player[data-yt]").forEach(function (btn) {

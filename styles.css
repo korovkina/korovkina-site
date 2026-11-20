@@ -90,7 +90,13 @@ code, .mono { font-family: var(--f-mono); font-size: 0.92em; }
 .skip:focus { left: var(--gutter); top: 8px; }
 
 /* ---------- header: navigation as a linked list ---------- */
-.site-head { padding-block: 22px; border-bottom: 1px solid var(--line); }
+.site-head { position: relative; padding-block: 22px; border-bottom: 1px solid var(--line); background: var(--paper); }
+/* на широких экранах шапка закреплена, чтобы рыбка-указатель в меню и прогресс чтения были видны; на телефоне меню в две строки заняло бы много места */
+@media (min-width: 720px) {
+  .site-head { position: sticky; top: 0; z-index: 20; }
+  html { scroll-padding-top: 92px; }
+  .article-toc { top: 104px !important; }
+}
 .chain {
   display: flex; flex-wrap: wrap; align-items: center; gap: 6px 0;
   margin: 0; padding: 0; list-style: none;
@@ -376,7 +382,8 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 
 /* code tabs */
 .tabs { margin-top: 16px; }
-.tab-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: -1px; }
+.tab-list { position: relative; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: -1px; }
+.tabs-ready .tab-list { padding-top: 14px; }
 .tab-list button {
   font: 500 0.8125rem var(--f-mono); color: var(--muted); background: transparent; cursor: pointer;
   border: 1px solid var(--line); border-radius: 10px 10px 0 0; padding: 7px 14px;
@@ -489,3 +496,18 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 .fish-fast { background: var(--fish-color, var(--brand)); }
 .fish.no-anim { transition: none; }
 @media (prefers-reduced-motion: reduce) { .fish { transition: none; } }
+
+/* рыбка-указатель над текущим пунктом меню-цепочки */
+.chain { position: relative; }
+.fish.fish-nav { width: 18px; height: 10px; transition-duration: .7s; }
+/* рыбка над выбранной вкладкой языка */
+.fish.fish-tab { width: 16px; height: 9px; transition-duration: .5s; }
+/* прогресс чтения: линия по нижней границе шапки и рыбка на ней */
+.read-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; pointer-events: none; }
+.read-progress[hidden] { display: none; }
+.read-progress-line { display: block; height: 100%; width: 0; background: var(--fish-color, var(--brand)); }
+.fish.fish-read { top: auto; bottom: 3px; width: 20px; height: 11px; transition: none; }
+@media (max-width: 719px) {
+  .read-progress { position: fixed; top: 0; bottom: auto; z-index: 20; }
+  .fish.fish-read { bottom: auto; top: 3px; }
+}

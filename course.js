@@ -52,6 +52,7 @@
         });
       }
       if (window.siteInitTabs) window.siteInitTabs();
+      if (window.siteRefresh) window.siteRefresh();
     })
     .catch(function () {
       // ключ не подошёл: если он был сохранён раньше, значит его сменили
