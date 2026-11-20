@@ -218,9 +218,7 @@
     var target = location.pathname;
     try { target = decodeURIComponent(target); } catch (e) {}
     lostSearch.hidden = false;
-    lostSearch.innerHTML = '<p class="ls-title">Ищу <code></code> бинарным поиском по страницам сайта</p>' +
-      '<ol class="ls-list" start="0"></ol><pre class="ls-log" aria-live="polite"></pre>';
-    lostSearch.querySelector("code").textContent = target;
+    lostSearch.innerHTML = '<ol class="ls-list" start="0"></ol><pre class="ls-log" aria-live="polite"></pre>';
     var listEl = lostSearch.querySelector(".ls-list"), logEl = lostSearch.querySelector(".ls-log");
     var rows = pagesList.map(function (path, i) {
       var li = document.createElement("li");
