@@ -23,7 +23,7 @@
       var m = e.data, t = current;
       if (m.type === "ready") {
         ready = true;
-        if (t) { status(t, "Выполняется…", ""); armTimer(); }
+        if (t) { status(t, "Выполняется…", "busy"); armTimer(); }
         return;
       }
       if (!t) return;
@@ -49,9 +49,46 @@
   }
 
   // ---------- одна задача ----------
+  var loadTimer = null;
   function status(t, text, kind) {
+    clearInterval(loadTimer);
     t.status.textContent = text;
     t.status.className = "runner-status" + (kind ? " is-" + kind : "");
+    if (kind === "busy") t.status.appendChild(loader());
+  }
+  // пока идёт работа, туда-сюда плавает рыбка и пускает пузыри
+  function loader() {
+    var wrap = document.createElement("span"), swim = document.createElement("span"), fish = document.createElement("span");
+    wrap.className = "runner-loader";
+    wrap.setAttribute("aria-hidden", "true");
+    swim.className = "loader-swim";
+    fish.className = "fish fish-loader";
+    fish.style.setProperty("--fish-color", "var(--fish-" + (1 + Math.floor(Math.random() * 6)) + ")");
+    swim.appendChild(fish);
+    for (var i = 0; i < 3; i++) {
+      var b = document.createElement("span");
+      b.className = "loader-bubble";
+      b.style.animationDelay = (i * 0.45) + "s";
+      swim.appendChild(b);
+    }
+    wrap.appendChild(swim);
+    return wrap;
+  }
+  // первая загрузка Python небыстрая: подписи сменяют друг друга, чтобы было не скучно ждать
+  var LOAD_TEXTS = [
+    "Загружаю Python…",
+    "Рыбка плывёт за интерпретатором…",
+    "Python весит около 13 МБ, грузится только в первый раз",
+    "Почти доплыла…"
+  ];
+  function loading(t) {
+    var i = 0;
+    status(t, LOAD_TEXTS[0], "busy");
+    loadTimer = setInterval(function () {
+      i = Math.min(i + 1, LOAD_TEXTS.length - 1);
+      t.status.firstChild.nodeValue = LOAD_TEXTS[i];
+      if (i === LOAD_TEXTS.length - 1) clearInterval(loadTimer);
+    }, 2500);
   }
   function append(t, type, text) {
     t.output += type === "out" ? text : "";
@@ -80,8 +117,8 @@
     t.result.hidden = false;
     setRunning(t, true);
     if (!worker) startWorker();
-    if (ready) { status(t, "Выполняется…", ""); armTimer(); }
-    else status(t, "Загружаю Python… Это нужно только при первом запуске.", "");
+    if (ready) { status(t, "Выполняется…", "busy"); armTimer(); }
+    else loading(t);
     worker.postMessage({ code: t.code.value, stdin: "" });
   }
   // остановка: поток с Python приходится убить, следующий запуск поднимет его заново

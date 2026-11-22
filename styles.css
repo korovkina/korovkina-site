@@ -618,3 +618,19 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 .runner-out:has(> code:empty) { display: none; }
 .runner-err { color: var(--fish-2); }
 .runner-off { color: var(--muted); }
+
+/* рыбка-загрузка: плавает туда-сюда, пока грузится Python или выполняется код */
+.runner-loader { display: inline-block; position: relative; width: 170px; height: 26px; margin-left: 14px; vertical-align: middle; }
+.runner-loader::before { content: ""; position: absolute; left: 0; right: 0; bottom: 1px; border-bottom: 1.5px dashed var(--line); }
+.loader-swim { position: absolute; left: 0; top: 5px; animation: loader-swim 3s ease-in-out infinite; }
+.fish.fish-loader { position: relative; display: block; width: 32px; height: 18px; transition: none; animation: loader-turn 3s steps(1) infinite, loader-wiggle .5s ease-in-out infinite alternate; }
+.loader-bubble { position: absolute; left: 14px; top: -3px; width: 6px; height: 6px; border: 1.2px solid var(--ptr); border-radius: 50%; opacity: 0; animation: loader-bubble 1.35s ease-out infinite; }
+@keyframes loader-swim { 0%, 100% { translate: 0 0; } 50% { translate: 138px 0; } }
+@keyframes loader-turn { 0% { transform: scaleX(1); } 50% { transform: scaleX(-1); } }
+@keyframes loader-wiggle { from { rotate: -5deg; } to { rotate: 5deg; } }
+@keyframes loader-bubble { 0% { opacity: 0; translate: 0 0; scale: .5; } 20% { opacity: .9; } 100% { opacity: 0; translate: 3px -20px; scale: 1.1; } }
+.runner-status.is-busy { color: var(--muted); font-weight: 500; }
+@media (prefers-reduced-motion: reduce) {
+  .loader-swim, .fish.fish-loader, .loader-bubble { animation: none; }
+  .loader-swim { translate: 69px 0; }
+}
