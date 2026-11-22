@@ -585,3 +585,36 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
   .read-progress { position: fixed; top: 0; bottom: auto; z-index: 20; }
   .fish.fish-read { bottom: auto; top: 3px; }
 }
+
+/* задачи по Python (/problems/): условие, ожидаемый вывод и редактор с запуском кода (problems.js) */
+.task { margin-top: 56px; padding-top: 8px; scroll-margin-top: 16px; }
+.task + .task { border-top: 1px solid var(--line); padding-top: 40px; }
+.task h2 { margin-top: 0; }
+.task-num { color: var(--ptr); font-family: var(--f-mono); font-weight: 500; font-size: 0.85em; }
+.task.is-solved h2::after { content: " ✓"; color: var(--fish-4); }
+.task-label { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ptr); font-weight: 500; margin: 24px 0 0 !important; }
+.article-body pre.task-expected { margin-top: 8px; background: var(--soft); border-color: transparent; }
+.task-toc li.is-solved a { color: var(--ink); }
+.task-toc li.is-solved a::after { content: " ✓"; color: var(--fish-4); }
+.runner-code {
+  display: block; width: 100%; margin-top: 8px; padding: 16px 18px; resize: vertical; overflow: hidden;
+  font: 0.875rem/1.55 var(--f-mono); tab-size: 4; white-space: pre; overflow-wrap: normal; overflow-x: auto;
+  color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  min-height: 6.5em;
+}
+.runner-code:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+.runner-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 12px; }
+.runner-bar .btn { padding: 9px 18px; font-size: 0.9375rem; cursor: pointer; font-family: inherit; }
+.runner-bar .btn.is-stop { background: var(--fish-2); border-color: var(--fish-2); color: var(--accent-ink); }
+.runner-keys { font-family: var(--f-mono); font-size: 0.8125rem; color: var(--muted); }
+@media (hover: none) { .runner-keys { display: none; } }
+.runner-result { margin-top: 16px; }
+.runner-status { margin: 0 !important; font-weight: 600; }
+.runner-status.is-ok { color: var(--fish-4); }
+.runner-status.is-ok::before { content: "✓ "; }
+.runner-status.is-diff { color: var(--fish-3); }
+.runner-status.is-bad { color: var(--fish-2); }
+.article-body pre.runner-out { margin-top: 8px; min-height: 3.2em; white-space: pre-wrap; overflow-wrap: anywhere; }
+.runner-out:has(> code:empty) { display: none; }
+.runner-err { color: var(--fish-2); }
+.runner-off { color: var(--muted); }

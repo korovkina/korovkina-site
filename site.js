@@ -308,6 +308,7 @@
     document.body.appendChild(layer);
     setTimeout(function () { layer.remove(); }, maxD * 55 + 1300);
   }
+  window.siteFishSchool = fishSchool;               // problems.js: стая за верно решённую задачу
   var SCHOOL_WORDS = ["fish", "рыба", "рыбы", "косяк", "bfs", "secret", "school"];   // любое из этих слов запускает стаю
   var typed = "", pointer = null;
   document.addEventListener("pointermove", function (e) { pointer = [e.clientX, e.clientY]; }, { passive: true });

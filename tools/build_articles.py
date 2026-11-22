@@ -173,7 +173,8 @@ def site_header(up, current=""):
 """
 
 
-def head(title, description, canonical, depth):
+def head(title, description, canonical, depth, current=' aria-current="page"'):
+    """Начало страницы. current — атрибуты ссылки «Статьи» в шапке (пусто, если страница не из статей)."""
     up = "../" * depth
     return f"""<!doctype html>
 <html lang="ru">
@@ -199,7 +200,7 @@ def head(title, description, canonical, depth):
   <script src="{up}site.js" defer></script>
 </head>
 <body>
-{site_header(up, ' aria-current="page"')}"""
+{site_header(up, current)}"""
 
 
 FOOT = """
