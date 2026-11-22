@@ -252,11 +252,26 @@ def build_collection(c):
       <aside class="article-toc" aria-label="Задачи">
         <p class="toc-title">Задачи</p>
         <ol class="task-toc">{toc}</ol>
+        <div class="aquarium" hidden>
+          <div class="aq-tank" aria-hidden="true"></div>
+          <p class="aq-count" aria-live="polite"></p>
+        </div>
       </aside>
       <article class="article-body">
 {render_intro(intro)}
 <aside class="note runner-note" hidden><p class="note-label">Как решать</p><p>Код запускается прямо в браузере, вывод сразу сравнивается с ожидаемым, а решения сохраняются в этом браузере. При первом запуске загрузится Python — около 13 МБ.</p></aside>
 {chr(10).join(render_task(c["slug"], t) for t in tasks)}
+<section class="finale" id="finale" hidden aria-labelledby="finale-title">
+  <p class="eyebrow">{len(tasks)} из {len(tasks)}</p>
+  <h2 id="finale-title">Все задачи решены!</h2>
+  <p>Все рыбки в аквариуме. Сохраните открытку на память или отправьте её тому, кто вас учит: пусть порадуется вместе с вами.</p>
+  <p class="finale-name"><label for="finale-name">Имя на открытке</label><input id="finale-name" type="text" maxlength="40" autocomplete="name" placeholder="Например, Аня"></p>
+  <canvas class="finale-card" width="1200" height="630" role="img" aria-label="Открытка: сборник «{html.escape(c["title"])}» решён"></canvas>
+  <div class="runner-bar">
+    <button type="button" class="btn primary finale-save">Скачать открытку</button>
+    <button type="button" class="btn ghost finale-share" hidden>Поделиться</button>
+  </div>
+</section>
       </article>
     </div>
   </main>
