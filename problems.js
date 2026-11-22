@@ -11,26 +11,67 @@
     try { if (val === null) localStorage.removeItem(key); else localStorage.setItem(key, val); } catch (e) {}
   }
   // вывод сравниваем без хвостовых пробелов в строках и пустых строк в конце
-  // defaultdict печатается как defaultdict(<class 'list'>, {...}): засчитываем его как обычный словарь {...}
+  // defaultdict и Counter засчитываем как обычный словарь:
+  //   defaultdict(<class 'list'>, {...}) → {...},  Counter({...}) → {...},  Counter() → {}
+  // Counter печатает ключи по убыванию частоты, поэтому строку с ним сравниваем без учёта порядка ключей.
+  var WRAPS = ["defaultdict(<", "Counter("];
+  function closing(s, i, open, close) {              // индекс парной скобки к s[i]
+    for (var depth = 0; i < s.length; i++) {
+      if (s[i] === open) depth++;
+      else if (s[i] === close && --depth === 0) return i;
+    }
+    return -1;
+  }
   function plainDicts(s) {
-    var start, from = 0;
-    while ((start = s.indexOf("defaultdict(<", from)) >= 0) {
-      var i = start + "defaultdict(".length, depth = 0;
-      for (; i < s.length; i++) {                     // фабрика: <class 'list'>, <function <lambda> at 0x…>
-        if (s[i] === "<") depth++;
-        else if (s[i] === ">" && --depth === 0) break;
+    var from = 0;
+    for (;;) {
+      var start = -1, kind = null;
+      WRAPS.forEach(function (w) {
+        var k = s.indexOf(w, from);
+        if (k >= 0 && (start < 0 || k < start)) { start = k; kind = w; }
+      });
+      if (start < 0) return s;
+      var open;
+      if (kind === "Counter(") {
+        open = start + kind.length;
+        if (s[open] === ")") { s = s.slice(0, start) + "{}" + s.slice(open + 1); continue; }
+      } else {
+        var gt = closing(s, start + "defaultdict(".length, "<", ">");   // фабрика: <class 'list'>, <function <lambda> at 0x…>
+        open = gt + 3;
+        if (gt < 0 || s.slice(gt + 1, open) !== ", ") { from = start + 1; continue; }
       }
-      if (s.slice(i + 1, i + 3) !== ", " || s[i + 3] !== "{") { from = start + 1; continue; }
-      var open = i + 3, j = open;
-      for (depth = 0; j < s.length; j++) {            // словарь до парной закрывающей скобки
-        if (s[j] === "{") depth++;
-        else if (s[j] === "}" && --depth === 0) break;
-      }
-      if (s[j + 1] !== ")") { from = start + 1; continue; }
-      s = s.slice(0, start) + s.slice(open, j + 1) + s.slice(j + 2);
+      var end = s[open] === "{" ? closing(s, open, "{", "}") : -1;
+      if (end < 0 || s[end + 1] !== ")") { from = start + 1; continue; }
+      s = s.slice(0, start) + s.slice(open, end + 1) + s.slice(end + 2);
       from = start;
     }
-    return s;
+  }
+  // элементы словаря верхнего уровня: '{'a': 1, 'b': [1, 2]}' → ["'a': 1", "'b': [1, 2]"]
+  function dictItems(s) {
+    if (s[0] !== "{" || s[s.length - 1] !== "}") return null;
+    var items = [], cur = "", depth = 0, quote = null;
+    for (var i = 1; i < s.length - 1; i++) {
+      var ch = s[i];
+      if (quote) {
+        if (ch === "\\") { cur += ch + s[++i]; continue; }
+        if (ch === quote) quote = null;
+      } else if (ch === "'" || ch === '"') quote = ch;
+      else if ("([{".indexOf(ch) >= 0) depth++;
+      else if (")]}".indexOf(ch) >= 0) depth--;
+      else if (ch === "," && depth === 0) { items.push(cur.trim()); cur = ""; continue; }
+      cur += ch;
+    }
+    if (cur.trim()) items.push(cur.trim());
+    return items.sort();
+  }
+  function sameLine(g, w) {
+    if (g === w) return true;
+    if (g.indexOf("Counter(") < 0) return false;
+    var u = plainDicts(g), a = dictItems(u), b = dictItems(w);
+    return u === w || !!(a && b && a.join("\n") === b.join("\n"));
+  }
+  function defaultDicts(s) {                          // только defaultdict: Counter оставляем, чтобы знать, где порядок не важен
+    return s.split("\n").map(function (l) { return l.indexOf("Counter(") >= 0 ? l : plainDicts(l); }).join("\n");
   }
   function norm(s) { return s.replace(/\r/g, "").split("\n").map(function (l) { return l.replace(/\s+$/, ""); }).join("\n").replace(/\n+$/, ""); }
 
@@ -154,10 +195,12 @@
     clearTimeout(timer);
     current = null;
     setRunning(t, false);
-    var got = norm(plainDicts(t.output)), want = norm(t.expected);
+    var got = norm(defaultDicts(t.output)), want = norm(t.expected);
+    var g = got.split("\n"), w = want.split("\n"), i = 0;
+    while (i < g.length && i < w.length && sameLine(g[i], w[i])) i++;
     if (t.hadError) return status(t, "Программа завершилась с ошибкой.", "bad");
     if (!got) return status(t, "Программа ничего не вывела. Результат нужно напечатать через print().", "");
-    if (got === want) {
+    if (i === g.length && i === w.length) {
       status(t, "Совпадает с ожидаемым выводом!", "ok");
       markSolved(t, true);
       if (window.siteFishSchool) {
@@ -166,8 +209,6 @@
       }
       return;
     }
-    var g = got.split("\n"), w = want.split("\n"), i = 0;
-    while (i < g.length && i < w.length && g[i] === w[i]) i++;
     status(t, g.length !== w.length && i === Math.min(g.length, w.length)
       ? "Почти: строк в выводе " + g.length + ", а ожидается " + w.length + "."
       : "Отличается от ожидаемого вывода в строке " + (i + 1) + ".", "diff");
