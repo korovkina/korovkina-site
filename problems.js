@@ -11,6 +11,27 @@
     try { if (val === null) localStorage.removeItem(key); else localStorage.setItem(key, val); } catch (e) {}
   }
   // вывод сравниваем без хвостовых пробелов в строках и пустых строк в конце
+  // defaultdict печатается как defaultdict(<class 'list'>, {...}): засчитываем его как обычный словарь {...}
+  function plainDicts(s) {
+    var start, from = 0;
+    while ((start = s.indexOf("defaultdict(<", from)) >= 0) {
+      var i = start + "defaultdict(".length, depth = 0;
+      for (; i < s.length; i++) {                     // фабрика: <class 'list'>, <function <lambda> at 0x…>
+        if (s[i] === "<") depth++;
+        else if (s[i] === ">" && --depth === 0) break;
+      }
+      if (s.slice(i + 1, i + 3) !== ", " || s[i + 3] !== "{") { from = start + 1; continue; }
+      var open = i + 3, j = open;
+      for (depth = 0; j < s.length; j++) {            // словарь до парной закрывающей скобки
+        if (s[j] === "{") depth++;
+        else if (s[j] === "}" && --depth === 0) break;
+      }
+      if (s[j + 1] !== ")") { from = start + 1; continue; }
+      s = s.slice(0, start) + s.slice(open, j + 1) + s.slice(j + 2);
+      from = start;
+    }
+    return s;
+  }
   function norm(s) { return s.replace(/\r/g, "").split("\n").map(function (l) { return l.replace(/\s+$/, ""); }).join("\n").replace(/\n+$/, ""); }
 
   // ---------- общий поток с Python ----------
@@ -133,7 +154,7 @@
     clearTimeout(timer);
     current = null;
     setRunning(t, false);
-    var got = norm(t.output), want = norm(t.expected);
+    var got = norm(plainDicts(t.output)), want = norm(t.expected);
     if (t.hadError) return status(t, "Программа завершилась с ошибкой.", "bad");
     if (!got) return status(t, "Программа ничего не вывела. Результат нужно напечатать через print().", "");
     if (got === want) {
