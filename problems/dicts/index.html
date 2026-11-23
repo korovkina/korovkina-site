@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Задачи на словари — задачи по Python — Татьяна Коровкина</title>
+  <meta name="description" content="Доступ по ключу, изменение, перебор и встроенные методы словарей.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Задачи на словари — задачи по Python — Татьяна Коровкина">
+  <meta property="og:description" content="Доступ по ключу, изменение, перебор и встроенные методы словарей.">
+  <meta property="og:url" content="https://korovkina.uk/problems/dicts/">
+  <meta property="og:image" content="https://korovkina.uk/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Татьяна Коровкина — алгоритмы и собеседования">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://korovkina.uk/problems/dicts/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="../../styles.css">
+  <script src="../../site.js" defer></script>
+  <script src="../../problems.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="../../">head</a></li>
+          <li><a href="../../#about">Обо мне</a></li>
+          <li><a href="../../#course">Курс</a></li>
+          <li><a href="../../#mentoring">Занятия</a></li>
+          <li><a href="../../talks/">Выступления</a></li>
+          <li><a href="../../articles/">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <div class="head-tools">
+        <div class="theme-switch" role="group" aria-label="Тема оформления" hidden>
+          <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Светлая тема" title="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+          <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1Z"/></svg></button>
+        </div>
+        <nav class="lang-switch" aria-label="Язык сайта">
+          <span aria-current="true">RU</span>
+          <a href="../../en/" hreflang="en" lang="en">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="article-page problems-page" data-worker="../worker.js">
+    <div class="wrap article-layout">
+      <header class="article-head">
+        <p class="eyebrow"><a href="../">Задачи по Python</a> · 10 задач</p>
+        <h1 class="article-title">Задачи на словари</h1>
+        <p class="lead">Задачи на словари в Python: доступ по ключу, изменение, перебор и встроенные методы.</p>
+      </header>
+      <aside class="article-toc" aria-label="Задачи">
+        <p class="toc-title">Задачи</p>
+        <ol class="task-toc"><li><a href="#task-1">1. Доступ по ключу</a></li><li><a href="#task-2">2. Изменение значения</a></li><li><a href="#task-3">3. Добавление и удаление элементов</a></li><li><a href="#task-4">4. Проверка наличия ключа</a></li><li><a href="#task-5">5. Перебор словаря</a></li><li><a href="#task-6">6. Сумма значений</a></li><li><a href="#task-7">7. Обратный словарь</a></li><li><a href="#task-8">8. Частота букв</a></li><li><a href="#task-9">9. Вложенные словари</a></li><li><a href="#task-10">10. Форматированный вывод</a></li></ol>
+        <div class="aquarium" hidden>
+          <div class="aq-tank" aria-hidden="true"></div>
+          <p class="aq-count" aria-live="polite"></p>
+        </div>
+      </aside>
+      <article class="article-body">
+<p>Полезные ссылки:</p><ul><li><a href="https://www.w3schools.com/python/python_dictionaries.asp" rel="noopener">Общая теория</a></li><li><a href="https://www.w3schools.com/python/python_ref_dictionary.asp" rel="noopener">Встроенные методы словарей</a></li><li><a href="https://www.w3schools.com/python/python_dictionaries_exercises.asp" rel="noopener">Короткий тест с подсказками</a></li></ul>
+<aside class="note runner-note" hidden><p class="note-label">Как решать</p><p>Код запускается прямо в браузере, вывод сразу сравнивается с ожидаемым, а решения сохраняются в этом браузере. При первом запуске загрузится Python — около 13 МБ.</p></aside>
+<section class="task" id="task-1" data-task="dicts/1" aria-labelledby="task-1-title">
+<h2 id="task-1-title"><span class="task-num">1.</span> Доступ по ключу</h2>
+<p>Дан словарь:</p>
+<pre class="task-data"><code>person = {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 25, &quot;city&quot;: &quot;Paris&quot;}</code></pre>
+<p>Выведи имя и город, обращаясь к значениям по ключам. Каждое значение — с новой строки.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Alice
+Paris</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-1-code">Решение</label></p>
+  <textarea class="runner-code" id="task-1-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">person = {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 25, &quot;city&quot;: &quot;Paris&quot;}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-2" data-task="dicts/2" aria-labelledby="task-2-title">
+<h2 id="task-2-title"><span class="task-num">2.</span> Изменение значения</h2>
+<p>Дан словарь:</p>
+<pre class="task-data"><code>person = {&quot;name&quot;: &quot;Bob&quot;, &quot;age&quot;: 30}</code></pre>
+<p>Измени возраст на 31 и добавь новый ключ &quot;city&quot; со значением &quot;London&quot;. Выведи обновлённый словарь.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>{&#x27;name&#x27;: &#x27;Bob&#x27;, &#x27;age&#x27;: 31, &#x27;city&#x27;: &#x27;London&#x27;}</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-2-code">Решение</label></p>
+  <textarea class="runner-code" id="task-2-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">person = {&quot;name&quot;: &quot;Bob&quot;, &quot;age&quot;: 30}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-3" data-task="dicts/3" aria-labelledby="task-3-title">
+<h2 id="task-3-title"><span class="task-num">3.</span> Добавление и удаление элементов</h2>
+<p>Дан словарь:</p>
+<pre class="task-data"><code>student = {&quot;name&quot;: &quot;Kate&quot;, &quot;grade&quot;: &quot;A&quot;}</code></pre>
+<p>Добавь ключ &quot;age&quot; со значением 18 и удали ключ &quot;grade&quot;. Выведи получившийся словарь.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: del или dict.pop()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>{&#x27;name&#x27;: &#x27;Kate&#x27;, &#x27;age&#x27;: 18}</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-3-code">Решение</label></p>
+  <textarea class="runner-code" id="task-3-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">student = {&quot;name&quot;: &quot;Kate&quot;, &quot;grade&quot;: &quot;A&quot;}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-4" data-task="dicts/4" aria-labelledby="task-4-title">
+<h2 id="task-4-title"><span class="task-num">4.</span> Проверка наличия ключа</h2>
+<p>Дан словарь и список ключей, которые нужно проверить:</p>
+<pre class="task-data"><code>info = {&quot;login&quot;: &quot;user123&quot;, &quot;password&quot;: &quot;qwerty&quot;}
+keys = [&quot;login&quot;, &quot;email&quot;]</code></pre>
+<p>Для каждого ключа из списка keys по очереди: если ключ есть в словаре, выведи его значение, иначе выведи &quot;Нет такого ключа.&quot;</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: оператор in</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>user123
+Нет такого ключа.</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-4-code">Решение</label></p>
+  <textarea class="runner-code" id="task-4-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">info = {&quot;login&quot;: &quot;user123&quot;, &quot;password&quot;: &quot;qwerty&quot;}
+keys = [&quot;login&quot;, &quot;email&quot;]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-5" data-task="dicts/5" aria-labelledby="task-5-title">
+<h2 id="task-5-title"><span class="task-num">5.</span> Перебор словаря</h2>
+<p>Дан словарь с оценками учеников:</p>
+<pre class="task-data"><code>scores = {&quot;Alice&quot;: 90, &quot;Bob&quot;: 75, &quot;Charlie&quot;: 82}</code></pre>
+<p>Выведи всех учеников и их оценки, каждого с новой строки, в формате «имя → оценка».</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: dict.items()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Alice → 90
+Bob → 75
+Charlie → 82</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-5-code">Решение</label></p>
+  <textarea class="runner-code" id="task-5-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">scores = {&quot;Alice&quot;: 90, &quot;Bob&quot;: 75, &quot;Charlie&quot;: 82}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-6" data-task="dicts/6" aria-labelledby="task-6-title">
+<h2 id="task-6-title"><span class="task-num">6.</span> Сумма значений</h2>
+<p>Дан словарь:</p>
+<pre class="task-data"><code>nums = {&quot;a&quot;: 3, &quot;b&quot;: 7, &quot;c&quot;: 2}</code></pre>
+<p>Найди и выведи сумму всех значений.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: dict.values(), sum()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>12</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-6-code">Решение</label></p>
+  <textarea class="runner-code" id="task-6-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">nums = {&quot;a&quot;: 3, &quot;b&quot;: 7, &quot;c&quot;: 2}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-7" data-task="dicts/7" aria-labelledby="task-7-title">
+<h2 id="task-7-title"><span class="task-num">7.</span> Обратный словарь</h2>
+<p>Дан словарь цветов:</p>
+<pre class="task-data"><code>colors = {&quot;red&quot;: &quot;#FF0000&quot;, &quot;green&quot;: &quot;#00FF00&quot;, &quot;blue&quot;: &quot;#0000FF&quot;}</code></pre>
+<p>Создай новый словарь, где ключи и значения поменялись местами, и выведи его.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: dict.items()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>{&#x27;#FF0000&#x27;: &#x27;red&#x27;, &#x27;#00FF00&#x27;: &#x27;green&#x27;, &#x27;#0000FF&#x27;: &#x27;blue&#x27;}</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-7-code">Решение</label></p>
+  <textarea class="runner-code" id="task-7-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">colors = {&quot;red&quot;: &quot;#FF0000&quot;, &quot;green&quot;: &quot;#00FF00&quot;, &quot;blue&quot;: &quot;#0000FF&quot;}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-8" data-task="dicts/8" aria-labelledby="task-8-title">
+<h2 id="task-8-title"><span class="task-num">8.</span> Частота букв</h2>
+<p>Дано слово:</p>
+<pre class="task-data"><code>word = &quot;banana&quot;</code></pre>
+<p>Создай словарь, где ключ — буква, а значение — сколько раз она встречается в слове. Буквы в словаре должны идти в порядке первого появления в слове. Выведи словарь.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: dict.get(ключ, 0)</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>{&#x27;b&#x27;: 1, &#x27;a&#x27;: 3, &#x27;n&#x27;: 2}</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-8-code">Решение</label></p>
+  <textarea class="runner-code" id="task-8-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">word = &quot;banana&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-9" data-task="dicts/9" aria-labelledby="task-9-title">
+<h2 id="task-9-title"><span class="task-num">9.</span> Вложенные словари</h2>
+<p>Дан словарь students: ключ — имя ученика, значение — словарь с его данными.</p>
+<pre class="task-data"><code>students = {
+    &quot;Alice&quot;: {&quot;age&quot;: 20, &quot;grade&quot;: &quot;A&quot;},
+    &quot;Bob&quot;: {&quot;age&quot;: 22, &quot;grade&quot;: &quot;B&quot;}
+}</code></pre>
+<p>Выведи возраст и оценку Боба (ключ &quot;Bob&quot;) через пробел.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>22 B</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-9-code">Решение</label></p>
+  <textarea class="runner-code" id="task-9-code" rows="7" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">students = {
+    &quot;Alice&quot;: {&quot;age&quot;: 20, &quot;grade&quot;: &quot;A&quot;},
+    &quot;Bob&quot;: {&quot;age&quot;: 22, &quot;grade&quot;: &quot;B&quot;}
+}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-10" data-task="dicts/10" aria-labelledby="task-10-title">
+<h2 id="task-10-title"><span class="task-num">10.</span> Форматированный вывод</h2>
+<p>Дан словарь с данными о товаре:</p>
+<pre class="task-data"><code>product = {&quot;name&quot;: &quot;Laptop&quot;, &quot;price&quot;: 1200, &quot;brand&quot;: &quot;Dell&quot;}</code></pre>
+<p>С помощью f-строк выведи название, бренд и цену в две строки, как в ожидаемом выводе.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Товар: Laptop (Dell)
+Цена: 1200$</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-10-code">Решение</label></p>
+  <textarea class="runner-code" id="task-10-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">product = {&quot;name&quot;: &quot;Laptop&quot;, &quot;price&quot;: 1200, &quot;brand&quot;: &quot;Dell&quot;}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="finale" id="finale" hidden aria-labelledby="finale-title">
+  <p class="eyebrow">10 из 10</p>
+  <h2 id="finale-title">Все задачи решены!</h2>
+  <p>Все рыбки в аквариуме. Сохраните открытку на память или отправьте её тому, кто вас учит: пусть порадуется вместе с вами.</p>
+  <p class="finale-name"><label for="finale-name">Имя на открытке</label><input id="finale-name" type="text" maxlength="40" autocomplete="name" placeholder="Например, Аня"></p>
+  <canvas class="finale-card" width="1200" height="630" role="img" aria-label="Открытка: сборник «Задачи на словари» решён"></canvas>
+  <div class="runner-bar">
+    <button type="button" class="btn primary finale-save">Скачать открытку</button>
+    <button type="button" class="btn ghost finale-share" hidden>Поделиться</button>
+  </div>
+</section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>

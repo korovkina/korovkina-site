@@ -1,9 +1,71 @@
 # Сборники задач по Python для раздела /problems/.
 # file — исходник в этой же папке: задачи в строках '''…''', после каждой — стартовый код с данными.
-# Порядок здесь = порядок на странице /problems/.
+# Оригиналы с решениями автора лежат вне репозитория; забрать свежие (без решений):
+#   python3 tools/build_problems.py --from ~/Documents/ShortcutEdu/issues
+# Порядок здесь = порядок на странице /problems/. slug не менять: по нему в браузерах учеников хранится прогресс.
+
+[[collections]]
+slug = "strings"
+file = "strings.py"
+title = "Задачи на строки"
+description = "Индексы, срезы, разворот, встроенные методы и f-строки."
+
+[[collections]]
+slug = "lists"
+file = "lists.py"
+title = "Задачи на списки"
+description = "Индексы и срезы, методы списков, сортировка с key и первые генераторы списков."
+
+[[collections]]
+slug = "loops"
+file = "iterables.py"
+title = "Задачи на циклы"
+description = "Цикл for по спискам, строкам, словарям, множествам и кортежам, range() и enumerate()."
+
+[[collections]]
+slug = "dicts"
+file = "dicts.py"
+title = "Задачи на словари"
+description = "Доступ по ключу, изменение, перебор и встроенные методы словарей."
+
+[[collections]]
+slug = "sets"
+file = "sets.py"
+title = "Задачи на множества"
+description = "Создание, добавление и удаление элементов, пересечение, объединение и разность множеств."
+
+[[collections]]
+slug = "list-comprehensions"
+file = "list_comprehensions.py"
+title = "Задачи на генераторы списков"
+description = "Каждая задача решается одним генератором списка — одной строкой, обычно с условием."
+
+[[collections]]
+slug = "dict-comprehensions"
+file = "dict_comprehensions.py"
+title = "Задачи на генераторы словарей"
+description = "Каждая задача решается одним генератором словаря — от простых пар до вложенных данных."
 
 [[collections]]
 slug = "mixed"
 file = "mixed.py"
 title = "Задачи на коллекции"
 description = "Строки, списки, словари, генераторы списков и словарей. В одной задаче может понадобиться несколько тем сразу."
+
+[[collections]]
+slug = "matrix"
+file = "matrix.py"
+title = "Задачи на матрицы"
+description = "Списки списков: обход по строкам и столбцам, суммы, подсчёты и поиск."
+
+[[collections]]
+slug = "two-pointers"
+file = "two_pointers.py"
+title = "Индексы и два указателя"
+description = "Соседние элементы, элементы через один и два указателя с разных концов — разминка перед техникой двух указателей."
+
+[[collections]]
+slug = "recursion"
+file = "recursion.py"
+title = "Задачи на рекурсию"
+description = "Функция решает задачу, вызывая саму себя: числа, строки, списки и вложенные папки."

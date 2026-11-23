@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Задачи на рекурсию — задачи по Python — Татьяна Коровкина</title>
+  <meta name="description" content="Функция решает задачу, вызывая саму себя: числа, строки, списки и вложенные папки.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Задачи на рекурсию — задачи по Python — Татьяна Коровкина">
+  <meta property="og:description" content="Функция решает задачу, вызывая саму себя: числа, строки, списки и вложенные папки.">
+  <meta property="og:url" content="https://korovkina.uk/problems/recursion/">
+  <meta property="og:image" content="https://korovkina.uk/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Татьяна Коровкина — алгоритмы и собеседования">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://korovkina.uk/problems/recursion/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="../../styles.css">
+  <script src="../../site.js" defer></script>
+  <script src="../../problems.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="../../">head</a></li>
+          <li><a href="../../#about">Обо мне</a></li>
+          <li><a href="../../#course">Курс</a></li>
+          <li><a href="../../#mentoring">Занятия</a></li>
+          <li><a href="../../talks/">Выступления</a></li>
+          <li><a href="../../articles/">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <div class="head-tools">
+        <div class="theme-switch" role="group" aria-label="Тема оформления" hidden>
+          <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Светлая тема" title="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+          <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1Z"/></svg></button>
+        </div>
+        <nav class="lang-switch" aria-label="Язык сайта">
+          <span aria-current="true">RU</span>
+          <a href="../../en/" hreflang="en" lang="en">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="article-page problems-page" data-worker="../worker.js">
+    <div class="wrap article-layout">
+      <header class="article-head">
+        <p class="eyebrow"><a href="../">Задачи по Python</a> · 10 задач</p>
+        <h1 class="article-title">Задачи на рекурсию</h1>
+        <p class="lead">Задачи на рекурсию: функция решает задачу, вызывая саму себя для задачи поменьше.</p>
+      </header>
+      <aside class="article-toc" aria-label="Задачи">
+        <p class="toc-title">Задачи</p>
+        <ol class="task-toc"><li><a href="#task-1">1. Числа от 1 до n</a></li><li><a href="#task-2">2. Числа от n до 1</a></li><li><a href="#task-3">3. Сумма от 1 до n</a></li><li><a href="#task-4">4. Сумма цифр</a></li><li><a href="#task-5">5. Количество цифр</a></li><li><a href="#task-6">6. Разворот строки</a></li><li><a href="#task-7">7. Палиндром</a></li><li><a href="#task-8">8. Максимум в списке</a></li><li><a href="#task-9">9. Числа во вложенных списках</a></li><li><a href="#task-10">10. Пути к файлам</a></li></ol>
+        <div class="aquarium" hidden>
+          <div class="aq-tank" aria-hidden="true"></div>
+          <p class="aq-count" aria-live="polite"></p>
+        </div>
+      </aside>
+      <article class="article-body">
+<p>В каждой задаче уже есть заготовка функции и её вызовы. Замени pass на рекурсивное решение. Не забудь про базовый случай — момент, когда рекурсия останавливается. В задачах 1–8 циклы не используй: повторение должно получаться за счёт того, что функция вызывает саму себя. В задачах 9 и 10 цикл по элементам можно, а рекурсия нужна, чтобы спускаться во вложенные списки и папки.</p>
+<aside class="note runner-note" hidden><p class="note-label">Как решать</p><p>Код запускается прямо в браузере, вывод сразу сравнивается с ожидаемым, а решения сохраняются в этом браузере. При первом запуске загрузится Python — около 13 МБ.</p></aside>
+<section class="task" id="task-1" data-task="recursion/1" aria-labelledby="task-1-title">
+<h2 id="task-1-title"><span class="task-num">1.</span> Числа от 1 до n</h2>
+<p>Напиши рекурсивную функцию print_numbers(n), которая печатает числа от 1 до n, каждое на новой строке.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: сначала напечатай числа до n - 1, потом само n</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>1
+2
+3
+4
+5</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-1-code">Решение</label></p>
+  <textarea class="runner-code" id="task-1-code" rows="8" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">def print_numbers(n):
+    pass
+
+
+print_numbers(5)
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-2" data-task="recursion/2" aria-labelledby="task-2-title">
+<h2 id="task-2-title"><span class="task-num">2.</span> Числа от n до 1</h2>
+<p>Напиши рекурсивную функцию reverse_numbers(n), которая печатает числа от n до 1, каждое на новой строке.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>5
+4
+3
+2
+1</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-2-code">Решение</label></p>
+  <textarea class="runner-code" id="task-2-code" rows="8" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">def reverse_numbers(n):
+    pass
+
+
+reverse_numbers(5)
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-3" data-task="recursion/3" aria-labelledby="task-3-title">
+<h2 id="task-3-title"><span class="task-num">3.</span> Сумма от 1 до n</h2>
+<p>Напиши рекурсивную функцию sum_n(n), которая возвращает сумму чисел от 1 до n. Функция ничего не печатает: результат печатают вызовы внизу.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>15
+1
+5050</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-3-code">Решение</label></p>
+  <textarea class="runner-code" id="task-3-code" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">def sum_n(n):
+    pass
+
+
+print(sum_n(5))
+print(sum_n(1))
+print(sum_n(100))
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-4" data-task="recursion/4" aria-labelledby="task-4-title">
+<h2 id="task-4-title"><span class="task-num">4.</span> Сумма цифр</h2>
+<p>Напиши рекурсивную функцию digit_sum(n), которая возвращает сумму цифр неотрицательного целого числа n.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: n % 10 — последняя цифра, n // 10 — число без последней цифры</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>15
+7</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-4-code">Решение</label></p>
+  <textarea class="runner-code" id="task-4-code" rows="9" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">def digit_sum(n):
+    pass
+
+
+print(digit_sum(483))
+print(digit_sum(7))
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-5" data-task="recursion/5" aria-labelledby="task-5-title">
+<h2 id="task-5-title"><span class="task-num">5.</span> Количество цифр</h2>
+<p>Напиши рекурсивную функцию count_digits(n), которая возвращает, сколько цифр в неотрицательном целом числе n. Учти, что в числе 0 одна цифра.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: n // 10</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>4
+1
+1</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-5-code">Решение</label></p>
+  <textarea class="runner-code" id="task-5-code" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">def count_digits(n):
+    pass
+
+
+print(count_digits(5821))
+print(count_digits(7))
+print(count_digits(0))
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-6" data-task="recursion/6" aria-labelledby="task-6-title">
+<h2 id="task-6-title"><span class="task-num">6.</span> Разворот строки</h2>
+<p>Напиши рекурсивную функцию reverse_string(s), которая возвращает строку s задом наперёд. Срез [::-1] не используй.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: s[0] — первый символ, s[1:] — строка без первого символа</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>nohtyp
+абыр</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-6-code">Решение</label></p>
+  <textarea class="runner-code" id="task-6-code" rows="9" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">def reverse_string(s):
+    pass
+
+
+print(reverse_string(&quot;python&quot;))
+print(reverse_string(&quot;рыба&quot;))
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-7" data-task="recursion/7" aria-labelledby="task-7-title">
+<h2 id="task-7-title"><span class="task-num">7.</span> Палиндром</h2>
+<p>Напиши рекурсивную функцию is_palindrome(s), которая возвращает True, если строка s — палиндром, то есть одинаково читается слева направо и справа налево, и False, если нет.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: сравни первый и последний символ, а потом проверь строку между ними: s[1:-1]</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>True
+False
+True</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-7-code">Решение</label></p>
+  <textarea class="runner-code" id="task-7-code" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">def is_palindrome(s):
+    pass
+
+
+print(is_palindrome(&quot;level&quot;))
+print(is_palindrome(&quot;python&quot;))
+print(is_palindrome(&quot;abba&quot;))
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-8" data-task="recursion/8" aria-labelledby="task-8-title">
+<h2 id="task-8-title"><span class="task-num">8.</span> Максимум в списке</h2>
+<p>Напиши рекурсивную функцию find_max(arr), которая возвращает наибольший элемент непустого списка arr. Встроенную функцию max() не используй.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: arr[0] и find_max(arr[1:])</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>11
+-1</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-8-code">Решение</label></p>
+  <textarea class="runner-code" id="task-8-code" rows="9" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">def find_max(arr):
+    pass
+
+
+print(find_max([3, 8, 2, 11, 5]))
+print(find_max([-4, -9, -1]))
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-9" data-task="recursion/9" aria-labelledby="task-9-title">
+<h2 id="task-9-title"><span class="task-num">9.</span> Числа во вложенных списках</h2>
+<p>Список может содержать числа и другие списки, а те — снова числа и списки. Напиши рекурсивную функцию count_elements(arr), которая считает все числа, в том числе внутри вложенных списков. Сами вложенные списки не считаются.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: isinstance(x, list) — проверка, что x является списком</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>6
+0
+1</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-9-code">Решение</label></p>
+  <textarea class="runner-code" id="task-9-code" rows="10" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">def count_elements(arr):
+    pass
+
+
+print(count_elements([1, [2, 3], [4, [5, 6]]]))
+print(count_elements([]))
+print(count_elements([[[]], 7]))
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-10" data-task="recursion/10" aria-labelledby="task-10-title">
+<h2 id="task-10-title"><span class="task-num">10.</span> Пути к файлам</h2>
+<p>Файловая система записана словарём: папка — это словарь, файл — ключ со значением None.</p>
+<pre class="task-data"><code>files = {
+    &quot;documents&quot;: {
+        &quot;notes.txt&quot;: None,
+        &quot;school&quot;: {
+            &quot;math.txt&quot;: None
+        }
+    },
+    &quot;photo.jpg&quot;: None
+}</code></pre>
+<p>Напиши рекурсивную функцию print_paths(tree, prefix=&quot;&quot;), которая печатает пути ко всем файлам, каждый на новой строке, в том порядке, в каком они записаны в словаре. Части пути разделяй символом /.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: tree.items(), проверка value is None</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>documents/notes.txt
+documents/school/math.txt
+photo.jpg</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-10-code">Решение</label></p>
+  <textarea class="runner-code" id="task-10-code" rows="19" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">files = {
+    &quot;documents&quot;: {
+        &quot;notes.txt&quot;: None,
+        &quot;school&quot;: {
+            &quot;math.txt&quot;: None
+        }
+    },
+    &quot;photo.jpg&quot;: None
+}
+
+
+def print_paths(tree, prefix=&quot;&quot;):
+    pass
+
+
+print_paths(files)
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="finale" id="finale" hidden aria-labelledby="finale-title">
+  <p class="eyebrow">10 из 10</p>
+  <h2 id="finale-title">Все задачи решены!</h2>
+  <p>Все рыбки в аквариуме. Сохраните открытку на память или отправьте её тому, кто вас учит: пусть порадуется вместе с вами.</p>
+  <p class="finale-name"><label for="finale-name">Имя на открытке</label><input id="finale-name" type="text" maxlength="40" autocomplete="name" placeholder="Например, Аня"></p>
+  <canvas class="finale-card" width="1200" height="630" role="img" aria-label="Открытка: сборник «Задачи на рекурсию» решён"></canvas>
+  <div class="runner-bar">
+    <button type="button" class="btn primary finale-save">Скачать открытку</button>
+    <button type="button" class="btn ghost finale-share" hidden>Поделиться</button>
+  </div>
+</section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>

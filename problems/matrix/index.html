@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Задачи на матрицы — задачи по Python — Татьяна Коровкина</title>
+  <meta name="description" content="Списки списков: обход по строкам и столбцам, суммы, подсчёты и поиск.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Задачи на матрицы — задачи по Python — Татьяна Коровкина">
+  <meta property="og:description" content="Списки списков: обход по строкам и столбцам, суммы, подсчёты и поиск.">
+  <meta property="og:url" content="https://korovkina.uk/problems/matrix/">
+  <meta property="og:image" content="https://korovkina.uk/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Татьяна Коровкина — алгоритмы и собеседования">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://korovkina.uk/problems/matrix/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="../../styles.css">
+  <script src="../../site.js" defer></script>
+  <script src="../../problems.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="../../">head</a></li>
+          <li><a href="../../#about">Обо мне</a></li>
+          <li><a href="../../#course">Курс</a></li>
+          <li><a href="../../#mentoring">Занятия</a></li>
+          <li><a href="../../talks/">Выступления</a></li>
+          <li><a href="../../articles/">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <div class="head-tools">
+        <div class="theme-switch" role="group" aria-label="Тема оформления" hidden>
+          <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Светлая тема" title="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+          <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1Z"/></svg></button>
+        </div>
+        <nav class="lang-switch" aria-label="Язык сайта">
+          <span aria-current="true">RU</span>
+          <a href="../../en/" hreflang="en" lang="en">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="article-page problems-page" data-worker="../worker.js">
+    <div class="wrap article-layout">
+      <header class="article-head">
+        <p class="eyebrow"><a href="../">Задачи по Python</a> · 10 задач</p>
+        <h1 class="article-title">Задачи на матрицы</h1>
+        <p class="lead">Задачи на матрицы — списки списков: обход по строкам и по столбцам, суммы, подсчёты и поиск.</p>
+      </header>
+      <aside class="article-toc" aria-label="Задачи">
+        <p class="toc-title">Задачи</p>
+        <ol class="task-toc"><li><a href="#task-1">1. Сумма всех элементов</a></li><li><a href="#task-2">2. Больше заданного числа</a></li><li><a href="#task-3">3. Минимальный элемент</a></li><li><a href="#task-4">4. Сумма каждой строки</a></li><li><a href="#task-5">5. Строка с максимальной суммой</a></li><li><a href="#task-6">6. Сумма каждого столбца</a></li><li><a href="#task-7">7. Есть ли элемент</a></li><li><a href="#task-8">8. Строки с нулём</a></li><li><a href="#task-9">9. Больше всего чётных</a></li><li><a href="#task-10">10. Все строки возрастают?</a></li></ol>
+        <div class="aquarium" hidden>
+          <div class="aq-tank" aria-hidden="true"></div>
+          <p class="aq-count" aria-live="polite"></p>
+        </div>
+      </aside>
+      <article class="article-body">
+<p>Во всех задачах матрица прямоугольная: в каждой строке одинаковое количество элементов. Строки и столбцы нумеруются с нуля. Решай, как удобно: циклами или генераторами.</p>
+<aside class="note runner-note" hidden><p class="note-label">Как решать</p><p>Код запускается прямо в браузере, вывод сразу сравнивается с ожидаемым, а решения сохраняются в этом браузере. При первом запуске загрузится Python — около 13 МБ.</p></aside>
+<section class="task" id="task-1" data-task="matrix/1" aria-labelledby="task-1-title">
+<h2 id="task-1-title"><span class="task-num">1.</span> Сумма всех элементов</h2>
+<p>Дана матрица:</p>
+<pre class="task-data"><code>matrix = [[1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9]]</code></pre>
+<p>Найди сумму всех её элементов и выведи её.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>45</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-1-code">Решение</label></p>
+  <textarea class="runner-code" id="task-1-code" rows="6" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">matrix = [[1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9]]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-2" data-task="matrix/2" aria-labelledby="task-2-title">
+<h2 id="task-2-title"><span class="task-num">2.</span> Больше заданного числа</h2>
+<p>Даны матрица и число:</p>
+<pre class="task-data"><code>matrix = [[5, 12, 7],
+          [3, 9, 15],
+          [10, 1, 8]]
+k = 7</code></pre>
+<p>Посчитай, сколько элементов матрицы строго больше k, и выведи это количество.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>5</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-2-code">Решение</label></p>
+  <textarea class="runner-code" id="task-2-code" rows="7" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">matrix = [[5, 12, 7],
+          [3, 9, 15],
+          [10, 1, 8]]
+k = 7
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-3" data-task="matrix/3" aria-labelledby="task-3-title">
+<h2 id="task-3-title"><span class="task-num">3.</span> Минимальный элемент</h2>
+<p>Дана матрица:</p>
+<pre class="task-data"><code>matrix = [[4, -2, 7],
+          [0, 5, -6],
+          [3, 8, 1]]</code></pre>
+<p>Найди минимальный элемент матрицы и выведи его.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>-6</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-3-code">Решение</label></p>
+  <textarea class="runner-code" id="task-3-code" rows="6" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">matrix = [[4, -2, 7],
+          [0, 5, -6],
+          [3, 8, 1]]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-4" data-task="matrix/4" aria-labelledby="task-4-title">
+<h2 id="task-4-title"><span class="task-num">4.</span> Сумма каждой строки</h2>
+<p>Дана матрица:</p>
+<pre class="task-data"><code>matrix = [[2, 4, 6],
+          [1, 1, 1],
+          [5, 0, 5]]</code></pre>
+<p>Составь список, где каждый элемент — сумма соответствующей строки, и выведи его.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[12, 3, 10]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-4-code">Решение</label></p>
+  <textarea class="runner-code" id="task-4-code" rows="6" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">matrix = [[2, 4, 6],
+          [1, 1, 1],
+          [5, 0, 5]]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-5" data-task="matrix/5" aria-labelledby="task-5-title">
+<h2 id="task-5-title"><span class="task-num">5.</span> Строка с максимальной суммой</h2>
+<p>Дана матрица:</p>
+<pre class="task-data"><code>matrix = [[3, 1, 4],
+          [9, 0, 0],
+          [2, 6, 1],
+          [1, 5, 3]]</code></pre>
+<p>Найди индекс строки с наибольшей суммой элементов и выведи его. Если таких строк несколько, выведи индекс первой из них.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>1</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-5-code">Решение</label></p>
+  <textarea class="runner-code" id="task-5-code" rows="7" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">matrix = [[3, 1, 4],
+          [9, 0, 0],
+          [2, 6, 1],
+          [1, 5, 3]]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-6" data-task="matrix/6" aria-labelledby="task-6-title">
+<h2 id="task-6-title"><span class="task-num">6.</span> Сумма каждого столбца</h2>
+<p>Дана матрица:</p>
+<pre class="task-data"><code>matrix = [[1, 2, 3],
+          [4, 5, 6]]</code></pre>
+<p>Составь список сумм по столбцам: первый элемент — сумма первого столбца, второй — второго и так далее. Выведи этот список.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: range(len(matrix[0]))</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[5, 7, 9]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-6-code">Решение</label></p>
+  <textarea class="runner-code" id="task-6-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">matrix = [[1, 2, 3],
+          [4, 5, 6]]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-7" data-task="matrix/7" aria-labelledby="task-7-title">
+<h2 id="task-7-title"><span class="task-num">7.</span> Есть ли элемент</h2>
+<p>Даны матрица и список чисел, которые нужно найти:</p>
+<pre class="task-data"><code>matrix = [[3, 8, 1],
+          [6, 2, 9]]
+targets = [9, 7]</code></pre>
+<p>Для каждого числа из targets выведи True, если оно есть в матрице, иначе False. Каждый ответ — на отдельной строке.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>True
+False</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-7-code">Решение</label></p>
+  <textarea class="runner-code" id="task-7-code" rows="6" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">matrix = [[3, 8, 1],
+          [6, 2, 9]]
+targets = [9, 7]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-8" data-task="matrix/8" aria-labelledby="task-8-title">
+<h2 id="task-8-title"><span class="task-num">8.</span> Строки с нулём</h2>
+<p>Дана матрица:</p>
+<pre class="task-data"><code>matrix = [[1, 0, 3],
+          [4, 5, 6],
+          [0, 0, 7],
+          [8, 9, 0]]</code></pre>
+<p>Посчитай, сколько строк содержат хотя бы один 0, и выведи это количество. Строка с несколькими нулями считается один раз.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>3</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-8-code">Решение</label></p>
+  <textarea class="runner-code" id="task-8-code" rows="7" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">matrix = [[1, 0, 3],
+          [4, 5, 6],
+          [0, 0, 7],
+          [8, 9, 0]]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-9" data-task="matrix/9" aria-labelledby="task-9-title">
+<h2 id="task-9-title"><span class="task-num">9.</span> Больше всего чётных</h2>
+<p>Дана матрица:</p>
+<pre class="task-data"><code>matrix = [[1, 3, 5, 2],
+          [2, 4, 7, 9],
+          [6, 1, 8, 3],
+          [2, 2, 1, 1]]</code></pre>
+<p>Найди индекс строки, в которой больше всего чётных элементов, и выведи его. Если таких строк несколько, выведи индекс первой из них.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>1</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-9-code">Решение</label></p>
+  <textarea class="runner-code" id="task-9-code" rows="7" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">matrix = [[1, 3, 5, 2],
+          [2, 4, 7, 9],
+          [6, 1, 8, 3],
+          [2, 2, 1, 1]]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-10" data-task="matrix/10" aria-labelledby="task-10-title">
+<h2 id="task-10-title"><span class="task-num">10.</span> Все строки возрастают?</h2>
+<p>Даны две матрицы:</p>
+<pre class="task-data"><code>a = [[1, 2, 3],
+     [0, 5, 9],
+     [-3, -1, 4]]
+b = [[1, 2, 3],
+     [4, 4, 6],
+     [7, 8, 9]]</code></pre>
+<p>Для каждой матрицы проверь, что в каждой её строке элементы строго возрастают слева направо: каждый следующий больше предыдущего. Выведи True или False: сначала для a, потом для b.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>True
+False</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-10-code">Решение</label></p>
+  <textarea class="runner-code" id="task-10-code" rows="9" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">a = [[1, 2, 3],
+     [0, 5, 9],
+     [-3, -1, 4]]
+b = [[1, 2, 3],
+     [4, 4, 6],
+     [7, 8, 9]]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="finale" id="finale" hidden aria-labelledby="finale-title">
+  <p class="eyebrow">10 из 10</p>
+  <h2 id="finale-title">Все задачи решены!</h2>
+  <p>Все рыбки в аквариуме. Сохраните открытку на память или отправьте её тому, кто вас учит: пусть порадуется вместе с вами.</p>
+  <p class="finale-name"><label for="finale-name">Имя на открытке</label><input id="finale-name" type="text" maxlength="40" autocomplete="name" placeholder="Например, Аня"></p>
+  <canvas class="finale-card" width="1200" height="630" role="img" aria-label="Открытка: сборник «Задачи на матрицы» решён"></canvas>
+  <div class="runner-bar">
+    <button type="button" class="btn primary finale-save">Скачать открытку</button>
+    <button type="button" class="btn ghost finale-share" hidden>Поделиться</button>
+  </div>
+</section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>

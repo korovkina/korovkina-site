@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Задачи на циклы — задачи по Python — Татьяна Коровкина</title>
+  <meta name="description" content="Цикл for по спискам, строкам, словарям, множествам и кортежам, range() и enumerate().">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Задачи на циклы — задачи по Python — Татьяна Коровкина">
+  <meta property="og:description" content="Цикл for по спискам, строкам, словарям, множествам и кортежам, range() и enumerate().">
+  <meta property="og:url" content="https://korovkina.uk/problems/loops/">
+  <meta property="og:image" content="https://korovkina.uk/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Татьяна Коровкина — алгоритмы и собеседования">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://korovkina.uk/problems/loops/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="../../styles.css">
+  <script src="../../site.js" defer></script>
+  <script src="../../problems.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="../../">head</a></li>
+          <li><a href="../../#about">Обо мне</a></li>
+          <li><a href="../../#course">Курс</a></li>
+          <li><a href="../../#mentoring">Занятия</a></li>
+          <li><a href="../../talks/">Выступления</a></li>
+          <li><a href="../../articles/">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <div class="head-tools">
+        <div class="theme-switch" role="group" aria-label="Тема оформления" hidden>
+          <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Светлая тема" title="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+          <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1Z"/></svg></button>
+        </div>
+        <nav class="lang-switch" aria-label="Язык сайта">
+          <span aria-current="true">RU</span>
+          <a href="../../en/" hreflang="en" lang="en">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="article-page problems-page" data-worker="../worker.js">
+    <div class="wrap article-layout">
+      <header class="article-head">
+        <p class="eyebrow"><a href="../">Задачи по Python</a> · 8 задач</p>
+        <h1 class="article-title">Задачи на циклы</h1>
+        <p class="lead">Задачи на цикл for: проход по спискам, строкам, словарям, множествам и кортежам, range() и enumerate(). Решение пиши прямо под данными задачи и сверяй с ожидаемым выводом.</p>
+      </header>
+      <aside class="article-toc" aria-label="Задачи">
+        <p class="toc-title">Задачи</p>
+        <ol class="task-toc"><li><a href="#task-1">1. Проход по списку</a></li><li><a href="#task-2">2. Проход по строке</a></li><li><a href="#task-3">3. Итерация по словарю</a></li><li><a href="#task-4">4. Цикл с range</a></li><li><a href="#task-5">5. Использование enumerate</a></li><li><a href="#task-6">6. Проход по множеству</a></li><li><a href="#task-7">7. Проход по кортежу</a></li><li><a href="#task-8">8. Разложение кортежей в цикле</a></li></ol>
+        <div class="aquarium" hidden>
+          <div class="aq-tank" aria-hidden="true"></div>
+          <p class="aq-count" aria-live="polite"></p>
+        </div>
+      </aside>
+      <article class="article-body">
+<p>Полезные ссылки:</p><ul><li><a href="https://www.w3schools.com/python/python_for_loops.asp" rel="noopener">Цикл for</a></li><li><a href="https://www.w3schools.com/python/ref_func_range.asp" rel="noopener">Функция range()</a></li><li><a href="https://www.w3schools.com/python/ref_func_enumerate.asp" rel="noopener">Функция enumerate()</a></li></ul>
+<aside class="note runner-note" hidden><p class="note-label">Как решать</p><p>Код запускается прямо в браузере, вывод сразу сравнивается с ожидаемым, а решения сохраняются в этом браузере. При первом запуске загрузится Python — около 13 МБ.</p></aside>
+<section class="task" id="task-1" data-task="loops/1" aria-labelledby="task-1-title">
+<h2 id="task-1-title"><span class="task-num">1.</span> Проход по списку</h2>
+<p>Дан список чисел:</p>
+<pre class="task-data"><code>nums = [3, 7, 2, 9, 4]</code></pre>
+<p>С помощью цикла for выведи для каждого числа строку: само число и его квадрат через пробел.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: print() с несколькими аргументами, оператор **</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>3 9
+7 49
+2 4
+9 81
+4 16</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-1-code">Решение</label></p>
+  <textarea class="runner-code" id="task-1-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">nums = [3, 7, 2, 9, 4]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-2" data-task="loops/2" aria-labelledby="task-2-title">
+<h2 id="task-2-title"><span class="task-num">2.</span> Проход по строке</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>s = &quot;Python&quot;</code></pre>
+<p>С помощью цикла for выведи каждый символ строки на отдельной строке, а последней строкой выведи количество гласных букв. Гласными считаем a, e, i, o, u в любом регистре (y не считаем).</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: оператор in, str.lower()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>P
+y
+t
+h
+o
+n
+1</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-2-code">Решение</label></p>
+  <textarea class="runner-code" id="task-2-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">s = &quot;Python&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-3" data-task="loops/3" aria-labelledby="task-3-title">
+<h2 id="task-3-title"><span class="task-num">3.</span> Итерация по словарю</h2>
+<p>Дан словарь с оценками:</p>
+<pre class="task-data"><code>grades = {&quot;Anna&quot;: 5, &quot;Ivan&quot;: 4, &quot;Olga&quot;: 5}</code></pre>
+<p>С помощью цикла for и метода items() выведи для каждого ученика строку вида «Anna got 5».</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: dict.items(), f-строки</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Anna got 5
+Ivan got 4
+Olga got 5</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-3-code">Решение</label></p>
+  <textarea class="runner-code" id="task-3-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">grades = {&quot;Anna&quot;: 5, &quot;Ivan&quot;: 4, &quot;Olga&quot;: 5}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-4" data-task="loops/4" aria-labelledby="task-4-title">
+<h2 id="task-4-title"><span class="task-num">4.</span> Цикл с range</h2>
+<p>С помощью цикла for и range():</p>
+<p>а) выведи все числа от 10 до 20 включительно в одну строку через пробел;</p>
+<p>б) следующей строкой выведи через пробел только те из них, которые делятся на 3.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: range(start, stop), print(x, end=&quot; &quot;), пустой print() переводит строку</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>10 11 12 13 14 15 16 17 18 19 20
+12 15 18</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-4-code">Решение</label></p>
+  <textarea class="runner-code" id="task-4-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-5" data-task="loops/5" aria-labelledby="task-5-title">
+<h2 id="task-5-title"><span class="task-num">5.</span> Использование enumerate</h2>
+<p>Дан список:</p>
+<pre class="task-data"><code>fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]</code></pre>
+<p>С помощью enumerate() выведи каждый фрукт с его индексом в формате «0: apple».</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: enumerate(), f-строки</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>0: apple
+1: banana
+2: cherry</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-5-code">Решение</label></p>
+  <textarea class="runner-code" id="task-5-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-6" data-task="loops/6" aria-labelledby="task-6-title">
+<h2 id="task-6-title"><span class="task-num">6.</span> Проход по множеству</h2>
+<p>Дано множество:</p>
+<pre class="task-data"><code>colors = {&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;}</code></pre>
+<p>С помощью цикла for выведи все цвета в верхнем регистре, каждый на отдельной строке, в алфавитном порядке.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: sorted(), str.upper()</p></div></details>
+<aside class="note note-important"><p class="note-label">Вопрос на подумать</p><p>Почему без sorted() порядок цветов может меняться от запуска к запуску?</p></aside>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>BLUE
+GREEN
+RED</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-6-code">Решение</label></p>
+  <textarea class="runner-code" id="task-6-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">colors = {&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;}
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-7" data-task="loops/7" aria-labelledby="task-7-title">
+<h2 id="task-7-title"><span class="task-num">7.</span> Проход по кортежу</h2>
+<p>Дан кортеж температур:</p>
+<pre class="task-data"><code>temps = (18, 22, 19, 25, 21)</code></pre>
+<p>С помощью цикла for, без функции max():</p>
+<p>а) найди максимальную температуру и выведи её первой строкой;</p>
+<p>б) затем выведи все значения выше 20, каждое на отдельной строке, в исходном порядке.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: переменная для текущего максимума, условие if</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>25
+22
+25
+21</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-7-code">Решение</label></p>
+  <textarea class="runner-code" id="task-7-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">temps = (18, 22, 19, 25, 21)
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-8" data-task="loops/8" aria-labelledby="task-8-title">
+<h2 id="task-8-title"><span class="task-num">8.</span> Разложение кортежей в цикле</h2>
+<p>Дан список точек — кортежей (x, y):</p>
+<pre class="task-data"><code>points = [(2, 3), (5, 7), (1, 4)]</code></pre>
+<p>С помощью цикла for разложи каждый кортеж на переменные x и y и выведи сумму x + y для каждой точки на отдельной строке.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: for x, y in points</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>5
+12
+5</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-8-code">Решение</label></p>
+  <textarea class="runner-code" id="task-8-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">points = [(2, 3), (5, 7), (1, 4)]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="finale" id="finale" hidden aria-labelledby="finale-title">
+  <p class="eyebrow">8 из 8</p>
+  <h2 id="finale-title">Все задачи решены!</h2>
+  <p>Все рыбки в аквариуме. Сохраните открытку на память или отправьте её тому, кто вас учит: пусть порадуется вместе с вами.</p>
+  <p class="finale-name"><label for="finale-name">Имя на открытке</label><input id="finale-name" type="text" maxlength="40" autocomplete="name" placeholder="Например, Аня"></p>
+  <canvas class="finale-card" width="1200" height="630" role="img" aria-label="Открытка: сборник «Задачи на циклы» решён"></canvas>
+  <div class="runner-bar">
+    <button type="button" class="btn primary finale-save">Скачать открытку</button>
+    <button type="button" class="btn ghost finale-share" hidden>Поделиться</button>
+  </div>
+</section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>

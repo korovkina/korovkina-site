@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Задачи на генераторы списков — задачи по Python — Татьяна Коровкина</title>
+  <meta name="description" content="Каждая задача решается одним генератором списка — одной строкой, обычно с условием.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Задачи на генераторы списков — задачи по Python — Татьяна Коровкина">
+  <meta property="og:description" content="Каждая задача решается одним генератором списка — одной строкой, обычно с условием.">
+  <meta property="og:url" content="https://korovkina.uk/problems/list-comprehensions/">
+  <meta property="og:image" content="https://korovkina.uk/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Татьяна Коровкина — алгоритмы и собеседования">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://korovkina.uk/problems/list-comprehensions/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="../../styles.css">
+  <script src="../../site.js" defer></script>
+  <script src="../../problems.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="../../">head</a></li>
+          <li><a href="../../#about">Обо мне</a></li>
+          <li><a href="../../#course">Курс</a></li>
+          <li><a href="../../#mentoring">Занятия</a></li>
+          <li><a href="../../talks/">Выступления</a></li>
+          <li><a href="../../articles/">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <div class="head-tools">
+        <div class="theme-switch" role="group" aria-label="Тема оформления" hidden>
+          <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Светлая тема" title="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+          <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1Z"/></svg></button>
+        </div>
+        <nav class="lang-switch" aria-label="Язык сайта">
+          <span aria-current="true">RU</span>
+          <a href="../../en/" hreflang="en" lang="en">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="article-page problems-page" data-worker="../worker.js">
+    <div class="wrap article-layout">
+      <header class="article-head">
+        <p class="eyebrow"><a href="../">Задачи по Python</a> · 10 задач</p>
+        <h1 class="article-title">Задачи на генераторы списков</h1>
+        <p class="lead">Задачи на генераторы списков (list comprehension). Каждую задачу реши одним генератором списка — одной строкой, обычно с условием.</p>
+      </header>
+      <aside class="article-toc" aria-label="Задачи">
+        <p class="toc-title">Задачи</p>
+        <ol class="task-toc"><li><a href="#task-1">1. Положительные числа</a></li><li><a href="#task-2">2. Квадраты чётных</a></li><li><a href="#task-3">3. Слова без цифр</a></li><li><a href="#task-4">4. Без пустых строк</a></li><li><a href="#task-5">5. Делится на 3 или на 5, но не на оба</a></li><li><a href="#task-6">6. Пары из двух списков</a></li><li><a href="#task-7">7. Слова длиннее среднего</a></li><li><a href="#task-8">8. Только целые числа</a></li><li><a href="#task-9">9. Пары с чётной суммой</a></li><li><a href="#task-10">10. Две одинаковые буквы подряд</a></li></ol>
+        <div class="aquarium" hidden>
+          <div class="aq-tank" aria-hidden="true"></div>
+          <p class="aq-count" aria-live="polite"></p>
+        </div>
+      </aside>
+      <article class="article-body">
+<p>Полезные ссылки:</p><ul><li><a href="https://www.w3schools.com/python/python_lists_comprehension.asp" rel="noopener">Генераторы списков</a></li><li><a href="https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions" rel="noopener">Генераторы списков в документации Python</a></li></ul>
+<p>Напоминание:</p><pre><code>[выражение for x in список if условие]
+print([i for i in range(50) if i % 2 == 0])     — чётные числа от 0 до 48</code></pre>
+<aside class="note runner-note" hidden><p class="note-label">Как решать</p><p>Код запускается прямо в браузере, вывод сразу сравнивается с ожидаемым, а решения сохраняются в этом браузере. При первом запуске загрузится Python — около 13 МБ.</p></aside>
+<section class="task" id="task-1" data-task="list-comprehensions/1" aria-labelledby="task-1-title">
+<h2 id="task-1-title"><span class="task-num">1.</span> Положительные числа</h2>
+<p>Дан список:</p>
+<pre class="task-data"><code>nums = [-3, 5, 0, 12, -7, 9, -1]</code></pre>
+<p>С помощью генератора создай новый список только из положительных чисел (ноль не положительный) и выведи его.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[5, 12, 9]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-1-code">Решение</label></p>
+  <textarea class="runner-code" id="task-1-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">nums = [-3, 5, 0, 12, -7, 9, -1]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-2" data-task="list-comprehensions/2" aria-labelledby="task-2-title">
+<h2 id="task-2-title"><span class="task-num">2.</span> Квадраты чётных</h2>
+<p>Дан список:</p>
+<pre class="task-data"><code>nums = list(range(1, 21))</code></pre>
+<p>Создай список квадратов только чётных чисел из nums и выведи его.</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[4, 16, 36, 64, 100, 144, 196, 256, 324, 400]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-2-code">Решение</label></p>
+  <textarea class="runner-code" id="task-2-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">nums = list(range(1, 21))
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-3" data-task="list-comprehensions/3" aria-labelledby="task-3-title">
+<h2 id="task-3-title"><span class="task-num">3.</span> Слова без цифр</h2>
+<p>Дан список:</p>
+<pre class="task-data"><code>words = [&quot;hi&quot;, &quot;cat3&quot;, &quot;dog&quot;, &quot;7up&quot;, &quot;apple2&quot;]</code></pre>
+<p>Создай список из тех слов, в которых нет ни одной цифры, и выведи его.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.isdigit() или str.isalpha(), any() или all()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[&#x27;hi&#x27;, &#x27;dog&#x27;]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-3-code">Решение</label></p>
+  <textarea class="runner-code" id="task-3-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">words = [&quot;hi&quot;, &quot;cat3&quot;, &quot;dog&quot;, &quot;7up&quot;, &quot;apple2&quot;]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-4" data-task="list-comprehensions/4" aria-labelledby="task-4-title">
+<h2 id="task-4-title"><span class="task-num">4.</span> Без пустых строк</h2>
+<p>Дан список:</p>
+<pre class="task-data"><code>lines = [&quot;hello&quot;, &quot;&quot;, &quot;world&quot;, &quot; &quot;, &quot;python&quot;, &quot;&quot;]</code></pre>
+<p>Создай список только из непустых строк и выведи его. Строки, состоящие из одних пробелов, тоже считаются пустыми.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.strip()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[&#x27;hello&#x27;, &#x27;world&#x27;, &#x27;python&#x27;]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-4-code">Решение</label></p>
+  <textarea class="runner-code" id="task-4-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">lines = [&quot;hello&quot;, &quot;&quot;, &quot;world&quot;, &quot; &quot;, &quot;python&quot;, &quot;&quot;]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-5" data-task="list-comprehensions/5" aria-labelledby="task-5-title">
+<h2 id="task-5-title"><span class="task-num">5.</span> Делится на 3 или на 5, но не на оба</h2>
+<p>Создай список всех чисел от 1 до 100 включительно, которые делятся на 3 или на 5, но не на 3 и 5 одновременно. Выведи его.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: range(), оператор %</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[3, 5, 6, 9, 10, 12, 18, 20, 21, 24, 25, 27, 33, 35, 36, 39, 40, 42, 48, 50, 51, 54, 55, 57, 63, 65, 66, 69, 70, 72, 78, 80, 81, 84, 85, 87, 93, 95, 96, 99, 100]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-5-code">Решение</label></p>
+  <textarea class="runner-code" id="task-5-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-6" data-task="list-comprehensions/6" aria-labelledby="task-6-title">
+<h2 id="task-6-title"><span class="task-num">6.</span> Пары из двух списков</h2>
+<p>Даны два списка одинаковой длины:</p>
+<pre class="task-data"><code>a = [1, 2, 3, 4, 5]
+b = [10, 20, 30, 40, 50]</code></pre>
+<p>Составь пары (x, y) из элементов, стоящих на одинаковых позициях: первый элемент a с первым элементом b, второй со вторым и так далее. Оставь только те пары, где x нечётный, а y больше 20. Выведи список пар.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: zip()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[(3, 30), (5, 50)]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-6-code">Решение</label></p>
+  <textarea class="runner-code" id="task-6-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">a = [1, 2, 3, 4, 5]
+b = [10, 20, 30, 40, 50]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-7" data-task="list-comprehensions/7" aria-labelledby="task-7-title">
+<h2 id="task-7-title"><span class="task-num">7.</span> Слова длиннее среднего</h2>
+<p>Дан список:</p>
+<pre class="task-data"><code>words = [&quot;cat&quot;, &quot;elephant&quot;, &quot;dog&quot;, &quot;hippopotamus&quot;, &quot;ant&quot;, &quot;tiger&quot;]</code></pre>
+<p>Создай список слов, длина которых строго больше средней длины слова в этом списке, и выведи его.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: sum() и len(). Среднюю длину можно посчитать заранее, до генератора.</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[&#x27;elephant&#x27;, &#x27;hippopotamus&#x27;]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-7-code">Решение</label></p>
+  <textarea class="runner-code" id="task-7-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">words = [&quot;cat&quot;, &quot;elephant&quot;, &quot;dog&quot;, &quot;hippopotamus&quot;, &quot;ant&quot;, &quot;tiger&quot;]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-8" data-task="list-comprehensions/8" aria-labelledby="task-8-title">
+<h2 id="task-8-title"><span class="task-num">8.</span> Только целые числа</h2>
+<p>Дан список строк:</p>
+<pre class="task-data"><code>raw = [&quot;10&quot;, &quot;abc&quot;, &quot;25&quot;, &quot;-3&quot;, &quot;4.5&quot;, &quot;0&quot;]</code></pre>
+<p>Оставь только те строки, которые записывают целое число (в том числе отрицательное), сразу преобразуй их в int и выведи получившийся список. Остальные строки пропусти. Обойдись без try/except: всё должно уместиться в один генератор с условием.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.isdigit() — но для &quot;-3&quot; он вернёт False, поэтому сначала убери минус в начале: str.lstrip(&quot;-&quot;) или срез.</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[10, 25, -3, 0]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-8-code">Решение</label></p>
+  <textarea class="runner-code" id="task-8-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">raw = [&quot;10&quot;, &quot;abc&quot;, &quot;25&quot;, &quot;-3&quot;, &quot;4.5&quot;, &quot;0&quot;]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-9" data-task="list-comprehensions/9" aria-labelledby="task-9-title">
+<h2 id="task-9-title"><span class="task-num">9.</span> Пары с чётной суммой</h2>
+<p>Дан список:</p>
+<pre class="task-data"><code>nums = [1, 2, 3, 4, 5]</code></pre>
+<p>Генератором с двумя циклами создай список всех пар (a, b), где a и b — элементы nums, а сумма a + b чётная. Пары упорядоченные: (1, 3) и (3, 1) — разные пары, и обе входят в ответ. Элемент может стоять в паре сам с собой, например (1, 1).</p>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[(1, 1), (1, 3), (1, 5), (2, 2), (2, 4), (3, 1), (3, 3), (3, 5), (4, 2), (4, 4), (5, 1), (5, 3), (5, 5)]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-9-code">Решение</label></p>
+  <textarea class="runner-code" id="task-9-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">nums = [1, 2, 3, 4, 5]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-10" data-task="list-comprehensions/10" aria-labelledby="task-10-title">
+<h2 id="task-10-title"><span class="task-num">10.</span> Две одинаковые буквы подряд</h2>
+<p>Дан текст:</p>
+<pre class="task-data"><code>text = &quot;happy little bunny is hopping across a green valley&quot;</code></pre>
+<p>Создай список слов, в которых хотя бы две одинаковые буквы стоят подряд, и выведи его.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.split(), any(), range() или zip(слово, слово[1:])</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[&#x27;happy&#x27;, &#x27;little&#x27;, &#x27;bunny&#x27;, &#x27;hopping&#x27;, &#x27;across&#x27;, &#x27;green&#x27;, &#x27;valley&#x27;]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-10-code">Решение</label></p>
+  <textarea class="runner-code" id="task-10-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">text = &quot;happy little bunny is hopping across a green valley&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="finale" id="finale" hidden aria-labelledby="finale-title">
+  <p class="eyebrow">10 из 10</p>
+  <h2 id="finale-title">Все задачи решены!</h2>
+  <p>Все рыбки в аквариуме. Сохраните открытку на память или отправьте её тому, кто вас учит: пусть порадуется вместе с вами.</p>
+  <p class="finale-name"><label for="finale-name">Имя на открытке</label><input id="finale-name" type="text" maxlength="40" autocomplete="name" placeholder="Например, Аня"></p>
+  <canvas class="finale-card" width="1200" height="630" role="img" aria-label="Открытка: сборник «Задачи на генераторы списков» решён"></canvas>
+  <div class="runner-bar">
+    <button type="button" class="btn primary finale-save">Скачать открытку</button>
+    <button type="button" class="btn ghost finale-share" hidden>Поделиться</button>
+  </div>
+</section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>

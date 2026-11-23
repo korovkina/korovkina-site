@@ -2,6 +2,7 @@
 
 Запуск из корня сайта:
     python3 tools/build_problems.py
+    python3 tools/build_problems.py --from ~/Documents/ShortcutEdu/issues   # сначала забрать свежие сборники
 
 Формат сборника — обычный .py-файл, который можно решать и в редакторе:
     '''
@@ -19,11 +20,15 @@
     '''
     стартовый код с данными задачи
 
+В конце файла после строки «# ===== Решения» можно хранить свои решения в комментариях:
+сборка их отрезает, на сайт они не попадают.
+
 Код задач запускается прямо в браузере: Python (Pyodide) лежит в pyodide/<версия>/,
 страница — problems.js, сам запуск — в отдельном потоке problems/worker.js.
 """
 import html
 import re
+import sys
 import textwrap
 import tomllib
 from pathlib import Path
@@ -51,8 +56,13 @@ def plural(n, one, few, many):
     return many
 
 
+SOLUTIONS_MARK = "# ===== Решения"
+
+
 def split_source(text):
-    """Делит файл на пары (строка документации, код после неё)."""
+    """Делит файл на пары (строка документации, код после неё).
+    Всё начиная со строки «# ===== Решения…» — решения автора, на сайт они не попадают."""
+    text = text.split("\n" + SOLUTIONS_MARK, 1)[0]
     parts = text.split("'''")
     # parts: [до первой строки, doc1, код1, doc2, код2, ...]
     pairs = []
@@ -283,7 +293,20 @@ def build_collection(c):
     return len(tasks)
 
 
+def sync_from(folder):
+    """Копирует сборники из папки автора в content/problems, отрезая решения: репозиторий публичный."""
+    meta = tomllib.loads((SRC / "problems.toml").read_text())["collections"]
+    for c in meta:
+        text = (Path(folder).expanduser() / c["file"]).read_text()
+        text = text.split("\n" + SOLUTIONS_MARK, 1)[0].rstrip() + "\n"
+        (SRC / c["file"]).write_text(text)
+        print(f"Скопирован {c['file']}")
+
+
 def main():
+    args = sys.argv[1:]
+    if args[:1] == ["--from"]:
+        sync_from(args[1])
     meta = tomllib.loads((SRC / "problems.toml").read_text())["collections"]
     cards = []
     for idx, c in enumerate(meta):

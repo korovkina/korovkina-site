@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Задачи на строки — задачи по Python — Татьяна Коровкина</title>
+  <meta name="description" content="Индексы, срезы, разворот, встроенные методы и f-строки.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Задачи на строки — задачи по Python — Татьяна Коровкина">
+  <meta property="og:description" content="Индексы, срезы, разворот, встроенные методы и f-строки.">
+  <meta property="og:url" content="https://korovkina.uk/problems/strings/">
+  <meta property="og:image" content="https://korovkina.uk/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Татьяна Коровкина — алгоритмы и собеседования">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://korovkina.uk/problems/strings/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="../../styles.css">
+  <script src="../../site.js" defer></script>
+  <script src="../../problems.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="site-head">
+    <div class="wrap head-row">
+      <nav aria-label="Разделы сайта">
+        <ol class="chain">
+          <li><a class="head" href="../../">head</a></li>
+          <li><a href="../../#about">Обо мне</a></li>
+          <li><a href="../../#course">Курс</a></li>
+          <li><a href="../../#mentoring">Занятия</a></li>
+          <li><a href="../../talks/">Выступления</a></li>
+          <li><a href="../../articles/">Статьи</a></li>
+          <li><span class="none">None</span></li>
+        </ol>
+      </nav>
+      <div class="head-tools">
+        <div class="theme-switch" role="group" aria-label="Тема оформления" hidden>
+          <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Светлая тема" title="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+          <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Тёмная тема" title="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1Z"/></svg></button>
+        </div>
+        <nav class="lang-switch" aria-label="Язык сайта">
+          <span aria-current="true">RU</span>
+          <a href="../../en/" hreflang="en" lang="en">EN</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="article-page problems-page" data-worker="../worker.js">
+    <div class="wrap article-layout">
+      <header class="article-head">
+        <p class="eyebrow"><a href="../">Задачи по Python</a> · 25 задач</p>
+        <h1 class="article-title">Задачи на строки</h1>
+        <p class="lead">Задачи на строки: индексы, срезы, разворот, встроенные методы и f-строки. Задачи идут от простых к сложным. Решение пиши прямо под данными задачи и сверяй с ожидаемым выводом.</p>
+      </header>
+      <aside class="article-toc" aria-label="Задачи">
+        <p class="toc-title">Задачи</p>
+        <ol class="task-toc"><li><a href="#task-1">1. Первый и последний символ и длина</a></li><li><a href="#task-2">2. Отрицательные индексы</a></li><li><a href="#task-3">3. Срез середины</a></li><li><a href="#task-4">4. Срез, который не выходит за край</a></li><li><a href="#task-5">5. Разворот и частичный разворот</a></li><li><a href="#task-6">6. Замена символов через срезы</a></li><li><a href="#task-7">7. Методы изменения регистра</a></li><li><a href="#task-8">8. Подсчёт буквы</a></li><li><a href="#task-9">9. Проверка начала и конца строки</a></li><li><a href="#task-10">10. f-строка и цепочка методов</a></li><li><a href="#task-11">11. Подсчёт букв и цифр</a></li><li><a href="#task-12">12. Лишние пробелы</a></li><li><a href="#task-13">13. Палиндром</a></li><li><a href="#task-14">14. Подсчёт слов</a></li><li><a href="#task-15">15. Замена подстроки</a></li><li><a href="#task-16">16. Форматирование предложения</a></li><li><a href="#task-17">17. Проверка протокола</a></li><li><a href="#task-18">18. Подсчёт русской буквы</a></li><li><a href="#task-19">19. Разбиение строки</a></li><li><a href="#task-20">20. Склейка слов</a></li><li><a href="#task-21">21. Частота каждой буквы</a></li><li><a href="#task-22">22. Самое длинное слово</a></li><li><a href="#task-23">23. Удаление знаков препинания</a></li><li><a href="#task-24">24. Слова длиннее заданной длины</a></li><li><a href="#task-25">25. Слитное написание с заглавных букв</a></li></ol>
+        <div class="aquarium" hidden>
+          <div class="aq-tank" aria-hidden="true"></div>
+          <p class="aq-count" aria-live="polite"></p>
+        </div>
+      </aside>
+      <article class="article-body">
+<p>Полезные ссылки:</p><ul><li><a href="https://www.w3schools.com/python/python_strings.asp" rel="noopener">Общая теория</a></li><li><a href="https://www.w3schools.com/python/python_ref_string.asp" rel="noopener">Встроенные методы</a></li><li><a href="https://www.w3schools.com/python/python_strings_exercises.asp" rel="noopener">Тест с подсказками</a></li></ul>
+<aside class="note runner-note" hidden><p class="note-label">Как решать</p><p>Код запускается прямо в браузере, вывод сразу сравнивается с ожидаемым, а решения сохраняются в этом браузере. При первом запуске загрузится Python — около 13 МБ.</p></aside>
+<section class="task" id="task-1" data-task="strings/1" aria-labelledby="task-1-title">
+<h2 id="task-1-title"><span class="task-num">1.</span> Первый и последний символ и длина</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>title = &quot;Programming&quot;</code></pre>
+<p>Выведи каждое с новой строки: первый символ строки, последний символ и фразу «В строке N символов», где N — длина строки.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: индексы [0] и [-1], len(), f-строка</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>P
+g
+В строке 11 символов</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-1-code">Решение</label></p>
+  <textarea class="runner-code" id="task-1-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">title = &quot;Programming&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-2" data-task="strings/2" aria-labelledby="task-2-title">
+<h2 id="task-2-title"><span class="task-num">2.</span> Отрицательные индексы</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>text = &quot;developer&quot;</code></pre>
+<p>Выведи каждый с новой строки: третий символ с начала (обычным индексом) и второй символ с конца (отрицательным индексом).</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: индекс [-1] — последний символ, [-2] — предпоследний</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>v
+e</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-2-code">Решение</label></p>
+  <textarea class="runner-code" id="task-2-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">text = &quot;developer&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-3" data-task="strings/3" aria-labelledby="task-3-title">
+<h2 id="task-3-title"><span class="task-num">3.</span> Срез середины</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>word = &quot;encyclopedia&quot;</code></pre>
+<p>Выведи 4 символа из середины строки: слева и справа от них должно остаться поровну символов. Границы среза вычисли через длину строки, а не подбирай вручную.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: len(), целочисленное деление //</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>clop</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-3-code">Решение</label></p>
+  <textarea class="runner-code" id="task-3-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">word = &quot;encyclopedia&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-4" data-task="strings/4" aria-labelledby="task-4-title">
+<h2 id="task-4-title"><span class="task-num">4.</span> Срез, который не выходит за край</h2>
+<p>Даны два слова:</p>
+<pre class="task-data"><code>long_word = &quot;programming&quot;
+short_word = &quot;turtle&quot;</code></pre>
+<p>Для каждого слова выведи срез с 3-го по 10-й символ включительно (символы считаем с первого). Если слово короче 10 символов, срез должен просто закончиться на последнем символе. Используй для обоих слов одинаковый срез, без условий и без len().</p>
+<aside class="note note-important"><p class="note-label">Вопрос на подумать</p><p>Почему срез не падает с ошибкой, если его правая граница больше длины строки?</p></aside>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>ogrammin
+rtle</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-4-code">Решение</label></p>
+  <textarea class="runner-code" id="task-4-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">long_word = &quot;programming&quot;
+short_word = &quot;turtle&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-5" data-task="strings/5" aria-labelledby="task-5-title">
+<h2 id="task-5-title"><span class="task-num">5.</span> Разворот и частичный разворот</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>name = &quot;Alexander&quot;</code></pre>
+<p>а) Выведи строку в обратном порядке.</p>
+<p>б) Выведи первые 5 символов строки в обратном порядке.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: срез с шагом -1</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>rednaxelA
+axelA</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-5-code">Решение</label></p>
+  <textarea class="runner-code" id="task-5-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">name = &quot;Alexander&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-6" data-task="strings/6" aria-labelledby="task-6-title">
+<h2 id="task-6-title"><span class="task-num">6.</span> Замена символов через срезы</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>code = &quot;A3C8D&quot;</code></pre>
+<p>Цифры стоят в ней на позициях с индексами 1 и 3. Собери новую строку, где обе цифры заменены на 0. Не используй replace(): только срезы и конкатенацию (сложение строк).</p>
+<aside class="note note-important"><p class="note-label">Вопрос на подумать</p><p>Почему нельзя написать code[1] = &quot;0&quot;?</p></aside>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>A0C0D</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-6-code">Решение</label></p>
+  <textarea class="runner-code" id="task-6-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">code = &quot;A3C8D&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-7" data-task="strings/7" aria-labelledby="task-7-title">
+<h2 id="task-7-title"><span class="task-num">7.</span> Методы изменения регистра</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>phrase = &quot;pYtHon is fUN!&quot;</code></pre>
+<p>Выведи каждый с новой строки три варианта строки:</p>
+<p>а) целиком в верхнем регистре;</p>
+<p>б) целиком в нижнем регистре;</p>
+<p>в) каждое слово с заглавной буквы, остальные буквы строчные.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.upper(), str.lower(), str.title()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>PYTHON IS FUN!
+python is fun!
+Python Is Fun!</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-7-code">Решение</label></p>
+  <textarea class="runner-code" id="task-7-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">phrase = &quot;pYtHon is fUN!&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-8" data-task="strings/8" aria-labelledby="task-8-title">
+<h2 id="task-8-title"><span class="task-num">8.</span> Подсчёт буквы</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>sentence = &quot;Apples are amazing and aromatic&quot;</code></pre>
+<p>Посчитай, сколько раз в ней встречается латинская буква a — и строчная, и заглавная.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.lower(), str.count()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>7</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-8-code">Решение</label></p>
+  <textarea class="runner-code" id="task-8-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">sentence = &quot;Apples are amazing and aromatic&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-9" data-task="strings/9" aria-labelledby="task-9-title">
+<h2 id="task-9-title"><span class="task-num">9.</span> Проверка начала и конца строки</h2>
+<p>Дано имя файла:</p>
+<pre class="task-data"><code>filename = &quot;holiday_photo.JPG&quot;</code></pre>
+<p>Проверь два условия:</p>
+<p>а) имя файла начинается со слова &quot;holiday&quot; (именно в таком регистре);</p>
+<p>б) имя файла заканчивается на &quot;.jpg&quot; без учёта регистра.</p>
+<p>Если выполнены оба условия, выведи «Фотография из отпуска», иначе «Другое изображение».</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.startswith(), str.endswith(), str.lower()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Фотография из отпуска</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-9-code">Решение</label></p>
+  <textarea class="runner-code" id="task-9-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">filename = &quot;holiday_photo.JPG&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-10" data-task="strings/10" aria-labelledby="task-10-title">
+<h2 id="task-10-title"><span class="task-num">10.</span> f-строка и цепочка методов</h2>
+<p>Дано название любимого блюда, записанное с лишними пробелами:</p>
+<pre class="task-data"><code>dish = &quot;  pasta carbonara &quot;</code></pre>
+<p>Выведи сообщение «Твоё любимое блюдо — БЛЮДО!», где название блюда записано заглавными буквами и без пробелов по краям.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.strip(), str.upper(), f-строка</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Твоё любимое блюдо — PASTA CARBONARA!</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-10-code">Решение</label></p>
+  <textarea class="runner-code" id="task-10-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">dish = &quot;  pasta carbonara &quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-11" data-task="strings/11" aria-labelledby="task-11-title">
+<h2 id="task-11-title"><span class="task-num">11.</span> Подсчёт букв и цифр</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>text = &quot;Room 404, floor 3B&quot;</code></pre>
+<p>Посчитай, сколько в ней букв и сколько цифр. Пробелы и знаки препинания не считаются ни тем, ни другим.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.isalpha(), str.isdigit()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Букв: 10
+Цифр: 4</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-11-code">Решение</label></p>
+  <textarea class="runner-code" id="task-11-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">text = &quot;Room 404, floor 3B&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-12" data-task="strings/12" aria-labelledby="task-12-title">
+<h2 id="task-12-title"><span class="task-num">12.</span> Лишние пробелы</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>s = &quot;   Hello   world   &quot;</code></pre>
+<p>Убери пробелы в начале и в конце строки, а между словами оставь ровно по одному пробелу. Выведи результат в квадратных скобках, чтобы было видно, что пробелов по краям не осталось.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.split() без аргументов, &quot; &quot;.join()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[Hello world]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-12-code">Решение</label></p>
+  <textarea class="runner-code" id="task-12-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">s = &quot;   Hello   world   &quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-13" data-task="strings/13" aria-labelledby="task-13-title">
+<h2 id="task-13-title"><span class="task-num">13.</span> Палиндром</h2>
+<p>Даны два слова:</p>
+<pre class="task-data"><code>word1 = &quot;level&quot;
+word2 = &quot;python&quot;</code></pre>
+<p>Для каждого слова выведи True, если оно одинаково читается слева направо и справа налево, иначе False.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: срез [::-1]</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>True
+False</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-13-code">Решение</label></p>
+  <textarea class="runner-code" id="task-13-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">word1 = &quot;level&quot;
+word2 = &quot;python&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-14" data-task="strings/14" aria-labelledby="task-14-title">
+<h2 id="task-14-title"><span class="task-num">14.</span> Подсчёт слов</h2>
+<p>Дано предложение, в котором слова разделены одним или несколькими пробелами:</p>
+<pre class="task-data"><code>sentence = &quot;Python is   easy to  learn&quot;</code></pre>
+<p>Посчитай, сколько в нём слов.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.split() без аргументов, len()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>5</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-14-code">Решение</label></p>
+  <textarea class="runner-code" id="task-14-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">sentence = &quot;Python is   easy to  learn&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-15" data-task="strings/15" aria-labelledby="task-15-title">
+<h2 id="task-15-title"><span class="task-num">15.</span> Замена подстроки</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>text = &quot;I like Java, Java is cool&quot;</code></pre>
+<p>Замени в ней все вхождения &quot;Java&quot; на &quot;Python&quot; и выведи результат.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.replace()</p></div></details>
+<aside class="note note-tip"><p class="note-label">Дополнительно</p><p>Замени только первое вхождение &quot;Java&quot;.</p></aside>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>I like Python, Python is cool</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-15-code">Решение</label></p>
+  <textarea class="runner-code" id="task-15-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">text = &quot;I like Java, Java is cool&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-16" data-task="strings/16" aria-labelledby="task-16-title">
+<h2 id="task-16-title"><span class="task-num">16.</span> Форматирование предложения</h2>
+<p>Даны имя и животное, записанные как попало:</p>
+<pre class="task-data"><code>name = &quot;аННА&quot;
+animal = &quot;КОТОВ&quot;</code></pre>
+<p>Выведи предложение «Имя любит животное.»: имя начинается с заглавной буквы, остальные буквы строчные, животное записано целиком строчными, в конце точка.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.capitalize(), str.lower(), f-строка</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Анна любит котов.</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-16-code">Решение</label></p>
+  <textarea class="runner-code" id="task-16-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">name = &quot;аННА&quot;
+animal = &quot;КОТОВ&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-17" data-task="strings/17" aria-labelledby="task-17-title">
+<h2 id="task-17-title"><span class="task-num">17.</span> Проверка протокола</h2>
+<p>Даны два адреса:</p>
+<pre class="task-data"><code>url1 = &quot;https://example.com&quot;
+url2 = &quot;http://example.com&quot;</code></pre>
+<p>Для каждого адреса выведи «Безопасный протокол», если он начинается с &quot;<a href="https://&quot;" rel="noopener">https://&quot;</a>, иначе «Небезопасный протокол».</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.startswith()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Безопасный протокол
+Небезопасный протокол</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-17-code">Решение</label></p>
+  <textarea class="runner-code" id="task-17-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">url1 = &quot;https://example.com&quot;
+url2 = &quot;http://example.com&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-18" data-task="strings/18" aria-labelledby="task-18-title">
+<h2 id="task-18-title"><span class="task-num">18.</span> Подсчёт русской буквы</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>text = &quot;Алла ела арбуз, а Анна — апельсин&quot;</code></pre>
+<p>Посчитай, сколько раз в ней встречается русская буква «а» — и строчная, и заглавная.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.lower(), str.count()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>8</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-18-code">Решение</label></p>
+  <textarea class="runner-code" id="task-18-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">text = &quot;Алла ела арбуз, а Анна — апельсин&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-19" data-task="strings/19" aria-labelledby="task-19-title">
+<h2 id="task-19-title"><span class="task-num">19.</span> Разбиение строки</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>text = &quot;apple,banana,kiwi&quot;</code></pre>
+<p>Раздели её по запятой и выведи получившийся список фруктов.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.split(&quot;,&quot;)</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>[&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;kiwi&#x27;]</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-19-code">Решение</label></p>
+  <textarea class="runner-code" id="task-19-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">text = &quot;apple,banana,kiwi&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-20" data-task="strings/20" aria-labelledby="task-20-title">
+<h2 id="task-20-title"><span class="task-num">20.</span> Склейка слов</h2>
+<p>Дан список слов:</p>
+<pre class="task-data"><code>words = [&quot;Python&quot;, &quot;is&quot;, &quot;awesome&quot;]</code></pre>
+<p>Собери из него строку, где слова разделены пробелом, и выведи её.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: &quot; &quot;.join()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Python is awesome</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-20-code">Решение</label></p>
+  <textarea class="runner-code" id="task-20-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">words = [&quot;Python&quot;, &quot;is&quot;, &quot;awesome&quot;]
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-21" data-task="strings/21" aria-labelledby="task-21-title">
+<h2 id="task-21-title"><span class="task-num">21.</span> Частота каждой буквы</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>text = &quot;Hello, World&quot;</code></pre>
+<p>Посчитай, сколько раз встречается каждая буква, без учёта регистра. Пробелы и знаки препинания не считай. Выведи словарь, в котором буквы записаны строчными и идут в порядке первого появления в строке.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.lower(), str.isalpha(), dict.get(ключ, 0)</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>{&#x27;h&#x27;: 1, &#x27;e&#x27;: 1, &#x27;l&#x27;: 3, &#x27;o&#x27;: 2, &#x27;w&#x27;: 1, &#x27;r&#x27;: 1, &#x27;d&#x27;: 1}</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-21-code">Решение</label></p>
+  <textarea class="runner-code" id="task-21-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">text = &quot;Hello, World&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-22" data-task="strings/22" aria-labelledby="task-22-title">
+<h2 id="task-22-title"><span class="task-num">22.</span> Самое длинное слово</h2>
+<p>Дано предложение:</p>
+<pre class="task-data"><code>sentence = &quot;Python makes programming fun and simple&quot;</code></pre>
+<p>Выведи через пробел самое длинное слово и его длину. Такое слово в предложении одно.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.split(), max(..., key=len)</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>programming 11</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-22-code">Решение</label></p>
+  <textarea class="runner-code" id="task-22-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">sentence = &quot;Python makes programming fun and simple&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-23" data-task="strings/23" aria-labelledby="task-23-title">
+<h2 id="task-23-title"><span class="task-num">23.</span> Удаление знаков препинания</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>text = &quot;Hello, world! How&#x27;s it going?&quot;</code></pre>
+<p>Выведи ту же строку без знаков препинания. Знаками препинания считаем все символы из string.punctuation, в том числе апостроф.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: import string, string.punctuation, &quot;&quot;.join() с генератором</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Hello world Hows it going</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-23-code">Решение</label></p>
+  <textarea class="runner-code" id="task-23-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">text = &quot;Hello, world! How&#x27;s it going?&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-24" data-task="strings/24" aria-labelledby="task-24-title">
+<h2 id="task-24-title"><span class="task-num">24.</span> Слова длиннее заданной длины</h2>
+<p>Даны предложение и число:</p>
+<pre class="task-data"><code>sentence = &quot;Python is a powerful and popular language&quot;
+n = 5</code></pre>
+<p>Найди все слова, длина которых больше n, и выведи их в исходном порядке в одну строку через запятую с пробелом.</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.split(), len(), &quot;, &quot;.join()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>Python, powerful, popular, language</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-24-code">Решение</label></p>
+  <textarea class="runner-code" id="task-24-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">sentence = &quot;Python is a powerful and popular language&quot;
+n = 5
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="task" id="task-25" data-task="strings/25" aria-labelledby="task-25-title">
+<h2 id="task-25-title"><span class="task-num">25.</span> Слитное написание с заглавных букв</h2>
+<p>Дана строка:</p>
+<pre class="task-data"><code>text = &quot;the quick brown fox&quot;</code></pre>
+<p>Сделай из неё строку, где все слова написаны слитно и каждое начинается с заглавной буквы. Такой стиль называют PascalCase (или UpperCamelCase).</p>
+<details class="spoiler task-hint"><summary>Подсказка</summary><div class="spoiler-body"><p>Пригодится: str.split(), str.capitalize(), &quot;&quot;.join()</p></div></details>
+<p class="task-label">Ожидаемый вывод</p>
+<pre class="task-expected"><code>TheQuickBrownFox</code></pre>
+<div class="runner" hidden>
+  <p class="task-label"><label for="task-25-code">Решение</label></p>
+  <textarea class="runner-code" id="task-25-code" rows="5" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">text = &quot;the quick brown fox&quot;
+
+</textarea>
+  <div class="runner-bar">
+    <button type="button" class="btn primary runner-run">Запустить</button>
+    <button type="button" class="btn ghost runner-reset">Сбросить</button>
+    <span class="runner-keys">Ctrl+Enter</span>
+  </div>
+  <div class="runner-result" hidden>
+    <p class="runner-status" role="status"></p>
+    <pre class="runner-out"><code></code></pre>
+  </div>
+</div>
+<noscript><p class="runner-off">Чтобы запускать код прямо на странице, включите JavaScript.</p></noscript>
+</section>
+<section class="finale" id="finale" hidden aria-labelledby="finale-title">
+  <p class="eyebrow">25 из 25</p>
+  <h2 id="finale-title">Все задачи решены!</h2>
+  <p>Все рыбки в аквариуме. Сохраните открытку на память или отправьте её тому, кто вас учит: пусть порадуется вместе с вами.</p>
+  <p class="finale-name"><label for="finale-name">Имя на открытке</label><input id="finale-name" type="text" maxlength="40" autocomplete="name" placeholder="Например, Аня"></p>
+  <canvas class="finale-card" width="1200" height="630" role="img" aria-label="Открытка: сборник «Задачи на строки» решён"></canvas>
+  <div class="runner-bar">
+    <button type="button" class="btn primary finale-save">Скачать открытку</button>
+    <button type="button" class="btn ghost finale-share" hidden>Поделиться</button>
+  </div>
+</section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <span>© 2026 Татьяна Коровкина</span>
+      <span class="mono">next → None</span>
+    </div>
+  </footer>
+</body>
+</html>
