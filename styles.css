@@ -672,3 +672,7 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 .finale-name input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
 .finale-card { display: block; width: 100%; height: auto; margin-top: 20px; border-radius: 14px; border: 1px solid var(--line); }
 @media (max-width: 600px) { .finale { padding: 22px 18px; } }
+
+/* фраза подзаголовка не разрывается посередине, если помещается в строку (site.js, phraseWrap) */
+.phrase { display: inline-block; max-width: 100%; }
+.nobr { white-space: nowrap; }

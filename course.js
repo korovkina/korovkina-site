@@ -52,6 +52,7 @@
         });
       }
       if (window.siteInitTabs) window.siteInitTabs();
+      if (window.sitePhrases) window.sitePhrases(root);
       if (window.siteRefresh) window.siteRefresh();
     })
     .catch(function () {

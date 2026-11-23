@@ -118,6 +118,55 @@
     choose(saved || document.querySelector(".tabs .tab-panel").dataset.lang, false);
   }
   initTabs();
+
+  // ---------- переносы по смыслу: в подзаголовках строка рвётся после точки, запятой или тире, а не посреди фразы ----------
+  // Каждая фраза становится неразрывным куском (inline-block); фраза длиннее строки переносится внутри себя.
+  var PHRASE_BREAK = /([.,;:!?»)]|\s—)\s+/g;
+  // короткие слова («к», «и», «на») не остаются в конце строки: неразрывный пробел после них
+  function glueShort(text) {
+    var re = /(^|[\s\u00a0])([\p{L}]{1,2}) /gu;
+    return text.replace(re, "$1$2\u00a0").replace(re, "$1$2\u00a0");
+  }
+  function phraseWrap(scope) {
+    if (document.documentElement.lang !== "ru") return;
+    (scope || document).querySelectorAll(".lead, .article-card .t").forEach(function (el) {
+      if (el.dataset.phrased) return;
+      el.dataset.phrased = "1";
+      var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function (node) {
+        var parts = node.nodeValue.replace(PHRASE_BREAK, "$1\u0000").split("\u0000");
+        // хвост из одного слова («…, сортировка.») не оставляем отдельной фразой: приклеиваем к предыдущей
+        for (var k = parts.length - 1; k > 0; k--) {
+          if (parts[k].trim() && parts[k].trim().split(/\s+/).length < 2) { parts[k - 1] += " " + parts[k].trim(); parts.splice(k, 1); }
+        }
+        if (parts.length < 2 && !/[\p{L}\d]-[\p{L}\d]/u.test(node.nodeValue)) { node.nodeValue = glueShort(node.nodeValue); return; }
+        var frag = document.createDocumentFragment();
+        parts.forEach(function (part, i) {
+          var lead = part.match(/^\s*/)[0], body = part.slice(lead.length);
+          if (lead) frag.appendChild(document.createTextNode(lead));
+          if (!body) return;
+          var span = document.createElement("span");
+          span.className = "phrase";
+          // слово через дефис («Telegram-канала») не разрываем на дефисе
+          body.split(/(\S*[\p{L}\d]-[\p{L}\d]\S*)/u).forEach(function (bit, j) {
+            if (!bit) return;
+            if (j % 2) {
+              var w = document.createElement("span");
+              w.className = "nobr";
+              w.textContent = bit;
+              span.appendChild(w);
+            } else span.appendChild(document.createTextNode(glueShort(bit)));
+          });
+          frag.appendChild(span);
+          if (i < parts.length - 1) frag.appendChild(document.createTextNode(" "));
+        });
+        node.parentNode.replaceChild(frag, node);
+      });
+    });
+  }
+  phraseWrap();
+  window.sitePhrases = phraseWrap;                 // course.js: после расшифровки страницы
   window.siteInitTabs = initTabs;
   // вкладки внутри спойлера получают размеры, только когда спойлер открыт
   document.addEventListener("toggle", function (e) {
