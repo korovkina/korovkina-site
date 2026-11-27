@@ -581,10 +581,61 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 .read-progress[hidden] { display: none; }
 .read-progress-line { display: block; height: 100%; width: 0; background: var(--fish-color, var(--brand)); }
 .fish.fish-read { top: auto; bottom: 3px; width: 20px; height: 11px; transition: none; }
+/* урок карточками: прогресс — доля открытых карточек, рыбка плывёт плавно, за ней — процент */
+.read-progress.by-cards .read-progress-line { transition: width .6s ease; }
+.read-progress.by-cards .fish.fish-read { transition: transform .6s ease; }
+.read-progress-pct {
+  position: absolute; left: 0; bottom: 3px; font-family: var(--f-mono); font-size: 0.6875rem; line-height: 1;
+  color: var(--fish-color, var(--brand)); transition: transform .6s ease; white-space: nowrap;
+}
+.read-progress-pct[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .read-progress.by-cards .read-progress-line, .read-progress.by-cards .fish.fish-read, .read-progress-pct { transition: none; }
+}
 @media (max-width: 719px) {
+  .read-progress-pct { bottom: auto; top: 3px; padding: 1px 4px; border-radius: 4px; background: var(--paper); }
   .read-progress { position: fixed; top: 0; bottom: auto; z-index: 20; }
   .fish.fish-read { bottom: auto; top: 3px; }
 }
+
+/* урок карточками (course.js): одна подтема на экран */
+.lesson-card { min-height: 40vh; animation: card-in .35s ease both; }
+.lesson-card[hidden] { display: none; }
+.lesson-card > :first-child, .lesson-card > .card-section + * { margin-top: 0; }
+.card-section { margin: 0 0 8px; font-family: var(--f-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ptr); }
+@keyframes card-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .lesson-card { animation: none; } }
+.card-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); }
+.card-nav button {
+  font: 500 0.9375rem var(--f-mono); color: var(--ink); background: var(--card); border: 1px solid var(--line);
+  border-radius: 10px; padding: 10px 18px; cursor: pointer; transition: border-color 0.15s ease;
+}
+.card-nav button:hover:not(:disabled) { border-color: var(--accent); }
+.card-nav button:disabled { opacity: .4; cursor: default; }
+.card-nav button[hidden] { visibility: hidden; display: inline-block; }
+.card-nav .card-next { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.card-count { font-family: var(--f-mono); font-size: 0.8125rem; color: var(--muted); }
+.card-nav + .pager { margin-top: 32px; }
+.card-nav + .pager > a:not(.next) { display: none; }
+.card-nav + .pager > .next { grid-column: 2; }
+@media (max-width: 560px) { .card-nav + .pager > .next { grid-column: 1; } }
+.pager[hidden] { display: none; }
+.card-toc-box summary { cursor: pointer; list-style: none; }
+.card-toc-box summary::-webkit-details-marker { display: none; }
+.card-toc-box summary::after { content: " ▾"; }
+.card-toc-box details:not([open]) summary { margin-bottom: 0; }
+.card-toc-box details:not([open]) summary::after { content: " ▸"; }
+@media (min-width: 961px) {
+  .card-toc-box { max-height: calc(100vh - 128px); overflow-y: auto; }
+  .card-toc-box summary { pointer-events: none; }
+  .card-toc-box summary::after { content: none; }
+}
+.card-toc { gap: 6px !important; }
+.card-toc .toc-sec { font-size: 0.8125rem; color: var(--ink); font-weight: 500; margin-top: 6px; }
+.card-toc .toc-sub { padding-left: 12px; }
+.card-toc a.seen { color: var(--ink); }
+.card-toc a[aria-current] { color: var(--accent); font-weight: 500; }
+.card-toc a[aria-current]::before { content: "▸ "; }
 
 /* задачи по Python (/problems/): условие, ожидаемый вывод и редактор с запуском кода (problems.js) */
 .task { margin-top: 56px; padding-top: 8px; scroll-margin-top: 16px; }

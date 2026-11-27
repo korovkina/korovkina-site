@@ -214,7 +214,8 @@
   }
 
   // прогресс чтения: линия по нижнему краю шапки, рыбка плывёт по ней от начала статьи к концу
-  var siteHead = document.querySelector(".site-head"), progress = null, progressFish = null, progressLine = null;
+  // в уроке карточками (course.js) прогресс — доля открытых карточек, рядом с рыбкой — процент
+  var siteHead = document.querySelector(".site-head"), progress = null, progressFish = null, progressLine = null, progressPct = null;
   function placeProgress() {
     var body = document.querySelector(".article-body");
     if (!body || !siteHead) { if (progress) progress.hidden = true; return; }
@@ -232,11 +233,30 @@
       paintFish(progress);                         // линия и рыбка одного цвета
     }
     progress.hidden = false;
-    var r = body.getBoundingClientRect(), vh = window.innerHeight;
-    var p = r.height > vh ? -r.top / (r.height - vh) : (r.top < vh ? 1 : 0);
+    var deck = body.querySelector("[data-cards-progress]"), p;
+    if (deck) {
+      p = +deck.dataset.cardsProgress;
+      if (!progressPct) {
+        progressPct = document.createElement("span");
+        progressPct.className = "read-progress-pct";
+        progress.appendChild(progressPct);
+      }
+    } else {
+      var r = body.getBoundingClientRect(), vh = window.innerHeight;
+      p = r.height > vh ? -r.top / (r.height - vh) : (r.top < vh ? 1 : 0);
+    }
+    progress.classList.toggle("by-cards", !!deck);
     p = Math.max(0, Math.min(1, p));
     progressLine.style.width = (p * 100) + "%";
-    progressFish.style.transform = "translateX(" + Math.round(p * (progress.clientWidth - 20)) + "px)";
+    var x = Math.round(p * (progress.clientWidth - 20));
+    progressFish.style.transform = "translateX(" + x + "px)";
+    if (progressPct) {
+      progressPct.hidden = !deck;
+      progressPct.textContent = Math.round(p * 100) + "%";
+      // подпись плывёт за рыбкой, у правого края — перед ней
+      var w = progressPct.offsetWidth;
+      progressPct.style.transform = "translateX(" + (x + 26 + w > progress.clientWidth ? x - w - 6 : x + 26) + "px)";
+    }
   }
 
   var ticking = false;

@@ -19,6 +19,8 @@
   в course/ на GitHub лежит только шифротекст и пустая «оболочка».
 - Ссылка для студентов: https://korovkina.uk/course/#КЛЮЧ. Часть после # браузер
   не отправляет на сервер; course.js расшифровывает страницу прямо в браузере.
+- Уроки из списка cards в site.toml показываются карточками: HTML режется по заголовкам h2/h3
+  (split_cards), course.js показывает по одной карточке и считает процент открытых.
 - Страницы уроков пронумерованы (/course/basics/1/…), чтобы по именам папок
   в публичном репозитории нельзя было понять, о чём материалы.
 """
@@ -149,6 +151,88 @@ def render_page_md(text):
     return body, toc
 
 
+# ---------- карточки: урок по одной подтеме на экран ----------
+
+def visible_len(fragment):
+    return len(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", fragment)).strip())
+
+
+def split_cards(body):
+    """Режет HTML урока на карточки по заголовкам h2/h3 верхнего уровня (внутрь вкладок и спойлеров не лезет).
+
+    Заголовок раздела без своего текста приклеивается к следующей карточке, две соседние короткие
+    подтемы одного раздела (например, «Преимущества» и «Недостатки») объединяются в одну.
+    Возвращает [{"html", "title", "section", "starts_section"}].
+    """
+    cuts, depth = [], 0
+    for m in re.finditer(r"<(/?)(div|details)\b[^>]*>|<h([23]) id=", body):
+        if m.group(3):
+            if depth == 0:
+                cuts.append(m.start())
+        else:
+            depth += -1 if m.group(1) else 1
+    bounds = [0] + cuts + [len(body)]
+    segs = [body[a:b] for a, b in zip(bounds, bounds[1:]) if body[a:b].strip()]
+
+    def heading(seg):
+        m = re.match(r"\s*<h([23])[^>]*>(.*?)</h\1>", seg, re.S)
+        return (int(m.group(1)), html.unescape(re.sub(r"<[^>]+>", "", m.group(2))).strip(), m.end()) if m else (0, "", 0)
+
+    def is_short(seg):
+        return visible_len(seg) < 350 and not re.search(r'<img|class="tabs|<table|<pre', seg)
+
+    cards, carry, section = [], "", ""
+    for seg in segs:
+        level, title, end = heading(seg)
+        if level == 2:
+            section = title
+        if not seg[end:].strip() or level == 0:      # только заголовок или текст до первого заголовка
+            carry += seg
+            continue
+        seg = carry + seg
+        starts = bool(carry) and heading(carry)[0] == 2 or level == 2
+        carry = ""
+        prev = cards[-1] if cards else None
+        if (prev and level == 3 and not starts and prev["section"] == section and prev["level"] == 3
+                and prev["short"] and is_short(seg)):
+            prev["html"] += seg
+            a, b = prev["title"].split(" ", 1), title.split(" ", 1)
+            prev["title"] = (f'{a[0]} и {b[0].lower()} {a[1]}' if len(a) == len(b) == 2 and a[1] == b[1]
+                             else f'{prev["title"]}. {title}')
+            prev["short"] = False
+            continue
+        cards.append({"html": seg, "title": title, "section": section, "level": level,
+                      "starts_section": starts, "short": is_short(seg)})
+    if carry and cards:
+        cards[-1]["html"] += carry
+    return cards
+
+
+def render_cards(cards):
+    """Карточки → (HTML для .article-body, HTML оглавления)."""
+    total = len(cards)
+    out, toc, last_sec = [], [], None
+    for i, c in enumerate(cards):
+        label = "" if c["starts_section"] or not c["section"] else \
+            f'<p class="card-section">{html.escape(c["section"])}</p>'
+        out.append(f'<section class="lesson-card" id="card-{i + 1}" data-card="{i + 1}" '
+                   f'aria-label="Карточка {i + 1} из {total}">{label}{c["html"]}</section>')
+        if c["section"] != last_sec and c["section"] and c["section"] != c["title"]:
+            toc.append(f'<li class="toc-sec">{html.escape(c["section"])}</li>')
+        last_sec = c["section"]
+        sub = ' class="toc-sub"' if c["section"] and c["section"] != c["title"] else ""
+        toc.append(f'<li{sub}><a href="#card-{i + 1}" data-card-link="{i + 1}">{html.escape(c["title"])}</a></li>')
+    nav = ('<nav class="card-nav" aria-label="Карточки">'
+           '<button type="button" class="card-prev">← назад</button>'
+           f'<span class="card-count" aria-live="polite">1 / {total}</span>'
+           '<button type="button" class="card-next">дальше →</button></nav>')
+    body = f'<div class="lesson-cards" data-total="{total}">{"".join(out)}</div>{nav}'
+    toc_block = ('<aside class="article-toc card-toc-box" aria-label="Карточки урока"><details open>'
+                 f'<summary class="toc-title">Карточки · {total}</summary>'
+                 f'<ol class="card-toc">{"".join(toc)}</ol></details></aside>')
+    return body, toc_block
+
+
 # ---------- курс ----------
 
 def lesson_kind(module_slug, lesson):
@@ -227,6 +311,9 @@ def build_course(conf, key, dump):
             return f"]({m.group(2) or '#'})"
         text = re.sub(r"\]\(((?!https?:)[\w./-]+\.md)(#[^)\s]*)?\)", link, text)
         pg["body"], pg["toc"] = render_page_md(restore_fences(text, fences))
+        pg["cards"] = None
+        if str(pg["path"].relative_to(edu)) in conf.get("cards", []):
+            pg["cards"] = split_cards(pg["body"])
         pg["mins"] = reading_minutes(restore_fences(re.sub(r"data:[^)]+", "", text), fences))
 
     # задачи, на которые не ссылается ни одна страница практики, — списком в конце темы
@@ -244,6 +331,10 @@ def build_course(conf, key, dump):
         toc_html = "".join(f'<li><a href="#{t["id"]}">{html.escape(t["name"])}</a></li>' for t in pg["toc"])
         toc_block = (f'<aside class="article-toc" aria-label="Содержание"><p class="toc-title">Содержание</p>'
                      f'<ol>{toc_html}</ol></aside>') if pg["toc"] else ""
+        page_body, meta = pg["body"], f'{pg["label"]} · {pg["mins"]} мин'
+        if pg["cards"]:
+            page_body, toc_block = render_cards(pg["cards"])
+            meta += " · " + plural(len(pg["cards"]), "карточка", "карточки", "карточек")
         if pg["kind"] == "task":
             pager = '<nav class="pager" aria-label="Навигация"><a href="../"><span>← к курсу</span>' \
                     f'{html.escape(conf["title"])}</a><span></span></nav>'
@@ -259,11 +350,11 @@ def build_course(conf, key, dump):
   <header class="article-head">
     <p class="eyebrow"><a href="../">{html.escape(conf["title"])}</a> · {html.escape(pg["module"]["title"])}</p>
     <h1 class="article-title">{html.escape(pg["title"])}</h1>
-    <p class="lesson-meta">{pg["label"]} · {pg["mins"]} мин</p>
+    <p class="lesson-meta">{meta}</p>
   </header>
   {toc_block}
   <article class="article-body">
-{pg["body"]}
+{page_body}
     {pager}
   </article>
 </div>"""
