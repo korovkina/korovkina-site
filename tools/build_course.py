@@ -202,7 +202,8 @@ def split_cards(body):
     for k, seg in enumerate(segs):
         level, title, end = heading(seg)
         if level == 2:
-            section, sub = title, ""
+            # «Содержание» в файлах задач компаний — оглавление, а не раздел: рубрикой для задач его не делаем
+            section, sub = ("" if title in ("Содержание", "Оглавление") else title), ""
         elif level == 3:
             sub = title
         rest = seg[end:]
