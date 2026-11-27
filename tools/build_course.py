@@ -158,14 +158,16 @@ def visible_len(fragment):
 
 
 def split_cards(body):
-    """Режет HTML урока на карточки по заголовкам h2/h3 верхнего уровня (внутрь вкладок и спойлеров не лезет).
+    """Режет HTML урока на карточки по заголовкам верхнего уровня (внутрь вкладок и спойлеров не лезет).
 
-    Заголовок раздела без своего текста приклеивается к следующей карточке, две соседние короткие
-    подтемы одного раздела (например, «Преимущества» и «Недостатки») объединяются в одну.
-    Возвращает [{"html", "title", "section", "starts_section"}].
+    Обычно карточка — подтема h3. Длинная подтема, в которой есть h4, режется ещё и по ним.
+    Заголовок без своего текста и короткое вступление раздела приклеиваются к следующей карточке,
+    две соседние короткие подтемы (например, «Преимущества» и «Недостатки») объединяются,
+    совсем короткая подтема присоединяется к предыдущей карточке того же раздела.
+    Возвращает [{"html", "title", "section", "sub", "level", "label"}].
     """
     cuts, depth = [], 0
-    for m in re.finditer(r"<(/?)(div|details)\b[^>]*>|<h([23]) id=", body):
+    for m in re.finditer(r"<(/?)(div|details)\b[^>]*>|<h([234]) id=", body):
         if m.group(3):
             if depth == 0:
                 cuts.append(m.start())
@@ -175,53 +177,97 @@ def split_cards(body):
     segs = [body[a:b] for a, b in zip(bounds, bounds[1:]) if body[a:b].strip()]
 
     def heading(seg):
-        m = re.match(r"\s*<h([23])[^>]*>(.*?)</h\1>", seg, re.S)
+        m = re.match(r"\s*<h([234])[^>]*>(.*?)</h\1>", seg, re.S)
         return (int(m.group(1)), html.unescape(re.sub(r"<[^>]+>", "", m.group(2))).strip(), m.end()) if m else (0, "", 0)
 
-    def is_short(seg):
-        return visible_len(seg) < 350 and not re.search(r'<img|class="tabs|<table|<pre', seg)
+    def plain(seg):
+        return not re.search(r'<img|class="tabs|<pre', seg)     # короткая таблица карточке не мешает
 
-    cards, carry, section = [], "", ""
+    # h4 остаются внутри своей подтемы, если вместе с ними она не слишком длинная
+    merged = []
     for seg in segs:
+        if heading(seg)[0] == 4 and merged and heading(merged[-1][0])[0] in (3, 4):
+            merged[-1].append(seg)
+        else:
+            merged.append([seg])
+    segs = []
+    for group in merged:
+        if len(group) > 1 and visible_len("".join(group)) <= 2000:
+            segs.append("".join(group))
+        else:
+            segs.extend(group)
+    levels = [heading(x)[0] for x in segs]
+
+    cards, carry, section, sub = [], "", "", ""
+    for k, seg in enumerate(segs):
         level, title, end = heading(seg)
         if level == 2:
-            section = title
-        if not seg[end:].strip() or level == 0:      # только заголовок или текст до первого заголовка
+            section, sub = title, ""
+        elif level == 3:
+            sub = title
+        rest = seg[end:]
+        nxt = levels[k + 1] if k + 1 < len(levels) else 0
+        intro = level == 2 and nxt == 3 and visible_len(rest) < 250 and plain(rest)
+        if not rest.strip() or level == 0 or intro:     # голый заголовок, текст до заголовков, короткое вступление
             carry += seg
             continue
-        seg = carry + seg
-        starts = bool(carry) and heading(carry)[0] == 2 or level == 2
+        if level == 4 and carry:
+            sub_in_card = heading(carry)[0] == 3 or (heading(carry)[0] == 2 and "<h3" in carry)
+        else:
+            sub_in_card = level != 4
+        seg, carried = carry + seg, carry
         carry = ""
+        first = heading(seg)[0]
+        if first == 2 or "<h2" in carried:            # заголовок раздела и так в карточке
+            label = ""
+        elif level == 4 and not sub_in_card:
+            label = f"{section} · {sub}" if section else sub
+        else:
+            label = section
         prev = cards[-1] if cards else None
-        if (prev and level == 3 and not starts and prev["section"] == section and prev["level"] == 3
-                and prev["short"] and is_short(seg)):
+        same = prev and not carried and prev["section"] == section and prev["level"] == level == 3
+        if same and prev["short"] and visible_len(seg) < 350 and plain(seg):
             prev["html"] += seg
             a, b = prev["title"].split(" ", 1), title.split(" ", 1)
-            prev["title"] = (f'{a[0]} и {b[0].lower()} {a[1]}' if len(a) == len(b) == 2 and a[1] == b[1]
-                             else f'{prev["title"]}. {title}')
+            if heading(prev["html"])[0] == 2:            # раздел целиком в одной карточке — по разделу и называем
+                prev["title"] = section
+            elif len(a) == len(b) == 2 and a[1] == b[1]:
+                prev["title"] = f'{a[0]} и {b[0].lower()} {a[1]}'
+            else:
+                prev["title"] = f'{prev["title"]}. {title}'
             prev["short"] = False
             continue
-        cards.append({"html": seg, "title": title, "section": section, "level": level,
-                      "starts_section": starts, "short": is_short(seg)})
-    if carry and cards:
-        cards[-1]["html"] += carry
+        if same and visible_len(seg) < 150 and plain(seg) and visible_len(prev["html"]) < 1500:
+            prev["html"] += seg
+            continue
+        cards.append({"html": seg, "title": title, "section": section, "sub": sub if level == 4 else "",
+                      "level": level, "label": label, "short": visible_len(seg) < 350 and plain(seg)})
+    if carry:
+        level, title, end = heading(carry)
+        if cards and not visible_len(carry[end:]):
+            cards[-1]["html"] += carry
+        else:
+            cards.append({"html": carry, "title": title, "section": section, "sub": "", "level": level,
+                          "label": "", "short": True})
     return cards
 
 
 def render_cards(cards):
     """Карточки → (HTML для .article-body, HTML оглавления)."""
     total = len(cards)
-    out, toc, last_sec = [], [], None
+    out, toc, last_sec, last_sub = [], [], None, None
     for i, c in enumerate(cards):
-        label = "" if c["starts_section"] or not c["section"] else \
-            f'<p class="card-section">{html.escape(c["section"])}</p>'
+        label = f'<p class="card-section">{html.escape(c["label"])}</p>' if c["label"] else ""
         out.append(f'<section class="lesson-card" id="card-{i + 1}" data-card="{i + 1}" '
                    f'aria-label="Карточка {i + 1} из {total}">{label}{c["html"]}</section>')
         if c["section"] != last_sec and c["section"] and c["section"] != c["title"]:
             toc.append(f'<li class="toc-sec">{html.escape(c["section"])}</li>')
-        last_sec = c["section"]
-        sub = ' class="toc-sub"' if c["section"] and c["section"] != c["title"] else ""
-        toc.append(f'<li{sub}><a href="#card-{i + 1}" data-card-link="{i + 1}">{html.escape(c["title"])}</a></li>')
+        if c["sub"] and c["sub"] != last_sub:
+            toc.append(f'<li class="toc-sub toc-label">{html.escape(c["sub"])}</li>')
+        last_sec, last_sub = c["section"], c["sub"]
+        cls = "toc-sub2" if c["sub"] else "toc-sub" if c["section"] and c["section"] != c["title"] else ""
+        cls = f' class="{cls}"' if cls else ""
+        toc.append(f'<li{cls}><a href="#card-{i + 1}" data-card-link="{i + 1}">{html.escape(c["title"])}</a></li>')
     nav = ('<nav class="card-nav" aria-label="Карточки">'
            '<button type="button" class="card-prev">← назад</button>'
            f'<span class="card-count" aria-live="polite">1 / {total}</span>'
@@ -312,7 +358,8 @@ def build_course(conf, key, dump):
         text = re.sub(r"\]\(((?!https?:)[\w./-]+\.md)(#[^)\s]*)?\)", link, text)
         pg["body"], pg["toc"] = render_page_md(restore_fences(text, fences))
         pg["cards"] = None
-        if str(pg["path"].relative_to(edu)) in conf.get("cards", []):
+        cards_conf = conf.get("cards", [])
+        if pg["kind"] != "task" and (cards_conf is True or str(pg["path"].relative_to(edu)) in cards_conf):
             pg["cards"] = split_cards(pg["body"])
         pg["mins"] = reading_minutes(restore_fences(re.sub(r"data:[^)]+", "", text), fences))
 

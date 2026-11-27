@@ -633,6 +633,8 @@ h2 { font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.15; }
 .card-toc { gap: 6px !important; }
 .card-toc .toc-sec { font-size: 0.8125rem; color: var(--ink); font-weight: 500; margin-top: 6px; }
 .card-toc .toc-sub { padding-left: 12px; }
+.card-toc .toc-sub2 { padding-left: 24px; }
+.card-toc .toc-label { font-size: 0.8125rem; color: var(--muted); }
 .card-toc a.seen { color: var(--ink); }
 .card-toc a[aria-current] { color: var(--accent); font-weight: 500; }
 .card-toc a[aria-current]::before { content: "▸ "; }
